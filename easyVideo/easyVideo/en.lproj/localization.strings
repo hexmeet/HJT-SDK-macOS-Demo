@@ -1,0 +1,182 @@
+/* 
+  localization.strings
+  easyVideo
+
+  Created by quanhao huang on 2018/8/13.
+  Copyright © 2018 easyVideo. All rights reserved.
+*/
+
+"APPNAME" = "easyVideo";
+
+/** LoginWindow */
+"login.window.private.cloud" = "Private Cloud User";
+"login.window.cloud.user" = "Cloud User";
+"login.window.cloud.login" = "Cloud Login";
+"login.window.join.meeting" = "Join a Meeting";
+"login.window.login" = "Log In";
+"login.window.private.login" = "Private Cloud Login";
+"login.window.servertf" = "Server";
+"login.window.usertf" = "Account/Mobile/Email";
+"login.window.passwordtf" = "Password";
+"login.window.advanced.settings" = "Advanced Settings";
+"login.window.advanced.port" = "Port (Optional)";
+"login.window.confid" = "Meeting ID";
+"login.window.displayname" = "Username in meeting";
+"login.window.join" = "Join";
+"login.window.applyfortrial" = "Apply for trial";
+
+/** HomeWindow */
+"home.left.meetingtitle" = "Meetings";
+"home.left.settitle" = "Settings";
+"home.left.registeredtitle" = "Online";
+"home.left.noregisteredtitle" = "Offline";
+"home.top.servertitle" = "My Self-service";
+"home.user.phone"      = "Mobile";
+"home.user.landline"   = "Telephone";
+"home.user.email"      = "Email";
+"home.user.department" = "Department";
+"home.user.company"    = "Company";
+"home.user.changepassword" = "Change Password";
+"home.user.loginout" = "Log Out";
+"home.pd.title" = "Change password";
+"home.pd.oldpd" = "Original password";
+"home.pd.alert" = "Ask administrator to reset if forget";
+"home.pd.newpd" = "New password";
+"home.pd.surepd" = "Confirm password";
+"home.join.camera" = "Turn off Camera";
+"home.join.mute" = "Turn off Microphone";
+"home.set.conventional" = "General";
+"home.set.audio" = "Audio";
+"home.set.video" = "Video";
+"home.set.about" = "About";
+"home.set.about.version" = "Version：";
+"home.set.routine.language" = "Language";
+"home.set.routine.chinese" = "中文";
+"home.set.routine.english" = "English";
+"home.set.routine.diagnosis" = "Diagnostics";
+"home.set.routine.uploaddiagnosis" = "Upload Diagnostics Data";
+"home.set.routine.application" = "Application";
+"home.set.routine.autologin" = "Auto Login";
+"home.set.routine.autoanswer" = "Auto Answer";
+"home.set.routine.highframerate" = "Enable high frame rate video";
+"home.set.audio.microphone" = "Microphone";
+"home.set.audio.speaker" = "Speaker";
+"home.set.audio.play" = "Play the test sound";
+"home.set.audio.playtitle" = "Please click play to see if you can hear the sound";
+"home.set.video.camera" = "Camera";
+"home.user.head.edithead" = "Change profile photo";
+"home.user.head.alert" = "Best size 800x800 and within 1MB";
+"home.user.head.open" = "Open Local";
+"home.user.head.updata" = "Upload";
+"home.join.password" = "Meeting Password";
+"home.invitation.join" = "Accept";
+"home.invitation.cancel" = "Declined";
+"home.invited.Meeting" = "You are invited to join meeting:";
+"home.joinmeetinginput" = "Input meeting ID(plus *password)";
+"home.signl.title" = "Media Statistic";
+
+/* Video */
+"video.openlocalvideo" = "Show Local Video";
+"video.closelocalvideo" = "Hide Local Video";
+"video.unmute" = "Unmute";
+"video.mute" = "Mute";
+"video.openvideo" = "Start Video";
+"video.stopvideo" = "Stop Video";
+"video.set" = "Devices";
+"video.meetingmanagement" = "Meeting Management";
+"video.speakerlayout" = "Speaker";
+"video.gallerylayout" = "Gallery";
+"video.handup" = "Speech Request";
+"video.showcontent" = "Show Share";
+"video.callend" = "Hang Up";
+"video.unselectvideo" = "Unselect video";
+"video.selectspeaker" = "Select the output device of the sound";
+"video.selectmicrophone" = "Select microphone";
+"video.selectcamera" = "Select camera";
+"video.speaker" = "Loudspeaker";
+"video.microphone" = "Microphone";
+"video.camera" = "Camera";
+"video.statistics.column.name" = "Media Direction";
+"video.statistics.codec" = "Codec";
+"video.statistics.rate" = "Rate(kbps)";
+"video.statistics.resolution" = "Resolution";
+"video.statistics.pktLossRate" = "Pkt Lost Rate";
+"video.statistics.column.thisEnd.audio" = "This End(Audio)";
+"video.statistics.column.farEnd.audio" = "Far End(Audio)";
+"video.statistics.column.thisEnd.video" = "This End(Video)";
+"video.statistics.column.farEnd.video" = "Far End(Video)";
+"video.statistics.column.thisEnd.content" = "This End(Content)";
+"video.statistics.column.farEnd.content" = "Far End(Content)";
+
+/* Image */
+"Image.Company" = "logo_login_title_en";
+
+/** Alert */
+"alert.back" = "Back";
+"alert.sure" = "Sure";
+"alert.cancel" = "Cancel";
+"alert.writeServerAddress" = "Please enter the address of the server";
+"alert.writePassWord" = "Please enter the password";
+"alert.writeConfId" = "Please enter the meeting ID";
+"alert.writeDisName" = "Username in meeting";
+"alert.connection" = "Connecting...";
+"alert.pass.note.writeOld" = "Please enter the old password";
+"alert.pass.note.writeNew" = "Please enter new password";
+"alert.pass.note.notMatch" = "Password does not match";
+"alert.changepasswords" = "Change password successfully";
+"alert.changepasswordf" = "Change password failed";
+"alert.changeusername" = "Username changed successfully";
+"alert.onlynumber" = "Only Numbers are allowed";
+"alert.loading" = "Trying to load...";
+"alert.loadingerror" = "Load failed check your network";
+"alert.reload" = "Reload the";
+"alert.modifysuccess" = "Modify success";
+"alert.invalidConfNumber" = "Invalid meeting ID";
+"alert.meetingnotstart" = "The meeting has not started yet";
+"alert.cloudnotactivat" = "The called cloud platform is not activated";
+"alert.meetingdosenotanonymouscall" = "This meeting does not allow anonymous calls";
+"alert.allowmeeting" = "Only the conference room owner is allowed to activate the conference room";
+"alert.trialexpired" = "Trial expired";
+"alert.limit" = "The number of participants has reached the limit.";
+"alert.joinmeetingerr" = "Join meeting error:";
+"alert.inputpassword" = "Input meeting password";
+"alert.uploaded.successfully" = "Uploaded successfully";
+"alert.upload" = "Upload...";
+"alert.uploaded.failed" = "Upload failed";
+"alert.nospeak" = "You have been muted by meeting manager.";
+"alert.speak" = "You have been unmuted by meeting manager.";
+"alert.openmainvenuemodel" = "Can not change layout for this call";
+"alert.error" = "Error";
+"alert.serverisinconsistent" = "Current server is inconsistent";
+"alert.note.loginout" = "Are you sure to log out?";
+"alert.note.networkNotStable" = "Network is not stable now, it may impact your call experience.";
+"alert.handsup.approve" = "Speech request has been sent";
+"alert.cannotconnectserver" = "Unable to connect to server";
+"alert.loginerr" = "Login failed:";
+"alert.open.carmer" = "Video application needs to get camera permissions";
+"alert.open.micphone" = "Video application needs to get microphone permissions";
+"alert.update" = "Update";
+"alert.foundnewversion" = "Found the new version";
+"alert.dontneedupload" = "No updates available";
+"alert.installing" = "Installing";
+"alert.sureinstallation" = "Start installation";
+"alert.yes" = "YES";
+"alert.no" = "NO";
+"alert.checkversion" = "Check Version";
+"alert.software.update" = "Software Update";
+"alert.downloadfailed" = "Download failed";
+"alert.network_stable" = "Network is not stable now, it may impact your conferencing experience.";
+"alert.network_poor" = "Network is in very poor status, recommend checking network or switching to better network.";
+"alert.network_insufficient" = "Network bandwidth is insufficient, it may impact your conferencing experience.";
+"alert.network_shortage" = "Network bandwidth is in serious shortage, recommend checking network bandwidth or switching to better network.";
+
+/** Error code */
+"errorcode.1100" = "Invalid username or password.";
+"error.resolve" = "Couldn't resolve host name";
+
+/** Menu */
+"menu.menuName" = "easyVideo";
+"menu.send" = "Upload Diagnostics Data";
+"menu.about" = "About";
+"menu.exit" = "Exit";
+

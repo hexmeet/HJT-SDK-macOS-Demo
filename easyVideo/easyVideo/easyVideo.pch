@@ -1,0 +1,38 @@
+//
+//  easyVideo.pch
+//  easyVideo
+//
+//  Created by quanhao huang on 2018/8/10.
+//  Copyright © 2018年 easyVideo. All rights reserved.
+//
+
+#ifndef easyVideo_pch
+#define easyVideo_pch
+
+#import <SDWebImageManager.h>
+#import <objc/runtime.h>
+#import "AppDelegate.h"
+#import "ConfigureMacro.h"
+#import "ColorMacro.h"
+#import "NoticeMacro.h"
+#import "PlistMacro.h"
+#import "NSView+addShadow.h"
+#import "NSView+backgroundcolor.h"
+#import "NSButton+backgroundcolor.h"
+#import "NSButton+mouseAction.h"
+#import "LanguageTool.h"
+#import "evsdk/IEVEngineObj.h"
+#import "EVUtils.h"
+#import "PlistUtils.h"
+#import <AliyunOSSiOS.h>
+#import <ZipArchive.h>
+#import <CocoaLumberjack/CocoaLumberjack.h>
+#import <DDLog.h>
+
+#ifdef DEBUG
+static const int ddLogLevel = DDLogLevelVerbose;
+#else
+static const int ddLogLevel = DDLogLevelInfo;
+#endif
+
+#endif /* easyVideo_pch */

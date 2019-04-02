@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="speakerView" id="c22-O7-iKe" customClass="speakerView">
+            <rect key="frame" x="0.0" y="0.0" width="143" height="225"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="vsq-L5-aQ6" customClass="SWSTAnswerButton">
+                    <rect key="frame" x="39" y="95" width="66" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="66" id="3ID-PN-UQF"/>
+                        <constraint firstAttribute="height" constant="80" id="XmC-Vs-SGh"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="KHw-2i-Yeg">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundNormalColor">
+                            <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundHoverColor">
+                            <color key="value" red="0.94509803920000002" green="0.94509803920000002" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundSelectedColor">
+                            <color key="value" red="0.94509803920000002" green="0.94509803920000002" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-Xb-rcc">
+                    <rect key="frame" x="44" y="100" width="56" height="70"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon3" id="33W-d0-Iio"/>
+                </imageView>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="tLt-pQ-cWw">
+                    <rect key="frame" x="10" y="10" width="123" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="2On-gK-mBy"/>
+                    </constraints>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" drawsBackground="YES" id="6kY-vS-rhh">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <imageView hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X3n-Cr-o92">
+                    <rect key="frame" x="87" y="99" width="14" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="14" id="Pb4-8k-GIj"/>
+                        <constraint firstAttribute="width" constant="14" id="zFf-FO-fJX"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="checkbox_selected" id="qfD-BW-onz"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="vsq-L5-aQ6" firstAttribute="centerY" secondItem="ImT-Xb-rcc" secondAttribute="centerY" id="1xW-eK-yNC"/>
+                <constraint firstItem="tLt-pQ-cWw" firstAttribute="top" secondItem="X3n-Cr-o92" secondAttribute="bottom" constant="9" id="32h-nw-zGX"/>
+                <constraint firstItem="tLt-pQ-cWw" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="10" id="5W9-dm-yHc"/>
+                <constraint firstAttribute="trailing" secondItem="X3n-Cr-o92" secondAttribute="trailing" constant="42" id="79E-cT-z4R"/>
+                <constraint firstItem="vsq-L5-aQ6" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="50" id="7Zg-k0-OGc"/>
+                <constraint firstItem="vsq-L5-aQ6" firstAttribute="centerX" secondItem="ImT-Xb-rcc" secondAttribute="centerX" id="IzH-Bg-KSK"/>
+                <constraint firstItem="tLt-pQ-cWw" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="QBC-Ej-70Z"/>
+                <constraint firstAttribute="trailing" secondItem="tLt-pQ-cWw" secondAttribute="trailing" constant="10" id="WQ1-W0-ZRS"/>
+                <constraint firstItem="vsq-L5-aQ6" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="gup-Ts-Ti3"/>
+                <constraint firstAttribute="bottom" secondItem="tLt-pQ-cWw" secondAttribute="bottom" constant="10" id="p0J-bN-Idh"/>
+                <constraint firstItem="tLt-pQ-cWw" firstAttribute="top" secondItem="vsq-L5-aQ6" secondAttribute="bottom" constant="5" id="pnD-J9-yW6"/>
+            </constraints>
+            <connections>
+                <outlet property="selectBtn" destination="vsq-L5-aQ6" id="V6Z-gk-T1L"/>
+                <outlet property="selectImage" destination="X3n-Cr-o92" id="Huh-WT-Zdb"/>
+                <outlet property="speakerName" destination="tLt-pQ-cWw" id="fpd-bo-qnF"/>
+            </connections>
+        </customView>
+    </objects>
+    <resources>
+        <image name="checkbox_selected" width="14" height="14"/>
+        <image name="icon3" width="56" height="70"/>
+    </resources>
+</document>

@@ -1,0 +1,20 @@
+//
+//  releasebuild.xcconfig
+//  easyVideo
+//
+//  Created by linlin li on 2019/1/5.
+//  Copyright © 2019 easyVideo. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Pods/Target Support Files/Pods-easyVideo/Pods-easyVideo.release.xcconfig"
+
+CLOUD_TRIAL_URL = http:\/\/www.hjtcloud.com/try
+
+PRODUCT_BUNDLE_IDENTIFIER = com.hexmeet.machjt
+PRODUCT_NAME = HJTSDK
+DEVELOPMENT_TEAM = W269R3L92R
+CODE_SIGN_IDENTITY = Developer ID Application: Beijing Zhong Chuang Shi Xun Technology Co., Ltd. (W269R3L92R)
+PROVISIONING_PROFILE_SPECIFIER = HexMeetHJT-Mac-Distribution

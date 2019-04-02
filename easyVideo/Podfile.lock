@@ -1,0 +1,41 @@
+PODS:
+  - AliyunOSSiOS (2.10.0)
+  - CocoaLumberjack (3.4.1):
+    - CocoaLumberjack/Default (= 3.4.1)
+    - CocoaLumberjack/Extensions (= 3.4.1)
+  - CocoaLumberjack/Default (3.4.1)
+  - CocoaLumberjack/Extensions (3.4.1):
+    - CocoaLumberjack/Default
+  - MagicalRecord (2.3.2):
+    - MagicalRecord/Core (= 2.3.2)
+  - MagicalRecord/Core (2.3.2)
+  - SDWebImage (4.3.3):
+    - SDWebImage/Core (= 4.3.3)
+  - SDWebImage/Core (4.3.3)
+  - ZipArchive (1.4.0)
+
+DEPENDENCIES:
+  - AliyunOSSiOS
+  - CocoaLumberjack
+  - MagicalRecord (~> 2.3.2)
+  - SDWebImage (~> 4.3.3)
+  - ZipArchive
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AliyunOSSiOS
+    - CocoaLumberjack
+    - MagicalRecord
+    - SDWebImage
+    - ZipArchive
+
+SPEC CHECKSUMS:
+  AliyunOSSiOS: 1f42c7b1542f22b75a81127bdb0b0798122a2f1f
+  CocoaLumberjack: 2e258a064cacc8eb9a2aca318e24d02a0a7fd56d
+  MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
+  SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
+  ZipArchive: e25a4373192673e3229ac8d6e9f64a3e5713c966
+
+PODFILE CHECKSUM: c5b9281ed5ae62d7acac847ce35f99badc4a49ed
+
+COCOAPODS: 1.5.3

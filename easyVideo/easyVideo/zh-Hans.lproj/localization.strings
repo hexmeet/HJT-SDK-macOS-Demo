@@ -1,0 +1,181 @@
+/* 
+  localization.strings
+  easyVideo
+
+  Created by quanhao huang on 2018/8/13.
+  Copyright © 2018年 easyVideo. All rights reserved.
+*/
+
+"APPNAME" = "easyVideo";
+
+/** LoginWindow */
+"login.window.private.cloud" = "私有部署";
+"login.window.cloud.user" = "云登录";
+"login.window.cloud.login" = "云登录";
+"login.window.join.meeting" = "加入会议";
+"login.window.login" = "登录";
+"login.window.private.login" = "私有部署登录";
+"login.window.servertf" = "服务器";
+"login.window.usertf" = "账号/手机/邮箱";
+"login.window.passwordtf" = "密码";
+"login.window.advanced.settings" = "高级设置";
+"login.window.advanced.port" = "端口（选填）";
+"login.window.confid" = "输入会议号码";
+"login.window.displayname" = "会议中显示的用户名";
+"login.window.join" = "加入";
+"login.window.applyfortrial" = "申请试用";
+
+/** HomeWindow */
+"home.left.meetingtitle" = "会议";
+"home.left.settitle" = "设置";
+"home.left.registeredtitle" = "已注册";
+"home.left.noregisteredtitle" = "未注册";
+"home.top.servertitle" = "我的自服务";
+"home.user.phone" = "手机";
+"home.user.landline" = "座机";
+"home.user.email" = "邮箱";
+"home.user.department" = "部门";
+"home.user.company" = "公司";
+"home.user.changepassword" = "修改密码";
+"home.user.loginout" = "退出登录";
+"home.pd.title" = "修改密码";
+"home.pd.oldpd" = "原密码";
+"home.pd.alert" = "忘记密码，请管理员重置";
+"home.pd.newpd" = "新密码";
+"home.pd.surepd" = "确认密码";
+"home.join.camera" = "关闭摄像头";
+"home.join.mute" = "关闭麦克风";
+"home.set.conventional" = "常规";
+"home.set.audio" = "音频";
+"home.set.video" = "视频";
+"home.set.about" = "关于";
+"home.set.about.version" = "版本号：";
+"home.set.routine.language" = "语言";
+"home.set.routine.chinese" = "中文";
+"home.set.routine.english" = "English";
+"home.set.routine.diagnosis" = "诊断";
+"home.set.routine.uploaddiagnosis" = "上传诊断信息";
+"home.set.routine.application" = "应用";
+"home.set.routine.autologin" = "自动登录";
+"home.set.routine.autoanswer" = "自动应答";
+"home.set.routine.highframerate" = "启用高帧率视频";
+"home.set.audio.microphone" = "麦克风";
+"home.set.audio.speaker" = "扬声器";
+"home.set.audio.play" = "播放测试声音";
+"home.set.audio.playtitle" = "请点播放测试，试试能否听到声音";
+"home.set.video.camera" = "摄像头";
+"home.user.head.edithead" = "编辑头像";
+"home.user.head.alert" = "最佳尺寸 800x800 (且在1MB以内) ";
+"home.user.head.open" = "打开本地";
+"home.user.head.updata" = "上传头像";
+"home.join.password" = "会议密码";
+"home.invitation.join" = "接受";
+"home.invitation.cancel" = "婉拒";
+"home.invited.Meeting" = "您被邀请加入会议:";
+"home.joinmeetinginput" = "请输入会议号码(加*密码)";
+"home.signl.title" = "媒体统计信息";
+
+/* Video */
+"video.openlocalvideo" = "开启本地视频";
+"video.closelocalvideo" = "关闭本地视频";
+"video.unmute" = "解除静音";
+"video.mute" = "静音";
+"video.openvideo" = "启用视频";
+"video.stopvideo" = "停止视频";
+"video.set" = "设备";
+"video.meetingmanagement" = "会议管理";
+"video.speakerlayout" = "主讲视图";
+"video.gallerylayout" = "画廊视图";
+"video.handup" = "申请发言";
+"video.showcontent" = "显示分享";
+"video.callend" = "  挂断";
+"video.unselectvideo" = "取消选定视频";
+"video.selectspeaker" = "请选择声音的输出设备";
+"video.selectmicrophone" = "请选择麦克风";
+"video.selectcamera" = "请选择摄像头";
+"video.speaker" = "扬声器";
+"video.microphone" = "麦克风";
+"video.camera" = "摄像头";
+"video.statistics.column.name" = "媒体方向";
+"video.statistics.codec" = "编解码器";
+"video.statistics.rate" = "速率(kbps)";
+"video.statistics.resolution" = "分辨率";
+"video.statistics.pktLossRate" = "丢包率";
+"video.statistics.column.thisEnd.audio" = "音频发送";
+"video.statistics.column.farEnd.audio" = "音频接收";
+"video.statistics.column.thisEnd.video" = "视频发送";
+"video.statistics.column.farEnd.video" = "视频接收";
+"video.statistics.column.thisEnd.content" = "内容发送";
+"video.statistics.column.farEnd.content" = "内容接收";
+
+/* Image */
+"Image.Company" = "logo_login_title_zh";
+
+/** Alert */
+"alert.back" = "返回";
+"alert.sure" = "确定";
+"alert.cancel" = "取消";
+"alert.writeServerAddress" = "请输入服务器地址";
+"alert.writePassWord" = "请输入账号密码";
+"alert.writeConfId" = "请输入会议号码";
+"alert.writeDisName" = "会议中显示的用户名";
+"alert.connection" = "连接中...";
+"alert.pass.note.writeOld" = "请输入旧密码";
+"alert.pass.note.writeNew" = "请输入新密码";
+"alert.pass.note.notMatch" = "两次填写的密码不一致";
+"alert.changepasswords" = "密码修改成功";
+"alert.changepasswordf" = "密码修改失败";
+"alert.changeusername" = "名字修改成功";
+"alert.onlynumber" = "只允许输入数字";
+"alert.loading" = "正在努力加载中...";
+"alert.loadingerror" = "加载失败请检查您的网络";
+"alert.reload" = "重新加载";
+"alert.modifysuccess" = "修改成功";
+"alert.invalidConfNumber" = "无效的会议室号码";
+"alert.meetingnotstart" = "会议还没有开始";
+"alert.cloudnotactivat" = "您呼叫的云平台尚未激活";
+"alert.meetingdosenotanonymouscall" = "本会议不允许匿名呼叫";
+"alert.allowmeeting" = "只允许会议室拥有者激活会议室";
+"alert.trialexpired" = "试用已过期";
+"alert.limit" = "当前会议室已达到上限";
+"alert.joinmeetingerr" = "入会失败 错误码:";
+"alert.inputpassword" = "请输入会议密码";
+"alert.uploaded.successfully" = "上传成功";
+"alert.upload" = "上传中";
+"alert.uploaded.failed" = "上传失败";
+"alert.nospeak" = "您已被管理员静音，如需发言请点击申请按钮";
+"alert.speak" = "您已经被解除禁言";
+"alert.openmainvenuemodel" = "当前会议暂不支持指定分屏模式";
+"alert.error" = "错误";
+"alert.serverisinconsistent" = "当前服务器不一致";
+"alert.note.loginout" = "确认退出登录？";
+"alert.note.networkNotStable" = "当前网络不稳定，可能会影响您的会话质量";
+"alert.handsup.approve" = "发言申请已发送，请稍候";
+"alert.cannotconnectserver" = "无法连接服务器";
+"alert.loginerr" = "登录失败:";
+"alert.open.carmer" = "视频应用需要获取您的相机权限";
+"alert.open.micphone" = "视频应用需要获取您的麦克风权限";
+"alert.update" = "更新";
+"alert.foundnewversion" = "发现最新的软件版本了";
+"alert.dontneedupload" = "已经是最新版本";
+"alert.sureinstallation" = "是否开始安装";
+"alert.installing" = "正在下载更新";
+"alert.yes" = "是";
+"alert.no" = "否";
+"alert.checkversion" = "检查更新";
+"alert.software.update" = "软件更新";
+"alert.downloadfailed" = "下载失败";
+"alert.network_stable" = "当前网络连接不稳定，可能会影响到您的会议体验";
+"alert.network_poor" = "当前网络连接很差，建议检查网络连接或者切换网络";
+"alert.network_insufficient" = "当前网络带宽不足，可能会影响到您的会议体验";
+"alert.network_shortage" = "当前网络带宽严重不足，建议检查网络带宽或者切换网络";
+
+/** Error code */
+"errorcode.1100" = "无效的用户名或密码";
+"error.resolve" = "无法解析主机名";
+
+/** Menu */
+"menu.menuName" = "easyVideo";
+"menu.send" = "发送诊断信息";
+"menu.about" = "关于";
+"menu.exit" = "关闭程序";

@@ -1,0 +1,18 @@
+//
+//  debugbuild.xcconfig
+//  easyVideo
+//
+//  Created by linlin li on 2019/1/5.
+//  Copyright © 2019 easyVideo. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Pods/Target Support Files/Pods-easyVideo/Pods-easyVideo.debug.xcconfig"
+
+CLOUD_TRIAL_URL = http:\/\/www.hjtcloud.com/try
+PRODUCT_BUNDLE_IDENTIFIER = easyvideo.easyvideo
+PRODUCT_NAME = easyVideo
+
+DEVELOPMENT_TEAM = W269R3L92R
