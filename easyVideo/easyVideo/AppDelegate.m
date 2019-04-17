@@ -262,8 +262,15 @@
             NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
             if (infoDic[@"autoLog"]) {
                 if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
-                    //                self.joinurl = webUrl;
-                    //                [self performSelector:@selector(autoLogWeb) withObject:self afterDelay:8];
+                    [NSUSERDEFAULT setValue:@"1" forKey:@"canautoLogin"];
+                    [NSUSERDEFAULT synchronize];
+                    
+                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
+                        [evengine enableSecure:YES];
+                    }else {
+                        [evengine enableSecure:NO];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSWEBLOGIN object:dic];
                 }else {
                     if ([dic[@"protocol"] isEqualToString:@"https"]) {
                         [evengine enableSecure:YES];
@@ -302,7 +309,14 @@
             NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
             if (infoDic[@"autoLog"]) {
                 if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
-                    
+                    [NSUSERDEFAULT setValue:@"1" forKey:@"canautoLogin"];
+                    [NSUSERDEFAULT synchronize];
+                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
+                        [evengine enableSecure:YES];
+                    }else {
+                        [evengine enableSecure:NO];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
                 }else {
                     if ([dic[@"protocol"] isEqualToString:@"https"]) {
                         [evengine enableSecure:YES];
@@ -665,11 +679,13 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 DDLogError(@"[Error] 10004 upload object success!");
                 Notifications(UPLOADSU);
+                [self removeLogFile];
             });
             
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 Notifications(UPLOADFAIL);
+                [self removeLogFile];
             });
         }
         return nil;
@@ -696,6 +712,16 @@
     }
     flieName = [NSString stringWithFormat:@"/EVINFO-%@-%@.zip", currentTimeString , userName];
     return flieName;
+}
+
+- (void)removeLogFile
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if ([fileManager fileExistsAtPath:[[paths objectAtIndex:0] stringByAppendingPathComponent:flieName]]) {
+        [fileManager removeItemAtPath:[[paths objectAtIndex:0] stringByAppendingPathComponent:flieName] error:nil];
+    }
 }
 
 #pragma mark - Notification

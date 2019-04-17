@@ -8,5 +8,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/833251a90bb740bea864710ac9112a0e)](https://www.codacy.com/app/scottli139/HJT-SDK-macOS-Demo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hexmeet/HJT-SDK-macOS-Demo&amp;utm_campaign=Badge_Grade)
 
 > Last Updated:
-Tue Apr  2 13:02:54 CST 2019
-e5be3292c2a9487894923a9e317aad420d14f046
+Wed Apr 17 21:39:46 CST 2019
+787f83004fb45d5da2c74a6685d9623b089fa5c8

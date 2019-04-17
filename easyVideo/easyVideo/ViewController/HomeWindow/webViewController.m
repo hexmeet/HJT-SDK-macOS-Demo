@@ -55,7 +55,7 @@
     [LanguageTool initUserLanguage];
     
     [loadBtn changeCenterButtonattribute:localizationBundle(@"alert.reload") color:WHITECOLOR];
-    prompttitel.stringValue = localizationBundle(@"Load failed check your network");
+    prompttitel.stringValue = localizationBundle(@"alert.loadingerror");
     
     if ([[NSUSERDEFAULT objectForKey:@"AUTOWEBLOGIN"]isEqualToString:@"YES"]) {
         [NSUSERDEFAULT setValue:@"NO" forKey:@"AUTOWEBLOGIN"];
@@ -271,7 +271,7 @@
     [self setConferenceManagerUrl];
     
     [loadBtn changeCenterButtonattribute:localizationBundle(@"alert.reload") color:WHITECOLOR];
-    prompttitel.stringValue = localizationBundle(@"Load failed check your network");
+    prompttitel.stringValue = localizationBundle(@"alert.loadingerror");
 }
 
 /**
