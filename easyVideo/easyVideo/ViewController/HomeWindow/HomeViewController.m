@@ -346,6 +346,13 @@
 
 - (void)portmpt:(NSNotification *)sender
 {
+    NSString *str = sender.object;
+    if ([str isEqualToString:@"10009"]) {
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.10009");
+        [self persendMethod:2];
+        return;
+    }
+
     hub.hidden = NO;
     hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@", localizationBundle(@"alert.joinmeetingerr"), sender.object];
     [self persendMethod:3];

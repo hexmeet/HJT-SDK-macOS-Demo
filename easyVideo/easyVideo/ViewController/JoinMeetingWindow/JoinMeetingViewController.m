@@ -331,6 +331,8 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         DDLogError(@"[Error] 10029 User anonymous logins error: type: %lu, code: %u, msg: %@", (unsigned long)err.type, err.code, err.msg);
+        //错误后直接关闭呼叫窗口
+        Notifications(CLOSECONNECTINGWINDOW);
         [[NSNotificationCenter defaultCenter] postNotificationName:PORTMPT object:[NSString stringWithFormat:@"%lu", (unsigned long)err.code]];
     });
 }

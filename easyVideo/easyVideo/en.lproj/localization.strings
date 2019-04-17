@@ -74,6 +74,8 @@
 "home.invited.Meeting" = "You are invited to join meeting:";
 "home.joinmeetinginput" = "Input meeting ID(plus *password)";
 "home.signl.title" = "Media Statistic";
+"video.statistics.column.encrypted" = "Encrypted";
+"video.statistics.column.unencrypted" = "Unencrypted";
 
 /* Video */
 "video.openlocalvideo" = "Show Local Video";
@@ -171,8 +173,9 @@
 "alert.network_shortage" = "Network bandwidth is in serious shortage, recommend checking network bandwidth or switching to better network.";
 
 /** Error code */
-"errorcode.1100" = "Invalid username or password.";
+"errorcode.1100" = "Invalid user.";
 "error.resolve" = "Couldn't resolve host name";
+"error.10009" = "Meeting number does not exist";
 
 /** Menu */
 "menu.menuName" = "easyVideo";

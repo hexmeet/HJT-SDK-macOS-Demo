@@ -44,7 +44,13 @@
 - (void)viewDidLayout
 {
     [super viewDidLayout];
-    self.view.window.title = localizationBundle(@"home.signl.title");
+    NSArray *statarr = [appDelegate.evengine getStats];
+    EVStreamStats *stats = statarr[0];
+    if (stats.is_encrypted) {
+        self.view.window.title = [NSString stringWithFormat:@"%@(%@)", localizationBundle(@"home.signl.title"), localizationBundle(@"video.statistics.column.encrypted")];
+    }else {
+        self.view.window.title = [NSString stringWithFormat:@"%@(%@)", localizationBundle(@"home.signl.title"), localizationBundle(@"video.statistics.column.unencrypted")];
+    }
 }
 
 - (void)viewWillDisappear

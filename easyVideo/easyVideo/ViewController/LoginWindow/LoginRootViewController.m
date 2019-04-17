@@ -231,6 +231,11 @@
 // if user choose auto login. app can auto login.
 - (void)getuserAutoLoginInfo
 {
+    if ([[NSUSERDEFAULT objectForKey:@"canautoLogin"] isEqualToString:@"1"]) {
+        [NSUSERDEFAULT setValue:@"2" forKey:@"canautoLogin"];
+        [NSUSERDEFAULT synchronize];
+        return;
+    }
     NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
     if (infoDic[@"autoLog"]) {
         if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
@@ -244,6 +249,7 @@
             [self userLoginAction:nil];
         }
     }
+    
 }
 
 #pragma mark - NSButton Method
@@ -750,11 +756,18 @@
 #pragma mark - EVEngineDelegate
 -(void)onError:(EVError *)err {
     dispatch_async(dispatch_get_main_queue(), ^{
+        DDLogError(@"[Error] 10002 loginError type: %lu, code:%u,  msg: %@", (unsigned long)err.type, err.code, err.msg);
         if (err.type == EVErrorTypeSdk) {
             //sdk error don't have to remind.
             return ;
         }
-        DDLogError(@"[Error] 10002 loginError type: %lu, code:%u,  msg: %@", (unsigned long)err.type, err.code, err.msg);
+        if (err.type == EVErrorTypeLocate) {
+            if (err.code == 10009) {
+                self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%lu", localizationBundle(@"errorcode.1100"), (unsigned long)err.code];
+                [self persendMethod:2];
+            }
+            return;
+        }
         self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%lu", localizationBundle(@"alert.loginerr"), (unsigned long)err.code];
         [self persendMethod:2];
     });
@@ -906,6 +919,9 @@
             [dic setValue:data[@"port"] forKey:@"port"];
             [dic setValue:disNameStr forKey:@"disName"];
             [dic setValue:data[@"confid"] forKey:@"confId"];
+            if (data[@"password"] != nil) {
+                [dic setValue:data[@"password"] forKey:@"password"];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
             
         }else {
@@ -945,6 +961,15 @@
 //How many seconds later, hub dismiss.
 - (void)portmpt:(NSNotification *)sender
 {
+    NSString *str = sender.object;
+    if ([str isEqualToString:@"10009"]) {
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.10009");
+        [self persendMethod:2];
+        return;
+    }
+    if ([str isEqualToString:@"2015"]) {
+        return;
+    }
     hub.hidden = NO;
     hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@", localizationBundle(@"alert.joinmeetingerr"), sender.object];
     [self persendMethod:3];
@@ -1019,7 +1044,7 @@
     [appDelegate.evengine setUserImage:[EVUtils bundleFile:@"bg_videomute.png"] filename:[EVUtils bundleFile:@"image_defaultuser.png"]];
     if (isCloundLogin) {
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setValue:infoPlistStringBundle(@"CloudServerAddress") forKey:@"server"];
+        [dic setValue:anonymousDic[@"server"] forKey:@"server"];
         [dic setValue:port forKey:@"port"];
         [dic setValue:displayname forKey:@"disName"];
         [dic setValue:confId forKey:@"confId"];

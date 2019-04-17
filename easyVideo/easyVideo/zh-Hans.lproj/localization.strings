@@ -74,6 +74,8 @@
 "home.invited.Meeting" = "您被邀请加入会议:";
 "home.joinmeetinginput" = "请输入会议号码(加*密码)";
 "home.signl.title" = "媒体统计信息";
+"video.statistics.column.encrypted" = "加密";
+"video.statistics.column.unencrypted" = "未加密";
 
 /* Video */
 "video.openlocalvideo" = "开启本地视频";
@@ -171,8 +173,9 @@
 "alert.network_shortage" = "当前网络带宽严重不足，建议检查网络带宽或者切换网络";
 
 /** Error code */
-"errorcode.1100" = "无效的用户名或密码";
+"errorcode.1100" = "无效的用户名";
 "error.resolve" = "无法解析主机名";
+"error.10009" = "会议号码不存在";
 
 /** Menu */
 "menu.menuName" = "easyVideo";

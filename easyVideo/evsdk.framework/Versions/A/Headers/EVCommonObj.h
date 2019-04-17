@@ -60,7 +60,8 @@ typedef NS_ENUM (NSUInteger, EVErrorType) {
     EVErrorTypeServer = 1,
     EVErrorTypeLocate = 2,
     EVErrorTypeCall = 3,
-    EVErrorTypeUnknown = 4
+    EVErrorTypeAVServer = 4,
+    EVErrorTypeUnknown = 5
 };
 
 __attribute__((visibility("default"))) @interface EVError : NSObject
