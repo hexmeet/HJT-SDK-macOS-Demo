@@ -584,6 +584,8 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
             cameraTitle.textColor = DEFAULREDCOLOR;
             [appDelegate.evengine enableCamera:NO];
         }
+    }else {
+        [appDelegate.evengine enableCamera:YES];
     }
     if (setDic[@"mute"]) {
         if ([setDic[@"mute"] isEqualToString:@"YES"]) {
@@ -592,7 +594,11 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
             muteTitle.stringValue = localizationBundle(@"video.unmute");
             muteTitle.textColor = DEFAULREDCOLOR;
             [appDelegate.evengine enableMic:NO];
+        }else {
+            [appDelegate.evengine enableMic:YES];
         }
+    }else {
+        [appDelegate.evengine enableMic:YES];
     }
 }
 
