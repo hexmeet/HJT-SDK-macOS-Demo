@@ -4,5 +4,4 @@ xcode_scheme: easyVideo
 podfile: easyVideo/Podfile
 
 script: 
-    cd easyVideo
-    xcodebuild -workspace easyvideo.xcworkspace  -configuration Debug -scheme easyVideo -derivedDataPath ./build
+    cd easyVideo; xcodebuild -workspace easyvideo.xcworkspace  -configuration Debug -scheme easyVideo -derivedDataPath ./build
