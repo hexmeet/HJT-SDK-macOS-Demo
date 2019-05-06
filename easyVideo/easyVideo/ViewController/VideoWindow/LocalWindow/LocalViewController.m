@@ -64,6 +64,8 @@
     
     locaVideoController = [[VideoController alloc] initWithViewAndType:LOCAL viewFrame:CGRectMake(0, self.view.bounds.size.height-110, 160, 90)];
     locaVideoController.userBg.hidden = YES;
+    locaVideoController.view.layer.borderWidth = 2;
+    locaVideoController.view.layer.borderColor = BLUECOLOR.CGColor;
 
     [self.view addSubview:locaVideoController.view];
     

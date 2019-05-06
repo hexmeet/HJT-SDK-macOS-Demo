@@ -22,6 +22,10 @@
 - (int) avlogin:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
 - (int) avlogout;
 
+//Anonymous call
+- (int) registerSIPServer:(NSString * _Nullable)domain displayName:(NSString * _Nonnull)displayName username:(NSString * _Nonnull)username password:(NSString * _Nonnull)password protocol:(NSString * _Nonnull)protocol;
+- (int) unregisterSIPServer;
+
 //SIP
 - (void) dialOut:(NSString *_Nonnull)number video:(BOOL)enable_video;
 - (void) hangUp;

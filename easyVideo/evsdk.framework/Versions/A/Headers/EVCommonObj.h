@@ -24,6 +24,14 @@ typedef NS_ENUM (NSUInteger, EVContentMode) {
     EVContentApplicationMode = 1
 };
 
+typedef NS_ENUM (NSUInteger, EVContentStatus) {
+    EVContentUnknown = 0,
+	EVContentGranted = 1,
+	EVContentReleased = 2,
+	EVContentDenied = 3,
+	EVContentRevoked = 4
+};
+
 typedef NS_ENUM (NSUInteger, EVStreamDir) {
 	EVStreamUpload = 0,
 	EVStreamDownload = 1
@@ -81,7 +89,10 @@ typedef NS_ENUM (NSUInteger, EVSdkError) {
     EVRegisterFailed = 6,
     EVInternalError = 7,
     EVServerUnreachable = 8,
-    EVServerInvalid = 9
+    EVServerInvalid = 9,
+    EVCallDeclined = 10,
+    EVCallBusy = 11,
+    EVCallIOError = 12
  };
 
 typedef NS_ENUM (NSUInteger, EVWarnCode) {
@@ -152,6 +163,7 @@ __attribute__((visibility("default"))) @interface EVUserInfo : NSObject
 @property (copy, nonatomic) NSString *_Nonnull customizedH5UrlPrefix;
 @property (copy, nonatomic) NSString *_Nonnull token;
 @property (copy, nonatomic) NSString *_Nonnull doradoVersion;
+@property (copy, nonatomic) NSString *_Nonnull callNumber;
 @end
 
 __attribute__((visibility("default"))) @interface EVCallInfo : NSObject
@@ -161,12 +173,17 @@ __attribute__((visibility("default"))) @interface EVCallInfo : NSObject
 @property (copy, nonatomic) NSString *_Nonnull conference_number;
 @property (copy, nonatomic) NSString *_Nonnull password;
 @property (strong, nonatomic) EVError *_Nonnull err;
+@property (assign, nonatomic) BOOL isBigConference;
+@property (assign, nonatomic) BOOL isRemoteMuted;
 @end
 
 __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 @property (assign, nonatomic) BOOL enabled;
 @property (assign, nonatomic) EVStreamDir dir;
 @property (assign, nonatomic) EVStreamType type;
+@property (assign, nonatomic) EVContentStatus status;
+@property (assign, nonatomic) BOOL isBigConference;
+@property (assign, nonatomic) BOOL isRemoteMuted;
 @end
 
 @protocol EVCommonDelegate <NSObject>
