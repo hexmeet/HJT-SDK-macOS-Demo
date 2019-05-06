@@ -1,4 +1,5 @@
 language: objective-c
+osx_image: xcode10.2
 xcode_project: easyVideo/easyVideo.xcodeproj
 xcode_scheme: easyVideo
 podfile: easyVideo/Podfile
