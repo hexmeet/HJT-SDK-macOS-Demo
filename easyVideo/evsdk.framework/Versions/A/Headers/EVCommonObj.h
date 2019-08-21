@@ -1,5 +1,9 @@
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
+#endif
 
 //! Project version number for evsdk.
 FOUNDATION_EXPORT double evsdkVersionNumber;
@@ -11,6 +15,25 @@ FOUNDATION_EXPORT const unsigned char evsdkVersionString[];
 //  Common
 //////////////////////////////
 #define EV_STREAM_SIZE 20
+
+typedef NS_ENUM (NSUInteger, EVCallType) {
+	EVCallUnknown = 0,
+	EVCallSIP = 1,
+	EVCallH323 = 2,
+	EVCallSVC = 3
+};
+
+typedef NS_ENUM (NSUInteger, EVCallDir) {
+	EVCallOutgoing = 0,
+	EVCallIncoming = 1
+};
+
+typedef NS_ENUM (NSUInteger, EVCallStatus) {
+	EVCallStatusSuccess = 0,
+	EVCallStatusAborted = 1,
+	EVCallStatusMissed = 2,
+	EVCallStatusDeclined = 3
+};
 
 typedef NS_ENUM (NSUInteger, EVStreamType) {
 	EVStreamAudio = 0,
@@ -46,6 +69,12 @@ typedef struct _EVVideoSize {
     int width;
     int height;
 } EVVideoSize;
+
+typedef enum EVEncryptType {
+    EVEncryptSHA1 = 0,
+    EVEncryptAES = 1
+} EVEncryptType;
+
 
 //////////////////////////////
 //  Log
@@ -144,6 +173,22 @@ __attribute__((visibility("default"))) @interface EVStreamStats : NSObject
 @end
 
 //////////////////////////////
+//  Call Log
+////////////////////////////// 
+
+__attribute__((visibility("default"))) @interface EVCallLog : NSObject
+@property (copy, nonatomic) NSString *_Nonnull id;
+@property (assign, nonatomic) EVCallType type;
+@property (assign, nonatomic) EVCallDir dir;
+@property (assign, nonatomic) EVCallStatus status;
+@property (copy, nonatomic) NSString *_Nonnull displayName;
+@property (copy, nonatomic) NSString *_Nonnull peer;
+@property (assign, nonatomic) uint64_t startTime;
+@property (assign, nonatomic) uint64_t duration;
+@property (assign, nonatomic) bool isAudioOnly;
+@end
+
+//////////////////////////////
 //  Event
 //////////////////////////////
 
@@ -164,6 +209,9 @@ __attribute__((visibility("default"))) @interface EVUserInfo : NSObject
 @property (copy, nonatomic) NSString *_Nonnull token;
 @property (copy, nonatomic) NSString *_Nonnull doradoVersion;
 @property (copy, nonatomic) NSString *_Nonnull callNumber;
+@property (copy, nonatomic) NSString *_Nonnull appServerType;
+@property (copy, nonatomic) NSString *_Nonnull urlSuffixForMobile;
+@property (copy, nonatomic) NSString *_Nonnull urlSuffixForPC;
 @end
 
 __attribute__((visibility("default"))) @interface EVCallInfo : NSObject
@@ -190,6 +238,9 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 @optional
 - (void)onError:(EVError *_Nonnull)err;
 - (void)onWarn:(EVWarn *_Nonnull)warn;
+- (void)onLoginSucceed:(EVUserInfo *_Nonnull)user;
+- (void)onDownloadUserImageComplete:(NSString *_Nonnull)path;
+- (void)onUploadUserImageComplete:(NSString *_Nonnull)path;
 - (void)onNetworkState:(bool)reachable;
 - (void)onNetworkQuality:(float)quality_rating;
 - (void)onProvision:(bool)applied;
@@ -198,6 +249,7 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (void)onCallEnd:(EVCallInfo * _Nonnull)info;
 - (void)onContent:(EVContentInfo * _Nonnull)info;
 - (void)onMuteSpeakingDetected;
+- (void)onCallLogUpdated:(EVCallLog * _Nonnull)call_log;
 @end
 
 //////////////////////////////
@@ -221,6 +273,9 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 //Login
 - (int) enableSecure:(BOOL)enable;
 - (NSString * _Nonnull) encryptPassword:(NSString * _Nonnull)password;
+- (NSString * _Nonnull) encryptPassword:(EVEncryptType)type password:(NSString * _Nonnull)password;
+- (int) downloadUserImage:(NSString *_Nonnull)path;
+- (int) uploadUserImage:(NSString *_Nonnull)path;
 
 //Provision
 - (NSString * _Nonnull) getSerialNumber;
@@ -228,11 +283,14 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (int) clearProvision;
 
 //Device
+- (int) switchCamera;
 - (NSArray<EVDevice *> * _Nonnull) getDevices:(EVDeviceType)type;
 - (EVDevice * _Nonnull) getDevice:(EVDeviceType)type;
 - (void) setDevice:(EVDeviceType)type withId:(unsigned int)id;
 - (int) enableMicMeter:(BOOL)enable;
 - (float) getMicVolume;
+- (int) setDeviceRotation:(int)rotation;
+- (int) audioInterruption:(int)type;
 
 //Set Windows
 - (int) setLocalVideoWindow:(void *_Nullable)id;
@@ -253,10 +311,18 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (BOOL) micEnabled;
 - (BOOL) highFPSEnabled;
 - (float) getNetworkQuality;
+- (NSString * _Nonnull) getDisplayName;
+- (int) enableHD:(BOOL)enable;
+- (BOOL) HDEnabled;
 
 //Send Content
 - (int) sendContent;
 - (int) sendWhiteBoard;
 - (int) stopContent;
+
+//Call Log
+- (int) setCallLogMaxSize:(unsigned int) num;
+- (NSArray<EVCallLog *> * _Nonnull) getCallLog;
+- (int) removeCallLog:(NSString * _Nonnull)id;
 
 @end

@@ -31,6 +31,7 @@
 @property (weak) IBOutlet NSButton *handBtn;
 @property (weak) IBOutlet NSButton *callendBtn;
 @property (weak) IBOutlet NSButton *locolShowHiddenBtn;
+@property (weak) IBOutlet NSButton *shareBtn;
 
 /** title */
 @property (weak) IBOutlet NSTextField *muteTitle;
@@ -39,6 +40,7 @@
 @property (weak) IBOutlet NSTextField *meetingTitle;
 @property (weak) IBOutlet NSTextField *videoTitle;
 @property (weak) IBOutlet NSTextField *handupTitle;
+@property (weak) IBOutlet NSTextField *shareTitle;
 @property (weak) IBOutlet NSButton *showContentVideo;
 @property (weak) IBOutlet NSTextField *showContentTitle;
 @property (weak) IBOutlet NSLayoutConstraint *centerLine;
@@ -52,6 +54,8 @@
 @property (weak) IBOutlet NSButton *cancelVideo;
 @property (weak) IBOutlet NSLayoutConstraint *cancelVideoConstraint;
 @property (weak) IBOutlet NSTextField *numberTitle;
+@property (weak) IBOutlet NSView *hud;
+@property (weak) IBOutlet NSTextField *hudTitle;
 
 - (void)setTimer;
 

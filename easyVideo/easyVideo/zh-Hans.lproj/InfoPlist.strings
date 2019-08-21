@@ -4,7 +4,6 @@
 "CFBundleName" = "easyVideo";
 "CFBundleProductName" = "123";
 "CloudServerAddress" = "cloud.hexmeet.com";
-"CloudLocationServerAddress" = "cloudcenter.hexmeet.com";
 "applyUrl" = "http://www.hjtcloud.com/try";
 "NSHumanReadableCopyright"= "版权所有 © 2019 北京中创视讯科技有限公司  保留一切权利";
 "NSCameraUsageDescription" = "视频应用需要获取您的相机权限";

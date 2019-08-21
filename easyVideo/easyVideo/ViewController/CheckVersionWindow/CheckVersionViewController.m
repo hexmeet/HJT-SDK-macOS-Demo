@@ -52,7 +52,7 @@ typedef enum _DownloadState {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadUrl:) name:DOWNLOADURL object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLanguage:) name:CHANGELANGUAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dontneedupload) name:DONTNEEDUPLODE object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closewindow) name:CLOSEUPLOADWINODW object:nil];
 }
 
 - (void)viewDidDisappear
@@ -61,6 +61,7 @@ typedef enum _DownloadState {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:DOWNLOADURL object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CHANGELANGUAGE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:DONTNEEDUPLODE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:CLOSEUPLOADWINODW object:nil];
 }
 
 #pragma mark - ButtonMethod
@@ -140,6 +141,11 @@ typedef enum _DownloadState {
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request];
     [dataTask resume];
+}
+
+- (void)closewindow
+{
+    [self.view.window close];
 }
 
 /** user click open file btn */

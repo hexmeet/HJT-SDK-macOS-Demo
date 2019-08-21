@@ -293,7 +293,6 @@
         }
         
         ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-        appDelegate.mainWindowController = connectingWindow;
         [connectingWindow.window orderFront:nil];
         
         if (!issetVideo) {
@@ -344,7 +343,6 @@
             Notifications(CLOSECONNECTINGWINDOW);
             DDLogInfo(@"[Info] 10030 User anonymous logins successful username:%@, displayName: %@, org: %@, cellphone: %@, email: %@", user.username, user.displayName, user.org, user.cellphone, user.email);
             ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-            self->appDelegate.mainWindowController = connectingWindow;
             [connectingWindow.window orderFront:nil];
             
         }
@@ -384,7 +382,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         EVServerError error = info.err.code;
-        //1001 2001 2005 2015 2031 2033 2035
+        //1001   2005 2015 2031 2033 2035
         DDLogWarn(@"[Warn] 10040 user join meeting failure errorcode:%lu", (unsigned long)error);
         if (error == EVServerInvalidToken) {
             self->hub.hidden = NO;
@@ -409,6 +407,21 @@
         }else if (error == EvServerTrialPeriodExpired) {
             self->hub.hidden = NO;
             self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.trialexpired");
+        }else if (error == 2011) {
+            self->hub.hidden = NO;
+            self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2011");
+        }else if (error == 2009) {
+            self->hub.hidden = NO;
+            self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2009");
+        }else if (error == 2024) {
+            self->hub.hidden = NO;
+            self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2024");
+        }else if (error == 2025) {
+            self->hub.hidden = NO;
+            self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2025");
+        }else if (error == 2007) {
+            self->hub.hidden = NO;
+            self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2007");
         }else {
             self->hub.hidden = NO;
             self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%lu", localizationBundle(@"alert.joinmeetingerr"), (unsigned long)info.err.code];
@@ -416,7 +429,7 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:PORTMPT object:[NSString stringWithFormat:@"%lu", (unsigned long)info.err.code]];
         
-        [self persendMethod:2];
+        [self persendMethod:3];
         Notifications(CLOSECONNECTINGWINDOW);
         self->appDelegate.isInTheMeeting = NO;
     });
@@ -448,7 +461,7 @@
 #pragma mark - Notification
 - (void)closeJoinWindow
 {
-//    [self.view.window close];
+    [self.view.window orderOut:nil];
 }
 
 - (void)cancelCall
@@ -520,9 +533,6 @@
     [appDelegate.evengine setUserImage:[EVUtils bundleFile:@"bg_videomute.png"] filename:downloadimagepath];
     
     ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-    
-    appDelegate.mainWindowController = connectingWindow;
-    
     [connectingWindow.window orderFront:nil];
     
     if (!issetVideo) {
@@ -574,41 +584,8 @@
 - (void)webJoinAction:(NSNotification *)sender
 {
     NSMutableDictionary *dic = sender.object;
-    NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
-    [setDic setValue:dic[@"confid"] forKey:@"confId"];
-    [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
-    
-    NSString *downloadimagepath = [[EVUtils get_current_app_path]stringByAppendingPathComponent:@"header.jpg"];
-    [appDelegate.evengine setUserImage:[EVUtils bundleFile:@"bg_videomute.png"] filename:downloadimagepath];
-    
-    Notifications(CLOSECONNECTINGWINDOW);
-    ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-    appDelegate.mainWindowController = connectingWindow;
-    [connectingWindow.window orderFront:nil];
-    
-    if (!issetVideo) {
-        
-        DDLogInfo(@"[Info] 10031 Start Video");
-        
-        Notifications(CLOSELOCALWINDOW);
-        localWindow = [LocalWindowController windowController];
-        
-        Notifications(CLOSEVIDEOHOMEWINDOW);
-        windowControl = [VideoHomeWindowController windowController];
-        issetVideo = YES;
-    }
-    
-    [NSUSERDEFAULT setValue:@"NO" forKey:@"anonymous"];
-    [NSUSERDEFAULT synchronize];
-    
-    HLog(@"1111111111111AUTOWEBJOIN%@", [NSUSERDEFAULT objectForKey:@"anonymous"]);
-    
-    [appDelegate.evengine setDelegate:self];
-//    NSString *disName = dic[@"displayname"];
-//    if (disName.length == 0) {
-//        disName = [EVUtils judgeString:NSUserName()];
-//    }
-    [appDelegate.evengine joinConference:dic[@"confid"] display_name:@"" password:dic[@"password"]];
+    [self.view.window makeKeyAndOrderFront:nil];
+    self.accoutTF.stringValue = dic[@"confid"];
 }
 
 - (void)removeVideo
@@ -722,7 +699,6 @@
     }
     
     ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-    appDelegate.mainWindowController = connectingWindow;
     [connectingWindow.window orderFront:nil];
     
     if (!issetVideo) {

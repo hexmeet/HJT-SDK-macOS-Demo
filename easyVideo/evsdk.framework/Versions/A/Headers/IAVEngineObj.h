@@ -1,11 +1,16 @@
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
+#endif
 #import "EVCommonObj.h"
 
 @protocol AVEngineDelegate <EVCommonDelegate>
 @optional
 - (void)onLoginSucceed:(EVUserInfo *_Nonnull)user;
 - (void)onSIPRegister:(BOOL)registered;
+- (void)onSIPForceClear;
 @end
 
 //////////////////////////////

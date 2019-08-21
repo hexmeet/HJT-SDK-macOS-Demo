@@ -18,7 +18,7 @@
 "login.window.servertf" = "Server";
 "login.window.usertf" = "Account/Mobile/Email";
 "login.window.passwordtf" = "Password";
-"login.window.advanced.settings" = "Advanced Settings";
+"login.window.advanced.settings" = "More";
 "login.window.advanced.port" = "Port (Optional)";
 "login.window.confid" = "Meeting ID";
 "login.window.displayname" = "Username in meeting";
@@ -74,8 +74,14 @@
 "home.invited.Meeting" = "You are invited to join meeting:";
 "home.joinmeetinginput" = "Input meeting ID(plus *password)";
 "home.signl.title" = "Media Statistic";
+"home.joinmeeting" = "join the meeting";
 "video.statistics.column.encrypted" = "Encrypted";
 "video.statistics.column.unencrypted" = "Unencrypted";
+"video.content.save" = "Save";
+"video.content.stop" = "Stop";
+"video.sharescreen" = "Select share screen";
+"video.share"= "Share";
+"video.screenimage" = "Screen";
 
 /* Video */
 "video.openlocalvideo" = "Show Local Video";
@@ -109,6 +115,7 @@
 "video.statistics.column.farEnd.video" = "Far End(Video)";
 "video.statistics.column.thisEnd.content" = "This End(Content)";
 "video.statistics.column.farEnd.content" = "Far End(Content)";
+"video.localdisplayname" = "Me";
 
 /* Image */
 "Image.Company" = "logo_login_title_en";
@@ -133,12 +140,14 @@
 "alert.loadingerror" = "Load failed check your network";
 "alert.reload" = "Reload the";
 "alert.modifysuccess" = "Modify success";
-"alert.invalidConfNumber" = "Invalid meeting ID";
-"alert.meetingnotstart" = "The meeting has not started yet";
-"alert.cloudnotactivat" = "The called cloud platform is not activated";
-"alert.meetingdosenotanonymouscall" = "This meeting does not allow anonymous calls";
-"alert.allowmeeting" = "Only the conference room owner is allowed to activate the conference room";
-"alert.trialexpired" = "Trial expired";
+"alert.sharesuccess" = "Share success";
+"alert.nosharepermission" = "The request for sending conent is denied due to lack of permission.";
+"alert.invalidConfNumber" = "Invalid meeting ID.";
+"alert.meetingnotstart" = "Invalid meeting ID or meeting has not started yet, please double check.";
+"alert.cloudnotactivat" = "The called cloud platform is not activated.";
+"alert.meetingdosenotanonymouscall" = "This meeting room does not allow anonymous calls.";
+"alert.allowmeeting" = "Only the owner can activate the meeting room.";
+"alert.trialexpired" = "Trial expired.";
 "alert.limit" = "The number of participants has reached the limit.";
 "alert.joinmeetingerr" = "Join meeting error:";
 "alert.inputpassword" = "Input meeting password";
@@ -154,7 +163,7 @@
 "alert.note.networkNotStable" = "Network is not stable now, it may impact your call experience.";
 "alert.handsup.approve" = "Speech request has been sent";
 "alert.cannotconnectserver" = "Unable to connect to server";
-"alert.loginerr" = "Login failed:";
+"alert.loginerr" = "Invalid user.";
 "alert.open.carmer" = "Video application needs to get camera permissions";
 "alert.open.micphone" = "Video application needs to get microphone permissions";
 "alert.update" = "Update";
@@ -171,11 +180,24 @@
 "alert.network_poor" = "Network is in very poor status, recommend checking network or switching to better network.";
 "alert.network_insufficient" = "Network bandwidth is insufficient, it may impact your conferencing experience.";
 "alert.network_shortage" = "Network bandwidth is in serious shortage, recommend checking network bandwidth or switching to better network.";
+"alert.stopshare" = "Sure you want to stop sharing?";
+"alert.prompt" = "Prompt";
+"alert.passworderror1" = "Incorrect password. Your account will be locked (for 5 minutes) after";
+"alert.passworderror2" = "more failed attempts.";
+"alert.passworderror3" = "Your account has been disabled. Please contact your administrator.";
+"alert.cantconnert.server" = "Unable to connect to the server. Please check your network connection.";
+"alert.micmute" = "Microphone Muted";
 
 /** Error code */
 "errorcode.1100" = "Invalid user.";
 "error.resolve" = "Couldn't resolve host name";
-"error.10009" = "Meeting number does not exist";
+"error.10009" = "Invalid user.";
+"error.1112" = "Administrator is not allowed to access app. Please use user account.";
+"error.2011" = "Meeting room expired.";
+"error.2009" = "There is no meeting room bound to the called group.";
+"error.2024" = "The number of participants has reached the organization limit.";
+"error.2025" = "The number of participants has reached the platform limit.";
+"error.2007" = "Call timeout, please retry.";
 
 /** Menu */
 "menu.menuName" = "easyVideo";

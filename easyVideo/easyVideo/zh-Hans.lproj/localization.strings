@@ -18,7 +18,7 @@
 "login.window.servertf" = "服务器";
 "login.window.usertf" = "账号/手机/邮箱";
 "login.window.passwordtf" = "密码";
-"login.window.advanced.settings" = "高级设置";
+"login.window.advanced.settings" = "更多";
 "login.window.advanced.port" = "端口（选填）";
 "login.window.confid" = "输入会议号码";
 "login.window.displayname" = "会议中显示的用户名";
@@ -74,8 +74,14 @@
 "home.invited.Meeting" = "您被邀请加入会议:";
 "home.joinmeetinginput" = "请输入会议号码(加*密码)";
 "home.signl.title" = "媒体统计信息";
+"home.joinmeeting" = "即将进入会议";
 "video.statistics.column.encrypted" = "加密";
 "video.statistics.column.unencrypted" = "未加密";
+"video.content.save" = "保存";
+"video.content.stop" = "停止";
+"video.sharescreen" = "选择共享屏幕";
+"video.share"= "分享";
+"video.screenimage" = "屏幕";
 
 /* Video */
 "video.openlocalvideo" = "开启本地视频";
@@ -109,6 +115,7 @@
 "video.statistics.column.farEnd.video" = "视频接收";
 "video.statistics.column.thisEnd.content" = "内容发送";
 "video.statistics.column.farEnd.content" = "内容接收";
+"video.localdisplayname" = "我";
 
 /* Image */
 "Image.Company" = "logo_login_title_zh";
@@ -133,13 +140,15 @@
 "alert.loadingerror" = "加载失败请检查您的网络";
 "alert.reload" = "重新加载";
 "alert.modifysuccess" = "修改成功";
-"alert.invalidConfNumber" = "无效的会议室号码";
-"alert.meetingnotstart" = "会议还没有开始";
+"alert.sharesuccess" = "分享成功";
+"alert.nosharepermission" = "由于没有权限，发送内容被拒绝";
+"alert.invalidConfNumber" = "无效的会议号码";
+"alert.meetingnotstart" = "呼叫失败，会议号码不存在或者此会议还未开始，请检查后重试";
 "alert.cloudnotactivat" = "您呼叫的云平台尚未激活";
-"alert.meetingdosenotanonymouscall" = "本会议不允许匿名呼叫";
+"alert.meetingdosenotanonymouscall" = "该会议不允许匿名呼叫";
 "alert.allowmeeting" = "只允许会议室拥有者激活会议室";
 "alert.trialexpired" = "试用已过期";
-"alert.limit" = "当前会议室已达到上限";
+"alert.limit" = "当前入会人数已达上限";
 "alert.joinmeetingerr" = "入会失败 错误码:";
 "alert.inputpassword" = "请输入会议密码";
 "alert.uploaded.successfully" = "上传成功";
@@ -154,7 +163,7 @@
 "alert.note.networkNotStable" = "当前网络不稳定，可能会影响您的会话质量";
 "alert.handsup.approve" = "发言申请已发送，请稍候";
 "alert.cannotconnectserver" = "无法连接服务器";
-"alert.loginerr" = "登录失败:";
+"alert.loginerr" = "无效的用户";
 "alert.open.carmer" = "视频应用需要获取您的相机权限";
 "alert.open.micphone" = "视频应用需要获取您的麦克风权限";
 "alert.update" = "更新";
@@ -171,11 +180,24 @@
 "alert.network_poor" = "当前网络连接很差，建议检查网络连接或者切换网络";
 "alert.network_insufficient" = "当前网络带宽不足，可能会影响到您的会议体验";
 "alert.network_shortage" = "当前网络带宽严重不足，建议检查网络带宽或者切换网络";
+"alert.stopshare" = "您确定要停止分享？";
+"alert.prompt" = "提示";
+"alert.passworderror1" = "密码错误。账号将在";
+"alert.passworderror2" = "次失败尝试后被锁定( 5 分钟)";
+"alert.passworderror3" = "密码错误次数已达上限，账号已被锁定，5分钟后自动解除";
+"alert.cantconnert.server" = "无法连接到服务，请检查网络";
+"alert.micmute" = "麦克风已静音";
 
 /** Error code */
-"errorcode.1100" = "无效的用户名";
+"errorcode.1100" = "无效的用户";
 "error.resolve" = "无法解析主机名";
-"error.10009" = "会议号码不存在";
+"error.10009" = "无效的用户";
+"error.1112" = "系统管理员无登录应用权限，请使用用户账号登录";
+"error.2011" = "您呼叫的云会议室已过期";
+"error.2009" = "您呼叫的群组尚未绑定云会议室";
+"error.2024" = "当前与会人数已达组织端口上限";
+"error.2025" = "当前与会人数已达平台会议端口上限";
+"error.2007" = "呼叫超时，请重试";
 
 /** Menu */
 "menu.menuName" = "easyVideo";

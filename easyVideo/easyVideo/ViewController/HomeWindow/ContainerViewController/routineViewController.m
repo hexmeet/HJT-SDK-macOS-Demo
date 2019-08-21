@@ -24,7 +24,7 @@ NSString * const BUCKET_NAME = @"hexmeet-log";
 NSString * const UPLOAD_OBJECT_KEY = @"hexmeethjt/mac";
 NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
 
-@synthesize languagecomboBox, languageTitle, diagnosisBtn, diagnosisTitle, applicationTitle, autoLoginBtn, autoAnserBtn, highFrameRateBtn;
+@synthesize languagecomboBox, languageTitle, diagnosisBtn, diagnosisTitle, applicationTitle, autoLoginBtn, autoAnserBtn, highFrameRateBtn, enableHD;
 
 - (void)viewWillAppear
 {
@@ -84,6 +84,7 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
     [autoLoginBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autologin") color:BLACKCOLOR];
     [autoAnserBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autoanswer") color:BLACKCOLOR];
     [highFrameRateBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.highframerate") color:BLACKCOLOR];
+    [enableHD changeLeftButtonattribute:@"1080p" color:BLACKCOLOR];
 }
 
 - (void)getSetInfo
@@ -108,6 +109,13 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
             highFrameRateBtn.state = NSOnState;
         }else {
             highFrameRateBtn.state = NSOffState;
+        }
+    }
+    if (infoDic[@"1080p"]) {
+        if ([infoDic[@"1080p"] isEqualToString:@"YES"]) {
+            enableHD.state = NSOnState;
+        }else {
+            enableHD.state = NSOffState;
         }
     }
 }
@@ -137,6 +145,12 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
     }else {
         [setDic setValue:@"NO" forKey:@"highFrameRate"];
         [appDelegate.evengine enableHighFPS:NO];
+    }
+    if (enableHD.state == NSOnState) {
+        [setDic setValue:@"YES" forKey:@"1080p"];
+        [appDelegate.evengine enableHD:YES];
+    }else {
+        [appDelegate.evengine enableHD:NO];
     }
     
     [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];

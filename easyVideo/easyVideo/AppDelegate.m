@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "SignalHandler.h"
 #import "UncaughtExceptionHandler.h"
+#import <IOKit/pwr_mgt/IOPMLib.h>
 
 //NSString * const BUCKET_NAME = ;
 //NSString * const UPLOAD_OBJECT_KEY = @"hexmeethjt/mac";
@@ -62,6 +63,8 @@
     self.uploadWindow = [UploadWindowController windowController];
     
     [self languageLocalization];
+    
+    [self preventSystemSleep];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginSucceed) name:LOGINGSUCCEED object:nil];
 }
@@ -181,6 +184,13 @@
         [evengine enableHighFPS:YES];
         NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
         [setDic setValue:@"YES" forKey:@"highFrameRate"];
+        [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
+    }
+    
+    //第一次默认开启自动登录
+    if (!infoDic[@"autoLog"]) {
+        NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+        [setDic setValue:@"YES" forKey:@"autoLog"];
         [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
     }
     
@@ -452,6 +462,34 @@
         [self.mainWindowController.window makeKeyAndOrderFront:self];
     }
     return YES;
+}
+
+
+#pragma mark - 防止系统休眠
+- (void)preventSystemSleep {
+    // kIOPMAssertionTypeNoDisplaySleep prevents display sleep,
+    // kIOPMAssertionTypeNoIdleSleep prevents idle sleep
+    
+    // reasonForActivity is a descriptive string used by the system whenever it needs
+    // to tell the user why the system is not sleeping. For example,
+    // "Mail Compacting Mailboxes" would be a useful string.
+    
+    //  NOTE: IOPMAssertionCreateWithName limits the string to 128 characters.
+    CFStringRef reasonForActivity= CFSTR("Describe Activity Type");
+    
+    IOPMAssertionID assertionID;
+    IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+                                                   kIOPMAssertionLevelOn, reasonForActivity, &assertionID);
+    if (success == kIOReturnSuccess)
+    {
+        
+        // Add the work you need to do without
+        // the system sleeping here.
+        
+        //        success = IOPMAssertionRelease(assertionID);
+        // The system will be able to sleep again.
+    }
+    
 }
 
 #pragma mark - NSURLSessionDataDelegate

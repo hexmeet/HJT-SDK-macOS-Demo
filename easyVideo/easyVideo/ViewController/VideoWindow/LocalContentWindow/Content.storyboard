@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="a7y-Ec-59w">
+            <objects>
+                <windowController storyboardIdentifier="LocalContentWindowController" id="HpV-8o-Huf" customClass="LocalContentWindowController" sceneMemberID="viewController">
+                    <window key="window" identifier="myWindow" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titleVisibility="hidden" id="B6Y-BP-cXD" customClass="myWindow">
+                        <windowStyleMask key="styleMask" closable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="196" y="240" width="960" height="540"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <connections>
+                            <outlet property="delegate" destination="HpV-8o-Huf" id="I2C-rq-Ug4"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="41E-9f-oRF" kind="relationship" relationship="window.shadowedContentViewController" id="dC2-U7-iOe"/>
+                    </connections>
+                </windowController>
+                <customObject id="Bzh-yV-9NI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="43" y="-17"/>
+        </scene>
+        <!--Local Contetn View Controller-->
+        <scene sceneID="PaF-Yy-CT7">
+            <objects>
+                <viewController storyboardIdentifier="LocalContetnViewController" id="41E-9f-oRF" customClass="LocalContetnViewController" sceneMemberID="viewController">
+                    <view key="view" id="cjH-cX-tba">
+                        <rect key="frame" x="0.0" y="0.0" width="960" height="540"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="I1g-G3-REp">
+                                <rect key="frame" x="0.0" y="0.0" width="960" height="540"/>
+                                <subviews>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="NYu-At-3GD">
+                                        <rect key="frame" x="400" y="464" width="160" height="56"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qfv-9A-t8R">
+                                                <rect key="frame" x="29" y="4" width="33" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="保存" id="YXX-lh-pJg">
+                                                    <font key="font" metaFont="cellTitle"/>
+                                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <button translatesAutoresizingMaskIntoConstraints="NO" id="UAG-MA-0a7" customClass="SWSTAnswerButton">
+                                                <rect key="frame" x="29" y="3" width="32" height="48"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="48" id="jWp-SP-hYJ"/>
+                                                    <constraint firstAttribute="width" constant="32" id="rYE-Ey-kJb"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_save" imagePosition="above" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="WdE-Xt-8fs">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="cellTitle"/>
+                                                </buttonCell>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="hoverImage" value="icon_save_hover"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="normalImage" value="icon_save"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="selectedImage" value="icon_save"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="buttonMethod:" target="41E-9f-oRF" id="2JV-EG-gWZ"/>
+                                                </connections>
+                                            </button>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dr0-oe-HgO">
+                                                <rect key="frame" x="99" y="4" width="33" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="停止" id="UWO-nI-0Zw">
+                                                    <font key="font" metaFont="cellTitle"/>
+                                                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <button translatesAutoresizingMaskIntoConstraints="NO" id="1Jf-OT-9yU" customClass="SWSTAnswerButton">
+                                                <rect key="frame" x="99" y="3" width="32" height="48"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="48" id="6gf-OS-Upn"/>
+                                                    <constraint firstAttribute="width" constant="32" id="f5h-Us-T6N"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_stop" imagePosition="above" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="mgH-iQ-rDN">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="cellTitle"/>
+                                                </buttonCell>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="hoverImage" value="icon_stop_hover"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="selectedImage" value="icon_stop"/>
+                                                    <userDefinedRuntimeAttribute type="image" keyPath="normalImage" value="icon_stop"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="buttonMethod:" target="41E-9f-oRF" id="LUB-e6-ITS"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="1Jf-OT-9yU" firstAttribute="top" secondItem="NYu-At-3GD" secondAttribute="top" constant="5" id="1zr-T3-WsL"/>
+                                            <constraint firstAttribute="bottom" secondItem="qfv-9A-t8R" secondAttribute="bottom" constant="4" id="7P9-tS-InL"/>
+                                            <constraint firstAttribute="height" constant="56" id="BmO-jI-mTb"/>
+                                            <constraint firstItem="UAG-MA-0a7" firstAttribute="top" secondItem="NYu-At-3GD" secondAttribute="top" constant="5" id="QWZ-09-yCF"/>
+                                            <constraint firstItem="qfv-9A-t8R" firstAttribute="centerX" secondItem="UAG-MA-0a7" secondAttribute="centerX" id="Rsz-MY-CG8"/>
+                                            <constraint firstItem="1Jf-OT-9yU" firstAttribute="centerX" secondItem="NYu-At-3GD" secondAttribute="centerX" constant="35" id="af1-c8-ym2"/>
+                                            <constraint firstAttribute="width" constant="160" id="erO-tA-QJT"/>
+                                            <constraint firstAttribute="bottom" secondItem="dr0-oe-HgO" secondAttribute="bottom" constant="4" id="fmG-v3-fgR"/>
+                                            <constraint firstAttribute="bottom" secondItem="1Jf-OT-9yU" secondAttribute="bottom" constant="3" id="gCx-59-IDn"/>
+                                            <constraint firstItem="dr0-oe-HgO" firstAttribute="centerX" secondItem="1Jf-OT-9yU" secondAttribute="centerX" id="ith-14-rBH"/>
+                                            <constraint firstItem="UAG-MA-0a7" firstAttribute="centerX" secondItem="NYu-At-3GD" secondAttribute="centerX" constant="-35" id="uNv-ew-mcU"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                                <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="wantsLayer" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="NYu-At-3GD" firstAttribute="centerX" secondItem="I1g-G3-REp" secondAttribute="centerX" id="Mo6-Le-nsM"/>
+                                    <constraint firstItem="NYu-At-3GD" firstAttribute="top" secondItem="I1g-G3-REp" secondAttribute="top" constant="20" id="Y9S-UZ-4H0"/>
+                                </constraints>
+                            </customView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="I1g-G3-REp" firstAttribute="leading" secondItem="cjH-cX-tba" secondAttribute="leading" id="1kq-r8-Z9t"/>
+                            <constraint firstAttribute="bottom" secondItem="I1g-G3-REp" secondAttribute="bottom" id="Xfe-KA-Hkw"/>
+                            <constraint firstItem="I1g-G3-REp" firstAttribute="top" secondItem="cjH-cX-tba" secondAttribute="top" id="gM6-Xn-Q2g"/>
+                            <constraint firstAttribute="trailing" secondItem="I1g-G3-REp" secondAttribute="trailing" id="tkb-Ow-1XC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="localView" destination="I1g-G3-REp" id="SKb-5t-fM4"/>
+                        <outlet property="saveBtn" destination="UAG-MA-0a7" id="Y5J-33-3kN"/>
+                        <outlet property="saveTitle" destination="qfv-9A-t8R" id="LCa-Qe-pad"/>
+                        <outlet property="stopBtn" destination="1Jf-OT-9yU" id="JzK-IQ-0ui"/>
+                        <outlet property="stopTitle" destination="dr0-oe-HgO" id="oFF-fu-gYh"/>
+                    </connections>
+                </viewController>
+                <customObject id="Z5V-aq-laQ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1040" y="-43"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="icon_save" width="32" height="32"/>
+        <image name="icon_save_hover" width="32" height="32"/>
+        <image name="icon_stop" width="32" height="32"/>
+        <image name="icon_stop_hover" width="32" height="32"/>
+    </resources>
+</document>

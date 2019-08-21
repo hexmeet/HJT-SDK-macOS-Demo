@@ -4,7 +4,6 @@
 "CFBundleName" = "easyVideo";
 "CFBundleProductName" = "123";
 "CloudServerAddress" = "cloud.hexmeet.com";
-"CloudLocationServerAddress" = "cloudcenter.hexmeet.com";
 "applyUrl" = "http://www.hjtcloud.com/try";
 "NSHumanReadableCopyright"= "Copyright © 2019 Beijing Zhong Chuang Shi Xun Technology Co., Ltd. All rights reserved.";
 "NSCameraUsageDescription" = "Video application needs to get camera permissions";
