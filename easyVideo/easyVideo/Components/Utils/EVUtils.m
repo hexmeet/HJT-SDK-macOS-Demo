@@ -274,4 +274,14 @@
     freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "a++", stderr);
 }
 
++ (NSString *)getCurrentTimes{
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSDate *datenow = [NSDate date];
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    
+    return currentTimeString;
+}
+
 @end

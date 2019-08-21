@@ -64,4 +64,7 @@
 /** 日志大小设置 */
 + (void)saveNewLogWhenOldLogTooBig;
 
+/** 获取当前时间 */
++ (NSString *)getCurrentTimes;
+
 @end

@@ -10,6 +10,8 @@
 		3CDC5C2EFEB448B5315FDD1D /* libPods-easyVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2468E2AB863878BD51748CAB /* libPods-easyVideo.a */; };
 		A3C5422621E087E20045A581 /* releasebuild.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A3C5422521E087E20045A581 /* releasebuild.xcconfig */; };
 		A3C5422821E088040045A581 /* debugbuild.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A3C5422721E088040045A581 /* debugbuild.xcconfig */; };
+		A6B76135230BD4C100B3ABE5 /* evsdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D34211D97B2009E80F3 /* evsdk.framework */; };
+		A6B76136230BD4C100B3ABE5 /* evsdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D34211D97B2009E80F3 /* evsdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BDF65B4FE548107EDA2E5343 /* libPods-easyVideoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A612B729E6FF589907CD6A18 /* libPods-easyVideoUITests.a */; };
 		F6733796C1EC9ABBFD7E1CBA /* libPods-easyVideoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E49A4960B89DC77B86C0CFB /* libPods-easyVideoTests.a */; };
 		FC111D6121770751000A089E /* UploadWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC111D6021770751000A089E /* UploadWindowController.m */; };
@@ -106,7 +108,19 @@
 		FC7320692137C48D0094575A /* VideoHomeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7320682137C48D0094575A /* VideoHomeWindowController.m */; };
 		FC73206C2137C4A00094575A /* VideoHomeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FC73206B2137C4A00094575A /* VideoHomeWindow.m */; };
 		FC7320722137C4F10094575A /* VideoHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7320712137C4F10094575A /* VideoHomeViewController.m */; };
+		FC782B0A230288DD00FC5B35 /* JoinWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FC782B09230288DD00FC5B35 /* JoinWindow.m */; };
+		FC782B0D230288F200FC5B35 /* JoinWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC782B0C230288F200FC5B35 /* JoinWindowViewController.m */; };
+		FC782B1023029A2900FC5B35 /* JoinWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC782B0F23029A2900FC5B35 /* JoinWindowController.m */; };
 		FC7D161C2148E38B00735341 /* NSImage+SubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FC7D161B2148E38B00735341 /* NSImage+SubImage.m */; };
+		FC955A4D228CF283004B5012 /* LocalContetnViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A46228CF283004B5012 /* LocalContetnViewController.m */; };
+		FC955A4E228CF283004B5012 /* myWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A47228CF283004B5012 /* myWindow.m */; };
+		FC955A4F228CF283004B5012 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC955A49228CF283004B5012 /* Content.storyboard */; };
+		FC955A50228CF283004B5012 /* LocalContentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A4C228CF283004B5012 /* LocalContentWindowController.m */; };
+		FC955A59228CFF2A004B5012 /* ScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A52228CFF29004B5012 /* ScreenView.m */; };
+		FC955A5A228CFF2A004B5012 /* ScreenView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC955A56228CFF29004B5012 /* ScreenView.xib */; };
+		FC955A5B228CFF2A004B5012 /* ScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A57228CFF29004B5012 /* ScreenViewController.m */; };
+		FC955A5C228CFF2A004B5012 /* ScreenWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A58228CFF29004B5012 /* ScreenWindowController.m */; };
+		FC955A5F228D02F0004B5012 /* RectWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FC955A5E228D02F0004B5012 /* RectWindow.m */; };
 		FCBA42CB211BE21B00229E93 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBA42CA211BE21B00229E93 /* AppDelegate.m */; };
 		FCBA42D1211BE21B00229E93 /* easyVideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FCBA42CF211BE21B00229E93 /* easyVideo.xcdatamodeld */; };
 		FCBA42D3211BE21C00229E93 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCBA42D2211BE21C00229E93 /* Assets.xcassets */; };
@@ -114,16 +128,6 @@
 		FCBA42D9211BE21C00229E93 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBA42D8211BE21C00229E93 /* main.m */; };
 		FCBA42E4211BE21C00229E93 /* easyVideoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBA42E3211BE21C00229E93 /* easyVideoTests.m */; };
 		FCBA42EF211BE21C00229E93 /* easyVideoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCBA42EE211BE21C00229E93 /* easyVideoUITests.m */; };
-		FCCA8D23211D8AB8009E80F3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D22211D8AB8009E80F3 /* QuartzCore.framework */; };
-		FCCA8D25211D9754009E80F3 /* libldap.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D24211D9754009E80F3 /* libldap.tbd */; };
-		FCCA8D27211D975F009E80F3 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D26211D975F009E80F3 /* libresolv.tbd */; };
-		FCCA8D29211D976B009E80F3 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D28211D976B009E80F3 /* libiconv.tbd */; };
-		FCCA8D2B211D9775009E80F3 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D2A211D9774009E80F3 /* libstdc++.tbd */; };
-		FCCA8D2D211D977C009E80F3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D2C211D977C009E80F3 /* CoreMedia.framework */; };
-		FCCA8D2F211D9784009E80F3 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D2E211D9783009E80F3 /* CoreAudio.framework */; };
-		FCCA8D31211D978B009E80F3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D30211D978B009E80F3 /* AudioToolbox.framework */; };
-		FCCA8D33211D9791009E80F3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D32211D9791009E80F3 /* AVFoundation.framework */; };
-		FCCA8D35211D97B2009E80F3 /* evsdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCA8D34211D97B2009E80F3 /* evsdk.framework */; };
 		FCFACA722154AF1F00587E25 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCFACA712154AF1F00587E25 /* SystemConfiguration.framework */; };
 		FCFACA742154AF2A00587E25 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCFACA732154AF2900587E25 /* CoreTelephony.framework */; };
 		FCFACA822154C2D900587E25 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = FCFACA802154C2D900587E25 /* GTMBase64.m */; };
@@ -153,6 +157,20 @@
 			remoteInfo = easyVideo;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6B76137230BD4C100B3ABE5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A6B76136230BD4C100B3ABE5 /* evsdk.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1A5607F57D897ED57350D542 /* Pods-easyVideoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-easyVideoUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-easyVideoUITests/Pods-easyVideoUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -344,8 +362,30 @@
 		FC73206B2137C4A00094575A /* VideoHomeWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoHomeWindow.m; sourceTree = "<group>"; };
 		FC7320702137C4F10094575A /* VideoHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoHomeViewController.h; sourceTree = "<group>"; };
 		FC7320712137C4F10094575A /* VideoHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoHomeViewController.m; sourceTree = "<group>"; };
+		FC782B08230288DD00FC5B35 /* JoinWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JoinWindow.h; sourceTree = "<group>"; };
+		FC782B09230288DD00FC5B35 /* JoinWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JoinWindow.m; sourceTree = "<group>"; };
+		FC782B0B230288F200FC5B35 /* JoinWindowViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JoinWindowViewController.h; sourceTree = "<group>"; };
+		FC782B0C230288F200FC5B35 /* JoinWindowViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JoinWindowViewController.m; sourceTree = "<group>"; };
+		FC782B0E23029A2900FC5B35 /* JoinWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JoinWindowController.h; sourceTree = "<group>"; };
+		FC782B0F23029A2900FC5B35 /* JoinWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JoinWindowController.m; sourceTree = "<group>"; };
 		FC7D161A2148E38B00735341 /* NSImage+SubImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSImage+SubImage.h"; sourceTree = "<group>"; };
 		FC7D161B2148E38B00735341 /* NSImage+SubImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSImage+SubImage.m"; sourceTree = "<group>"; };
+		FC955A46228CF283004B5012 /* LocalContetnViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalContetnViewController.m; sourceTree = "<group>"; };
+		FC955A47228CF283004B5012 /* myWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myWindow.m; sourceTree = "<group>"; };
+		FC955A48228CF283004B5012 /* LocalContentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalContentWindowController.h; sourceTree = "<group>"; };
+		FC955A49228CF283004B5012 /* Content.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
+		FC955A4A228CF283004B5012 /* myWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myWindow.h; sourceTree = "<group>"; };
+		FC955A4B228CF283004B5012 /* LocalContetnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalContetnViewController.h; sourceTree = "<group>"; };
+		FC955A4C228CF283004B5012 /* LocalContentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalContentWindowController.m; sourceTree = "<group>"; };
+		FC955A52228CFF29004B5012 /* ScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenView.m; sourceTree = "<group>"; };
+		FC955A53228CFF29004B5012 /* ScreenWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenWindowController.h; sourceTree = "<group>"; };
+		FC955A54228CFF29004B5012 /* ScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenViewController.h; sourceTree = "<group>"; };
+		FC955A55228CFF29004B5012 /* ScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenView.h; sourceTree = "<group>"; };
+		FC955A56228CFF29004B5012 /* ScreenView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenView.xib; sourceTree = "<group>"; };
+		FC955A57228CFF29004B5012 /* ScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenViewController.m; sourceTree = "<group>"; };
+		FC955A58228CFF29004B5012 /* ScreenWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenWindowController.m; sourceTree = "<group>"; };
+		FC955A5D228D02EF004B5012 /* RectWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RectWindow.h; sourceTree = "<group>"; };
+		FC955A5E228D02F0004B5012 /* RectWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RectWindow.m; sourceTree = "<group>"; };
 		FCBA42C6211BE21B00229E93 /* easyVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = easyVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCBA42C9211BE21B00229E93 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		FCBA42CA211BE21B00229E93 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -401,18 +441,9 @@
 			files = (
 				FC599BF1216CBED400844AEE /* IOKit.framework in Frameworks */,
 				FCFC287A215A360D00AF914D /* WebKit.framework in Frameworks */,
+				A6B76135230BD4C100B3ABE5 /* evsdk.framework in Frameworks */,
 				FCFACA742154AF2A00587E25 /* CoreTelephony.framework in Frameworks */,
 				FCFACA722154AF1F00587E25 /* SystemConfiguration.framework in Frameworks */,
-				FCCA8D33211D9791009E80F3 /* AVFoundation.framework in Frameworks */,
-				FCCA8D31211D978B009E80F3 /* AudioToolbox.framework in Frameworks */,
-				FCCA8D2F211D9784009E80F3 /* CoreAudio.framework in Frameworks */,
-				FCCA8D2D211D977C009E80F3 /* CoreMedia.framework in Frameworks */,
-				FCCA8D2B211D9775009E80F3 /* libstdc++.tbd in Frameworks */,
-				FCCA8D29211D976B009E80F3 /* libiconv.tbd in Frameworks */,
-				FCCA8D27211D975F009E80F3 /* libresolv.tbd in Frameworks */,
-				FCCA8D25211D9754009E80F3 /* libldap.tbd in Frameworks */,
-				FCCA8D35211D97B2009E80F3 /* evsdk.framework in Frameworks */,
-				FCCA8D23211D8AB8009E80F3 /* QuartzCore.framework in Frameworks */,
 				3CDC5C2EFEB448B5315FDD1D /* libPods-easyVideo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +611,7 @@
 		FC34A1DD21214F6C007F8994 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				FC955A60228D02F4004B5012 /* RectWindow */,
 				FC54713921A6BC0900760548 /* CrashLog */,
 				FC11D194217DAF3D0014EA36 /* NSTextField+copy */,
 				FC362F1F215DF09200FD87A7 /* NSData+CommonCrypto */,
@@ -908,7 +940,9 @@
 				FC73206B2137C4A00094575A /* VideoHomeWindow.m */,
 				FC7320702137C4F10094575A /* VideoHomeViewController.h */,
 				FC7320712137C4F10094575A /* VideoHomeViewController.m */,
+				FC955A51228CFF29004B5012 /* ScreenSetView */,
 				FC60B06D215216720042F3AD /* ContentWindow */,
+				FC955A45228CF283004B5012 /* LocalContentWindow */,
 				FC31C643214FA790005FFAE2 /* LocalWindow */,
 				FC31C634214F703F005FFAE2 /* Connecting */,
 				FC6B0B1A214A2B1F009D7530 /* EVLayoutManager */,
@@ -931,6 +965,19 @@
 			path = CustomNSButton;
 			sourceTree = "<group>";
 		};
+		FC782B072302883600FC5B35 /* JoinWindow */ = {
+			isa = PBXGroup;
+			children = (
+				FC782B0E23029A2900FC5B35 /* JoinWindowController.h */,
+				FC782B0F23029A2900FC5B35 /* JoinWindowController.m */,
+				FC782B08230288DD00FC5B35 /* JoinWindow.h */,
+				FC782B09230288DD00FC5B35 /* JoinWindow.m */,
+				FC782B0B230288F200FC5B35 /* JoinWindowViewController.h */,
+				FC782B0C230288F200FC5B35 /* JoinWindowViewController.m */,
+			);
+			path = JoinWindow;
+			sourceTree = "<group>";
+		};
 		FC7D16192148E37500735341 /* NSImage+SubImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -938,6 +985,43 @@
 				FC7D161B2148E38B00735341 /* NSImage+SubImage.m */,
 			);
 			path = "NSImage+SubImage";
+			sourceTree = "<group>";
+		};
+		FC955A45228CF283004B5012 /* LocalContentWindow */ = {
+			isa = PBXGroup;
+			children = (
+				FC955A49228CF283004B5012 /* Content.storyboard */,
+				FC955A48228CF283004B5012 /* LocalContentWindowController.h */,
+				FC955A4C228CF283004B5012 /* LocalContentWindowController.m */,
+				FC955A4A228CF283004B5012 /* myWindow.h */,
+				FC955A47228CF283004B5012 /* myWindow.m */,
+				FC955A4B228CF283004B5012 /* LocalContetnViewController.h */,
+				FC955A46228CF283004B5012 /* LocalContetnViewController.m */,
+			);
+			path = LocalContentWindow;
+			sourceTree = "<group>";
+		};
+		FC955A51228CFF29004B5012 /* ScreenSetView */ = {
+			isa = PBXGroup;
+			children = (
+				FC955A56228CFF29004B5012 /* ScreenView.xib */,
+				FC955A53228CFF29004B5012 /* ScreenWindowController.h */,
+				FC955A58228CFF29004B5012 /* ScreenWindowController.m */,
+				FC955A55228CFF29004B5012 /* ScreenView.h */,
+				FC955A52228CFF29004B5012 /* ScreenView.m */,
+				FC955A54228CFF29004B5012 /* ScreenViewController.h */,
+				FC955A57228CFF29004B5012 /* ScreenViewController.m */,
+			);
+			path = ScreenSetView;
+			sourceTree = "<group>";
+		};
+		FC955A60228D02F4004B5012 /* RectWindow */ = {
+			isa = PBXGroup;
+			children = (
+				FC955A5D228D02EF004B5012 /* RectWindow.h */,
+				FC955A5E228D02F0004B5012 /* RectWindow.m */,
+			);
+			path = RectWindow;
 			sourceTree = "<group>";
 		};
 		FCBA42BD211BE21A00229E93 = {
@@ -1023,6 +1107,7 @@
 		FCBA42FD211C13B500229E93 /* LoginWindow */ = {
 			isa = PBXGroup;
 			children = (
+				FC782B072302883600FC5B35 /* JoinWindow */,
 				FC3526A0211D720D004219AA /* RootWindowController.h */,
 				FC3526A1211D720D004219AA /* RootWindowController.m */,
 				FC33B0C9212BCEC100C31036 /* RootWindow.h */,
@@ -1070,6 +1155,7 @@
 				FCBA42C2211BE21B00229E93 /* Sources */,
 				FCBA42C3211BE21B00229E93 /* Frameworks */,
 				FCBA42C4211BE21B00229E93 /* Resources */,
+				A6B76137230BD4C100B3ABE5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1179,6 +1265,7 @@
 				FC362F23215DFA3D00FD87A7 /* image_defaultuser.png in Resources */,
 				FC6528FE21491C7A00A28B9C /* rootca.pem in Resources */,
 				FC708920213FB4BD0062129E /* speaker.wav in Resources */,
+				FC955A5A228CFF2A004B5012 /* ScreenView.xib in Resources */,
 				FC70891E213FB4AC0062129E /* ringtone.wav in Resources */,
 				FC362F22215DFA3D00FD87A7 /* bg_videomute.png in Resources */,
 				FC7031FF215390D6003FF884 /* CustomCell.xib in Resources */,
@@ -1190,6 +1277,7 @@
 				FC6D42F92147A0C500D73909 /* VideoController.xib in Resources */,
 				FC34A2242121884F007F8994 /* localization.strings in Resources */,
 				FC3E9CAB214106AA0095AE27 /* loading.gif in Resources */,
+				FC955A4F228CF283004B5012 /* Content.storyboard in Resources */,
 				FC2FE6852179BCA100DA16D7 /* hjt_logo21024.png in Resources */,
 				FCBA42D6211BE21C00229E93 /* Main.storyboard in Resources */,
 				A3C5422621E087E20045A581 /* releasebuild.xcconfig in Resources */,
@@ -1278,6 +1366,7 @@
 			files = (
 				FC3B3607212EB824009A496F /* ChangePasswordWindowController.m in Sources */,
 				FC3B7F1D2138DA5A0049A25C /* ManagementWindowController.m in Sources */,
+				FC782B0D230288F200FC5B35 /* JoinWindowViewController.m in Sources */,
 				FC3747342146113D00D70B20 /* MicphoneViewController.m in Sources */,
 				FC33B0CE212BD47E00C31036 /* HomeWindow.m in Sources */,
 				FC3846252126CA1B000C5E94 /* HomeWindowController.m in Sources */,
@@ -1288,9 +1377,12 @@
 				FC3A18C62122EA9A00E98BBA /* macHUD.m in Sources */,
 				FC37473F214638EA00D70B20 /* CameraViewController.m in Sources */,
 				FC73205C213792A70094575A /* NSColor+SWExtension.m in Sources */,
+				FC955A50228CF283004B5012 /* LocalContentWindowController.m in Sources */,
 				FC7031FE215390D6003FF884 /* CustomCell.m in Sources */,
 				FC73205D213792A70094575A /* SWSTAnswerButton.m in Sources */,
+				FC782B0A230288DD00FC5B35 /* JoinWindow.m in Sources */,
 				FC37FF75213D2C2B00B11731 /* EVUtils.m in Sources */,
+				FC955A4E228CF283004B5012 /* myWindow.m in Sources */,
 				FC374743214654E800D70B20 /* SignalWindowController.m in Sources */,
 				FC6C3B772130110400C498D3 /* videoViewController.m in Sources */,
 				FC54714B21A6BCA000760548 /* UncaughtExceptionHandler.m in Sources */,
@@ -1300,15 +1392,20 @@
 				FC60B07A21525C530042F3AD /* MeetingWebWindowController.m in Sources */,
 				FC111D6721770799000A089E /* UploadViewController.m in Sources */,
 				FC111D6121770751000A089E /* UploadWindowController.m in Sources */,
+				FC955A59228CFF2A004B5012 /* ScreenView.m in Sources */,
 				FC60B08021525C840042F3AD /* MeetingWebViewController.m in Sources */,
 				FC31C637214F705B005FFAE2 /* ConnectingWindowController.m in Sources */,
 				FC6C3B63212FAF5700C498D3 /* JoinMeetingViewController.m in Sources */,
 				FC6B0B1D214A2B3D009D7530 /* EVLayoutManager.m in Sources */,
+				FC782B1023029A2900FC5B35 /* JoinWindowController.m in Sources */,
 				FC33B0E2212C151A00C31036 /* UserViewController.m in Sources */,
 				FC6C3B60212FAF3F00C498D3 /* JoinMeetingWindow.m in Sources */,
+				FC955A5B228CFF2A004B5012 /* ScreenViewController.m in Sources */,
 				FC6D57B82136405900CE0179 /* HeadImageViewController.m in Sources */,
+				FC955A5F228D02F0004B5012 /* RectWindow.m in Sources */,
 				FCBA42D9211BE21C00229E93 /* main.m in Sources */,
 				FC60B0762152174A0042F3AD /* ContentViewController.m in Sources */,
+				FC955A4D228CF283004B5012 /* LocalContetnViewController.m in Sources */,
 				FC34A22E21218C1A007F8994 /* LanguageTool.m in Sources */,
 				FC374746214654F900D70B20 /* SignalWindow.m in Sources */,
 				FC6C3B6E212FF44D00C498D3 /* aboutViewController.m in Sources */,
@@ -1352,6 +1449,7 @@
 				FC31C63A214F70D5005FFAE2 /* ConnectingWindow.m in Sources */,
 				FC3B360D212EB876009A496F /* ChangePasswordViewController.m in Sources */,
 				FC37472B21460BEE00D70B20 /* cameraView.m in Sources */,
+				FC955A5C228CFF2A004B5012 /* ScreenWindowController.m in Sources */,
 				FCFACA9E2154C71D00587E25 /* InvitationViewController.m in Sources */,
 				FCFACA9B2154C67B00587E25 /* InvitationWindowController.m in Sources */,
 				FCFACA8D2154C62F00587E25 /* PasswordWindow.m in Sources */,

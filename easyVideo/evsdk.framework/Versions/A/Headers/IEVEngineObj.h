@@ -1,8 +1,18 @@
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
+#endif
 #import "EVCommonObj.h"
 
 #define EV_LAYOUT_SIZE 16
+
+#if TARGET_OS_IPHONE
+#define EVView UIView
+#elif TARGET_OS_MAC
+#define EVView NSView
+#endif
 
 typedef NS_ENUM (NSUInteger, EVServerError) {
     EVServerApiVersionNotSupported = 1000,
@@ -17,6 +27,7 @@ typedef NS_ENUM (NSUInteger, EVServerError) {
     EVServerGetFailed = 1009,
     EVServerNotSupported = 1010,
     EVServerRedisLockTimeout = 1011,
+    EVServerLocalZoneStopped = 1019,
     EVServerInvalidUserNamePassword = 1100,
     EVServerLoginFailedMoreThan5Times = 1101,
     EVServerAccountTemporarilyLocked = 1102,
@@ -158,7 +169,9 @@ typedef NS_ENUM (NSUInteger, EVCallError) {
     EVCallHaishenGatewayVideoPortCountUsedUp = 2029,
     EVCallOnlyRoomOwnerCanActivateRoom = 2031,
     EVCallNotAllowAnonymousParty = 2033,
-    EVCallTrialOrgExpired = 2035
+    EVCallTrialOrgExpired = 2035,
+    EVCallLocalZoneNotStarted = 2043,
+    EVCallLocalZoneStopped = 2045
 };
 
 //////////////////////////////
@@ -235,7 +248,7 @@ __attribute__((visibility("default"))) @interface EVLayoutRequest : NSObject
 @property (assign, nonatomic) EVLayoutType max_type;
 @property (assign, nonatomic) EVLayoutPage page;
 @property (assign, nonatomic) EVVideoSize max_resolution;
-@property (copy, nonatomic) NSArray<NSView *> * _Nullable windows;
+@property (copy, nonatomic) NSArray<EVView *> * _Nullable windows;
 @end
 
 __attribute__((visibility("default"))) @interface EVSite : NSObject
@@ -294,10 +307,7 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 
 @protocol EVEngineDelegate <EVCommonDelegate>
 @optional
-- (void)onLoginSucceed:(EVUserInfo *_Nonnull)user;
 - (void)onRegister:(BOOL)registered;
-- (void)onDownloadUserImageComplete:(NSString *_Nonnull)path;
-- (void)onUploadUserImageComplete:(NSString *_Nonnull)path;
 - (void)onLayoutSiteIndication:(EVSite *_Nonnull)site;
 - (void)onLayoutIndication:(EVLayoutIndication *_Nonnull)layout;
 - (void)onLayoutSpeakerIndication:(EVLayoutSpeakerIndication *_Nonnull)speaker;
@@ -322,8 +332,6 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 - (int) login:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
 - (int) loginWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
 - (int) logout;
-- (int) downloadUserImage:(NSString *_Nonnull)path;
-- (int) uploadUserImage:(NSString *_Nonnull)path;
 - (int) changePassword:(NSString *_Nonnull)oldpassword newpassword:(NSString *_Nonnull)newpassword;
 - (int) changeDisplayName:(NSString *_Nonnull)display_name;
 - (EVUserInfo *_Nullable) getUserInfo;

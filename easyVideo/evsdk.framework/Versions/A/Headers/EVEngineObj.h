@@ -1,5 +1,9 @@
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
 #import <Cocoa/Cocoa.h>
+#endif
 #import "IAVEngineObj.h"
 #import "IEVEngineObj.h"
 
@@ -8,6 +12,8 @@
 //////////////////////////////
 
 @interface EVEngineObj : NSObject<IAVEngineObj, IEVEngineObj> {
+@private
+	NSTimer* mIterateTimer;
 }
 //Common
 //Log
@@ -98,5 +104,8 @@
 - (int) joinConferenceWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
 - (int) leaveConference;
 - (int) setLayout:(EVLayoutRequest *_Nonnull)layout;
+
+//Private
+- (void) iterate;
 
 @end

@@ -69,5 +69,8 @@
 @property (weak) IBOutlet NSView *joinMeetingBg;
 @property (weak) IBOutlet NSButton *joinMeetingBackBtn;
 @property (weak) IBOutlet NSButton *anonymousjoinMeetingBtn;
+@property (weak) IBOutlet NSButton *videoBtn;
+@property (weak) IBOutlet NSButton *muteBtn;
+@property (weak) IBOutlet NSButton *settingBtn;
 
 @end

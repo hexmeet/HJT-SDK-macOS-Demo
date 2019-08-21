@@ -22,7 +22,7 @@
 @implementation HomeViewController
 
 //Left Custom View
-@synthesize leftMenuView, meetingline, setView, meetingView, setline, meetingViewImage, meetingViewTitle, meetingBtn, setViewImage, setViewTitle, setBtn, userImageBtn, userName, registerTitle, registerImage;
+@synthesize leftMenuView, meetingline, setView, meetingView, setline, meetingViewImage, meetingViewTitle, meetingBtn, setViewImage, setViewTitle, setBtn, userImageBtn, userName, registerTitle, registerImage, closeBtn, miniBtn, fullBtn;
 //Top Custom View
 @synthesize topMenuView, topMenuViewTitle;
 //Other
@@ -178,8 +178,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clouseDisplayName) name:CHANGEDISPLAYNAME object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(upladImage) name:UPLOADIMAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginOut:) name:LOGINGOUT object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(portmpt:) name:PORTMPT object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(registered:) name:REGISTERED object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFull:)name:NSWindowWillEnterFullScreenNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(willExitFull:)name:NSWindowWillExitFullScreenNotification object:nil];
     
     //初始化应用语言
     [LanguageTool initUserLanguage];
@@ -344,20 +346,6 @@
 //    }];
 }
 
-- (void)portmpt:(NSNotification *)sender
-{
-    NSString *str = sender.object;
-    if ([str isEqualToString:@"10009"]) {
-        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.10009");
-        [self persendMethod:2];
-        return;
-    }
-
-    hub.hidden = NO;
-    hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@", localizationBundle(@"alert.joinmeetingerr"), sender.object];
-    [self persendMethod:3];
-}
-
 - (void)registered:(NSNotification *)sender
 {
     NSString *registered = sender.object;
@@ -368,6 +356,20 @@
         self->registerImage.image = [NSImage imageNamed:@"status_fail"];
         self->registerTitle.stringValue = localizationBundle(@"home.left.noregisteredtitle");
     }
+}
+
+- (void)willEnterFull:(NSNotification*)notification{
+    closeBtn.hidden = YES;
+    miniBtn.hidden  = YES;
+    fullBtn.hidden  = YES;
+    Notifications(CLOSEJOINWINDOW);
+}
+
+- (void)willExitFull:(NSNotification*)notification {
+    closeBtn.hidden = NO;
+    miniBtn.hidden  = NO;
+    fullBtn.hidden  = NO;
+    Notifications(CLOSEJOINWINDOW);
 }
 
 #pragma mark - HIDDENHUD

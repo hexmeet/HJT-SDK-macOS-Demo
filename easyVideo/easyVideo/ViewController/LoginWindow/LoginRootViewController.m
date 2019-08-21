@@ -16,6 +16,8 @@
 #import "LocalWindowController.h"
 #import "ConnectingWindowController.h"
 #import <IOKit/IOKitLib.h>
+#import "JoinWindowViewController.h"
+#import "JoinWindowController.h"
 
 @interface LoginRootViewController ()<EVEngineDelegate, NSTextFieldDelegate>
 {
@@ -30,13 +32,20 @@
     NSString *passwordStr;
     NSMutableDictionary *anonymousDic;
     NSString *serverStr;
+    
 }
 
 @end
 
 @implementation LoginRootViewController
 
-@synthesize enterpriseLoginView, enterpriseLoginConstraint, enterpriseBtn, cloudBtn, enterpriseLoginbackButton, joinView, loginView, joinMeetingBtn, loginBtn, loginViewTitle, userLoginView, userLoginViewConstraint, homeView, userLoginBackBtn, serverTextFd, userTextFd, passwordTextFd, userLoginViewBg, userLoginViewLoginBtn, userLoginViewTitle, userTextFdConstraint, loginImageTitle, enterpriseImageTitle, advancedsetBtn, AdvancedSetView, AdvancedsetViewConstraint, advancedBackBtn, advanceTitleFd, portTextFd, httpBtn, advancedsureView, advancedcancelView, advancedsureBtn, advancedcancelBtn, joinMeetingView, joinMeetingViewConstraint, joinadvancedsetBtn, joinMeetingTitleFd, joinMeetingserverFd, joinMeetingConfIdFd, joinMeetingDisNameFd, joinMeetingBg, joinMeetingBackBtn, anonymousjoinMeetingBtn, joinMeetingchangeConstraint, applyBtn;
+@synthesize enterpriseLoginView, enterpriseLoginConstraint, enterpriseBtn, cloudBtn, enterpriseLoginbackButton, joinView, loginView, joinMeetingBtn, loginBtn, loginViewTitle, userLoginView, userLoginViewConstraint, homeView, userLoginBackBtn, serverTextFd, userTextFd, passwordTextFd, userLoginViewBg, userLoginViewLoginBtn, userLoginViewTitle, userTextFdConstraint, loginImageTitle, enterpriseImageTitle, advancedsetBtn, AdvancedSetView, AdvancedsetViewConstraint, advancedBackBtn, advanceTitleFd, portTextFd, httpBtn, advancedsureView, advancedcancelView, advancedsureBtn, advancedcancelBtn, joinMeetingView, joinMeetingViewConstraint, joinadvancedsetBtn, joinMeetingTitleFd, joinMeetingserverFd, joinMeetingConfIdFd, joinMeetingDisNameFd, joinMeetingBg, joinMeetingBackBtn, anonymousjoinMeetingBtn, joinMeetingchangeConstraint, applyBtn, videoBtn, muteBtn, settingBtn;
+
+- (void)viewWillAppear
+{
+    [super viewWillAppear];
+    [self getUserSet];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -53,7 +62,6 @@
     [self setJoinMeetingViewAttribute];
     
     [self languageLocalization];
-    
 }
 
 //Init SDK
@@ -208,12 +216,15 @@
     [userLoginBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
     [advancedsetBtn changeCenterButtonattribute:localizationBundle(@"login.window.advanced.settings") color:TITLECOLOR];
     [advancedBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
+    [settingBtn changeLeftButtonattribute:localizationBundle(@"home.left.settitle") color:TITLECOLOR];
     [advancedsureBtn changeCenterButtonattribute:localizationBundle(@"alert.sure") color:WHITECOLOR];
     [advancedcancelBtn changeCenterButtonattribute:localizationBundle(@"alert.cancel") color:CONTENTCOLOR];
     [joinadvancedsetBtn changeCenterButtonattribute:localizationBundle(@"login.window.advanced.settings") color:TITLECOLOR];
     [joinMeetingBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
     [anonymousjoinMeetingBtn changeCenterButtonattribute:localizationBundle(@"login.window.join") color:WHITECOLOR];
     [applyBtn changeCenterButtonattribute:localizationBundle(@"login.window.applyfortrial") color:BLUECOLOR];
+    [videoBtn changeLeftButtonattribute:localizationBundle(@"home.join.camera") color:BLACKCOLOR];
+    [muteBtn changeLeftButtonattribute:localizationBundle(@"home.join.mute") color:BLACKCOLOR];
     
     portTextFd.placeholderString = localizationBundle(@"login.window.advanced.port");
     advanceTitleFd.stringValue = localizationBundle(@"login.window.advanced.settings");
@@ -280,6 +291,22 @@
         enterpriseLoginView.hidden = NO;
         [self setRightAnimation:joinMeetingView];
         joinMeetingViewConstraint.constant = SCREENWIDTH;
+    }else if (sender == videoBtn) {
+        NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+        if (videoBtn.state == NSOnState) {
+            [setDic setValue:@"YES" forKey:@"camera"];
+        }else {
+            [setDic setValue:@"NO" forKey:@"camera"];
+        }
+        [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
+    }else if (sender == muteBtn) {
+        NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+        if (muteBtn.state == NSOnState) {
+            [setDic setValue:@"YES" forKey:@"mute"];
+        }else {
+            [setDic setValue:@"NO" forKey:@"mute"];
+        }
+        [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
     }
 }
 
@@ -333,14 +360,24 @@
  */
 - (IBAction)joinMeetingAciton:(id)sender
 {
+    NSDictionary * dic = [NSUSERDEFAULT objectForKey:@"AnonymousInformation"];
     isLoginOranonymousLogin = NO;
     isOnJoinPage = YES;
     [joinMeetingConfIdFd becomeFirstResponder];
     if (isCloundLogin) {
+        if (dic) {
+            joinMeetingConfIdFd.stringValue = dic[@"confId"];
+            joinMeetingDisNameFd.stringValue = dic[@"disName"];
+        }
         joinMeetingserverFd.hidden = YES;
         joinadvancedsetBtn.hidden = YES;
         joinMeetingchangeConstraint.constant = 30;
     }else{
+        if (dic) {
+            joinMeetingserverFd.stringValue = dic[@"server"];
+            joinMeetingConfIdFd.stringValue = dic[@"confId"];
+            joinMeetingDisNameFd.stringValue = dic[@"disName"];
+        }
         joinMeetingserverFd.hidden = NO;
         joinadvancedsetBtn.hidden = NO;
         joinMeetingchangeConstraint.constant = 60;
@@ -419,6 +456,9 @@
 {
     //remove the blank space
     //Delay of 1 second,sometimes sdk have no reaction.
+    hub.hidden = NO;
+    hub.hudTitleFd.stringValue = localizationBundle(@"alert.connection");
+    [self persendMethod:30];
     [self performSelector:@selector(login) withObject:self afterDelay:1];
 }
 
@@ -478,19 +518,16 @@
     
     if (isCloundLogin) {
         //CloundLogin
-        DDLogInfo(@"[Info] 10001 loginInfo server:%@ port:%@ name:%@ password:%@", infoPlistStringBundle(@"CloudLocationServerAddress"), portStr, userStr, passwordStr);
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        DDLogInfo(@"[Info] 10001 loginInfo server:%@ port:%@ name:%@ password:%@", infoDictionary[@"CLOUD_LOCATION_SERVER_ADDRESS"], portStr, userStr, passwordStr);
         [appDelegate.evengine enableSecure:YES];
-        serverStr = infoPlistStringBundle(@"CloudLocationServerAddress");
+        serverStr = infoDictionary[@"CLOUD_LOCATION_SERVER_ADDRESS"];
         [appDelegate.evengine loginWithLocation:serverStr port:0 name:userStr password:passwordStr];
     }else {
         //EnterpriseLogin
         [appDelegate.evengine loginWithLocation:serverStr port:[portStr intValue] name:userStr password:passwordStr];
         DDLogInfo(@"[Info] 10001 loginInfo server:%@ port:%@ name:%@ password:%@", serverStr, portStr, userStr, passwordStr);
     }
-    
-    hub.hidden = NO;
-    hub.hudTitleFd.stringValue = localizationBundle(@"alert.connection");
-    [self persendMethod:30];
 }
 
 /**
@@ -586,7 +623,8 @@
     DDLogInfo(@"[Info] 10028 user anonymous logins");
     if (isCloundLogin) {
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setValue:infoPlistStringBundle(@"CloudLocationServerAddress") forKey:@"server"];
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        [dic setValue:infoDictionary[@"CLOUD_LOCATION_SERVER_ADDRESS"] forKey:@"server"];
         [dic setValue:port forKey:@"port"];
         [dic setValue:disNameStr forKey:@"disName"];
         [dic setValue:confIdStr forKey:@"confId"];
@@ -606,6 +644,15 @@
         [dic setValue:confIdStr forKey:@"confId"];
         [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
     }
+    
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    [dic setValue:disNameStr forKey:@"disName"];
+    [dic setValue:confIdStr forKey:@"confId"];
+    [dic setValue:serverStr forKey:@"server"];
+    
+    [NSUSERDEFAULT setObject:dic forKey:@"AnonymousInformation"];
+    [NSUSERDEFAULT synchronize];
+    
     hub.hidden = NO;
     hub.hudTitleFd.stringValue = localizationBundle(@"alert.connection");
     [self persendMethod:5];
@@ -753,23 +800,61 @@
     joinMeetingserverFd.stringValue  = @"";
 }
 
+//get user set info
+- (void)getUserSet
+{
+    NSDictionary *setDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+    //open the camera
+    if (setDic[@"camera"]) {
+        if ([setDic[@"camera"] isEqualToString:@"YES"]) {
+            videoBtn.state = NSOnState;
+        }else {
+            videoBtn.state = NSOffState;
+        }
+    }
+    //open the micphone
+    if (setDic[@"mute"]) {
+        if ([setDic[@"mute"] isEqualToString:@"YES"]) {
+            muteBtn.state = NSOnState;
+        }else {
+            muteBtn.state = NSOffState;
+        }
+    }
+}
+
 #pragma mark - EVEngineDelegate
 -(void)onError:(EVError *)err {
     dispatch_async(dispatch_get_main_queue(), ^{
         DDLogError(@"[Error] 10002 loginError type: %lu, code:%u,  msg: %@", (unsigned long)err.type, err.code, err.msg);
-        if (err.type == EVErrorTypeSdk) {
+        [self->appDelegate.evengine logout];
+        if (err.type == EVErrorTypeServer) {
             //sdk error don't have to remind.
-            return ;
-        }
-        if (err.type == EVErrorTypeLocate) {
-            if (err.code == 10009) {
-                self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%lu", localizationBundle(@"errorcode.1100"), (unsigned long)err.code];
+            if (err.code == 1101) {
+                self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@%@", localizationBundle(@"alert.passworderror1"), err.args[0], localizationBundle(@"alert.passworderror2")];
+                [self persendMethod:2];
+            }else if (err.code == 1102) {
+                self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.passworderror3");
+                [self persendMethod:2];
+            }else if (err.code == 1100) {
+                self->hub.hudTitleFd.stringValue = localizationBundle(@"errorcode.1100");
+                [self persendMethod:2];
+            }else if (err.code == 1112) {
+                self->hub.hudTitleFd.stringValue = localizationBundle(@"errorcode.1112");
+                [self persendMethod:2];
+            }else {
+                self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.cantconnert.server");
                 [self persendMethod:2];
             }
-            return;
+        }else if (err.type == EVErrorTypeLocate) {
+            if (err.code == 10009) {
+                self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@", localizationBundle(@"error.10009")];
+                [self persendMethod:3];
+            }
+        }else {
+            self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@", localizationBundle(@"alert.cantconnert.server")];
+            self->hub.hidden = NO;
+            [self persendMethod:3];
         }
-        self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%lu", localizationBundle(@"alert.loginerr"), (unsigned long)err.code];
-        [self persendMethod:2];
     });
 }
 
@@ -779,7 +864,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *downloadimagepath = [[EVUtils get_current_app_path]stringByAppendingPathComponent:@"header.jpg"];
         [self->appDelegate.evengine downloadUserImage:downloadimagepath];
-        
+        Notifications(CLOSEUPLOADWINODW);
         if (self->isCloundLogin) {
             NSDictionary *userInfo = @{@"username":user.username, @"displayName":user.displayName, @"org":user.org, @"cellphone":user.cellphone, @"email":user.email, @"telephone":user.telephone, @"server":infoPlistStringBundle(@"CloudServerAddress"), @"password":self->passwordStr, @"token":user.token, @"customizedH5UrlPrefix":user.customizedH5UrlPrefix, @"locationServer":self->serverStr};
             [PlistUtils saveUserInfoPlistFile:userInfo withFileName:CLOUDUSERINFO];
@@ -846,12 +931,15 @@
     [userLoginBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
     [advancedsetBtn changeCenterButtonattribute:localizationBundle(@"login.window.advanced.settings") color:TITLECOLOR];
     [advancedBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
+    [settingBtn changeLeftButtonattribute:localizationBundle(@"home.left.settitle") color:TITLECOLOR];
     [advancedsureBtn changeCenterButtonattribute:localizationBundle(@"alert.sure") color:WHITECOLOR];
     [advancedcancelBtn changeCenterButtonattribute:localizationBundle(@"alert.cancel") color:CONTENTCOLOR];
     [joinadvancedsetBtn changeCenterButtonattribute:localizationBundle(@"login.window.advanced.settings") color:TITLECOLOR];
     [joinMeetingBackBtn changeLeftButtonattribute:localizationBundle(@"alert.back") color:TITLECOLOR];
     [anonymousjoinMeetingBtn changeCenterButtonattribute:localizationBundle(@"login.window.join") color:WHITECOLOR];
     [applyBtn changeCenterButtonattribute:localizationBundle(@"login.window.applyfortrial") color:BLUECOLOR];
+    [videoBtn changeLeftButtonattribute:localizationBundle(@"home.join.camera") color:TITLECOLOR];
+    [muteBtn changeLeftButtonattribute:localizationBundle(@"home.join.mute") color:TITLECOLOR];
     
     portTextFd.placeholderString = localizationBundle(@"login.window.advanced.port");
     advanceTitleFd.stringValue = localizationBundle(@"login.window.advanced.settings");
@@ -962,16 +1050,46 @@
 - (void)portmpt:(NSNotification *)sender
 {
     NSString *str = sender.object;
-    if ([str isEqualToString:@"10009"]) {
-        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.10009");
-        [self persendMethod:2];
-        return;
+    if ([str isEqualToString:@"1001"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.invalidConfNumber");
+    }else if ([str isEqualToString:@"2001"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.cloudnotactivat");
+    }else if ([str isEqualToString:@"2005"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.meetingnotstart");
+    }else if ([str isEqualToString:@"2031"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.meetingdosenotanonymouscall");
+    }else if ([str isEqualToString:@"2033"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.allowmeeting");
+    }else if ([str isEqualToString:@"2035"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.trialexpired");
+    }else if ([str isEqualToString:@"2011"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2011");
+    }else if ([str isEqualToString:@"2009"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2009");
+    }else if ([str isEqualToString:@"2024"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2024");
+    }else if ([str isEqualToString:@"2025"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2025");
+    }else if ([str isEqualToString:@"2007"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"error.2007");
+    }else if ([str isEqualToString:@"10009"]) {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.invalidConfNumber");
+    }else {
+        self->hub.hidden = NO;
+        self->hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@", localizationBundle(@"alert.joinmeetingerr"), str];
     }
-    if ([str isEqualToString:@"2015"]) {
-        return;
-    }
-    hub.hidden = NO;
-    hub.hudTitleFd.stringValue = [NSString stringWithFormat:@"%@%@", localizationBundle(@"alert.joinmeetingerr"), sender.object];
     [self persendMethod:3];
 }
 
@@ -1020,13 +1138,13 @@
     
     Notifications(CLOSEPASSWORDWINDOW);
     ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-    appDelegate.mainWindowController = connectingWindow;
     [connectingWindow.window orderFront:nil];
 }
 
 - (void)anonymoussss2
 {
-    NSString *port = anonymousDic[@"port"];
+    [self performSegueWithIdentifier:@"joinWindowSegue" sender:self];
+
     NSString *displayname = anonymousDic[@"displayname"];
     if (displayname.length == 0) {
         displayname = [EVUtils judgeString:NSUserName()];
@@ -1036,41 +1154,51 @@
     }else {
         [appDelegate.evengine enableSecure:YES];
     }
-    NSString *confId = anonymousDic[@"confid"];
     [NSUSERDEFAULT setValue:@"YES" forKey:@"anonymous"];
     [NSUSERDEFAULT synchronize];
     [self getEVSDK];
     Notifications(OPENVIDEO);
     [appDelegate.evengine setUserImage:[EVUtils bundleFile:@"bg_videomute.png"] filename:[EVUtils bundleFile:@"image_defaultuser.png"]];
-    if (isCloundLogin) {
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setValue:anonymousDic[@"server"] forKey:@"server"];
-        [dic setValue:port forKey:@"port"];
-        [dic setValue:displayname forKey:@"disName"];
-        [dic setValue:confId forKey:@"confId"];
-        [dic setValue:anonymousDic[@"password"] forKey:@"password"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
-    }else {
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setValue:anonymousDic[@"server"] forKey:@"server"];
-        [dic setValue:port forKey:@"port"];
-        [dic setValue:displayname forKey:@"disName"];
-        [dic setValue:confId forKey:@"confId"];
-        [dic setValue:anonymousDic[@"password"] forKey:@"password"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
+//    if (isCloundLogin) {
+//        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+//        [dic setValue:anonymousDic[@"server"] forKey:@"server"];
+//        [dic setValue:anonymousDic[@"port"] forKey:@"port"];
+//        [dic setValue:displayname forKey:@"disName"];
+//        [dic setValue:anonymousDic[@"confid"] forKey:@"confId"];
+//        [dic setValue:anonymousDic[@"password"] forKey:@"password"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
+//    }else {
+//        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+//        [dic setValue:anonymousDic[@"server"] forKey:@"server"];
+//        [dic setValue:port forKey:@"port"];
+//        [dic setValue:displayname forKey:@"disName"];
+//        [dic setValue:confId forKey:@"confId"];
+//        [dic setValue:anonymousDic[@"password"] forKey:@"password"];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONLOGIN object:dic];
+//    }
+//    hub.hidden = NO;
+//    hub.hudTitleFd.stringValue = localizationBundle(@"alert.connection");
+//    [self persendMethod:30];
+//
+//    NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+//    [setDic setValue:confId forKey:@"confId"];
+//    [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
+//
+//    Notifications(CLOSEPASSWORDWINDOW);
+//    ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
+//    appDelegate.mainWindowController = connectingWindow;
+//    [connectingWindow.window orderFront:nil];
+}
+
+#pragma Segues
+- (void)prepareForSegue:(NSStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"joinWindowSegue"]) {
+        JoinWindowController *addStorageWD = segue.destinationController;
+        JoinWindowViewController *viewC = (JoinWindowViewController *)addStorageWD.contentViewController;
+        viewC.meetingDic = anonymousDic;
+        [viewC setInfo];
     }
-    hub.hidden = NO;
-    hub.hudTitleFd.stringValue = localizationBundle(@"alert.connection");
-    [self persendMethod:30];
-    
-    NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
-    [setDic setValue:confId forKey:@"confId"];
-    [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
-    
-    Notifications(CLOSEPASSWORDWINDOW);
-    ConnectingWindowController *connectingWindow = [ConnectingWindowController windowController];
-    appDelegate.mainWindowController = connectingWindow;
-    [connectingWindow.window orderFront:nil];
 }
 
 #pragma mark - HIDDENHUD

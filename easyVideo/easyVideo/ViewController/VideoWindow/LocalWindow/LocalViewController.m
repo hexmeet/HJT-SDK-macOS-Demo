@@ -23,6 +23,7 @@
     
     BOOL ishiddenLocal;
     BOOL ishover;
+    BOOL localMute;
 }
 @end
 
@@ -36,13 +37,16 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:REFACTORINGLOCAL object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:REDUCTION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MUTENAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ISLOCALMUTE object:nil];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
     [self.view setBackgroundColor:CLEARCOLOR];
+    
     ishiddenLocal = NO;
+    localMute = NO;
     
     [self.topBg setBackgroundColor:CONTENTCOLOR];
     [self.buttomBg setBackgroundColor:CONTENTCOLOR];
@@ -57,15 +61,25 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setVideo:) name:REFACTORINGLOCAL object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reductionVideo) name:REDUCTION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(muteName:) name:MUTENAME object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localMute:) name:ISLOCALMUTE object:nil];
     
     appDelegate = APPDELEGATE;
     
     remoteList = [NSMutableArray arrayWithCapacity:1];
     
     locaVideoController = [[VideoController alloc] initWithViewAndType:LOCAL viewFrame:CGRectMake(0, self.view.bounds.size.height-110, 160, 90)];
-    locaVideoController.userBg.hidden = YES;
     locaVideoController.view.layer.borderWidth = 2;
     locaVideoController.view.layer.borderColor = BLUECOLOR.CGColor;
+//    locaVideoController.muteBg.hidden = NO;
+    locaVideoController.userBg.hidden = NO;
+    locaVideoController.userName.hidden = NO;
+    if (localMute) {
+        locaVideoController.muteBg.hidden = NO;
+        locaVideoController.nameConstraint.constant = 20;
+    }else {
+        locaVideoController.muteBg.hidden = YES;
+        locaVideoController.nameConstraint.constant = 5;
+    }
 
     [self.view addSubview:locaVideoController.view];
     
@@ -87,7 +101,15 @@
 
 - (void)setVideo:(NSNotification *)sender
 {
+    if ([appDelegate.evengine getDisplayName] != nil) {
+        locaVideoController.userName.stringValue = [appDelegate.evengine getDisplayName];
+    }else{
+        locaVideoController.userName.stringValue = localizationBundle(@"video.localdisplayname");
+    }
+    
     layoutType = EVLayoutSpeakerMode;
+    self.upBtn.hidden = YES;
+    self.buttomBg.hidden = YES;
     isspeaker = NO;
     self.buttomBg.hidden = YES;
     self.upBtn.hidden = NO;
@@ -202,6 +224,19 @@
     }
 }
 
+- (void)localMute:(NSNotification *)sender
+{
+    if ([sender.object isEqualToString:@"mute"]) {
+        localMute = YES;
+        locaVideoController.muteBg.hidden = NO;
+        locaVideoController.nameConstraint.constant = 20;
+    }else {
+        localMute = NO;
+        locaVideoController.muteBg.hidden = YES;
+        locaVideoController.nameConstraint.constant = 5;
+    }
+}
+
 #pragma mark - Mouse
 - (void)mouseEntered:(NSEvent *)theEvent
 {
@@ -209,10 +244,25 @@
     if (ishiddenLocal) {
         return;
     }
-    self.topBg.hidden = NO;
-    if (isspeaker) {
-        self.buttomBg.hidden = NO;
+    if (layoutType == EVLayoutGalleryMode) {
+        self.upBtn.hidden = YES;
+        self.topBg.hidden = NO;
+        self.buttomBg.hidden = YES;
+    }else{
+        self.topBg.hidden = NO;
+        if (isspeaker) {
+            self.buttomBg.hidden = NO;
+        }
     }
+//    locaVideoController.userBg.hidden = NO;
+//    locaVideoController.userName.hidden = NO;
+//    if (localMute) {
+//        locaVideoController.muteBg.hidden = NO;
+//        locaVideoController.nameConstraint.constant = 20;
+//    }else {
+//        locaVideoController.muteBg.hidden = YES;
+//        locaVideoController.nameConstraint.constant = 5;
+//    }
     for (int i = 0; i < remoteList.count; i++) {
         VideoController *remotVideo = remoteList[i];
         if (layoutType == EVLayoutGalleryMode) {
@@ -239,6 +289,8 @@
         remotVideo.muteBg.hidden = YES;
         remotVideo.userBg.hidden = YES;
     }
+//    locaVideoController.userBg.hidden = YES;
+//    locaVideoController.userName.hidden = YES;
 }
 
 - (void)mouseDown:(NSEvent *)event
@@ -254,8 +306,8 @@
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             remotVideoController = remoteList[3];
             NSArray *window = @[remotVideoController.videoView];
@@ -269,8 +321,8 @@
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             remotVideoController = remoteList[2];
             NSArray *window = @[remotVideoController.videoView];
@@ -284,8 +336,8 @@
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             remotVideoController = remoteList[1];
             NSArray *window = @[remotVideoController.videoView];
@@ -299,8 +351,8 @@
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             remotVideoController = remoteList[0];
             NSArray *window = @[remotVideoController.videoView];
@@ -335,8 +387,8 @@
     layout.max_type = EVLayoutType_5_4T_1B;
     layout.mode = EVLayoutSpeakerMode;
     EVVideoSize vsize;
-    vsize.width = 1280;
-    vsize.height = 720;
+    vsize.width = 0;
+    vsize.height = 0;
     layout.max_resolution = vsize;
     [appDelegate.evengine setLayout:layout];
 }
@@ -348,8 +400,8 @@
     layout.max_type = EVLayoutType_5_4T_1B;
     layout.mode = EVLayoutSpeakerMode;
     EVVideoSize vsize;
-    vsize.width = 1280;
-    vsize.height = 720;
+    vsize.width = 0;
+    vsize.height = 0;
     layout.max_resolution = vsize;
     [appDelegate.evengine setLayout:layout];
 }

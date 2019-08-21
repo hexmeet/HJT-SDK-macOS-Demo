@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,11 +14,14 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="9wX-Nx-PHe">
-                    <rect key="frame" x="161" y="88" width="159" height="96"/>
+                    <rect key="frame" x="120" y="88" width="240" height="96"/>
                     <subviews>
                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YYq-7B-e8A">
-                            <rect key="frame" x="18" y="39" width="123" height="18"/>
-                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="无法连接到服务器" id="j5o-ZH-OCl">
+                            <rect key="frame" x="18" y="21" width="204" height="54"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="200" id="YMO-G9-p1N"/>
+                            </constraints>
+                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="呼叫失败，会议号码不存在或者此会议还未开始，请检查后重试" id="j5o-ZH-OCl">
                                 <font key="font" metaFont="system" size="14"/>
                                 <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -27,9 +30,11 @@
                     </subviews>
                     <constraints>
                         <constraint firstItem="YYq-7B-e8A" firstAttribute="leading" secondItem="9wX-Nx-PHe" secondAttribute="leading" constant="20" id="EaF-J4-Hvn"/>
+                        <constraint firstItem="YYq-7B-e8A" firstAttribute="top" secondItem="9wX-Nx-PHe" secondAttribute="top" constant="21" id="H6d-y0-EV3"/>
                         <constraint firstItem="YYq-7B-e8A" firstAttribute="centerY" secondItem="9wX-Nx-PHe" secondAttribute="centerY" id="Pba-Ss-G5h"/>
+                        <constraint firstAttribute="width" constant="240" id="h8s-fe-xeI"/>
                         <constraint firstAttribute="trailing" secondItem="YYq-7B-e8A" secondAttribute="trailing" constant="20" id="sb0-Hf-XmN"/>
-                        <constraint firstAttribute="height" constant="96" id="yQO-SM-Kro"/>
+                        <constraint firstAttribute="bottom" secondItem="YYq-7B-e8A" secondAttribute="bottom" constant="21" id="vaq-Oi-ymc"/>
                     </constraints>
                 </customView>
             </subviews>

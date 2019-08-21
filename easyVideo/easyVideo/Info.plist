@@ -45,6 +45,8 @@
 	<string>${CURRENT_PROJECT_VERSION}</string>
 	<key>CLOUD_TRIAL_URL</key>
 	<string>${CLOUD_TRIAL_URL}</string>
+	<key>CLOUD_LOCATION_SERVER_ADDRESS</key>
+	<string>${CLOUD_LOCATION_SERVER_ADDRESS}</string>
 	<key>LSHasLocalizedDisplayName</key>
 	<true/>
 	<key>LSMinimumSystemVersion</key>
@@ -64,5 +66,7 @@
 	<string>111111</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<true/>
 </dict>
 </plist>

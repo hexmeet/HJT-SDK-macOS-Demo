@@ -12,6 +12,8 @@
 #include "Pods/Target Support Files/Pods-easyVideo/Pods-easyVideo.debug.xcconfig"
 
 CLOUD_TRIAL_URL = http:\/\/www.hjtcloud.com/try
+CLOUD_LOCATION_SERVER_ADDRESS = cloudcenter.hexmeet.com
+
 PRODUCT_BUNDLE_IDENTIFIER = easyvideo.easyvideo
 PRODUCT_NAME = easyVideo
 

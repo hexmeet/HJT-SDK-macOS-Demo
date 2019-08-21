@@ -47,7 +47,6 @@
     [_videoView setBackgroundColor:BLACKCOLOR];
     _videoView.layer.borderWidth = 1;
     _videoView.layer.borderColor = CLEARCOLOR.CGColor;
-
 }
 
 #pragma mark - ButtonMethod

@@ -16,7 +16,8 @@
 #import "EVLayoutManager.h"
 #import "ContentWindowController.h"
 #import "MeetingWebWindowController.h"
-#import "macHUD.H"
+#import "LocalContentWindowController.h"
+#import "ScreenWindowController.h"
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <OpenGL/CGLMacro.h>
@@ -31,6 +32,7 @@ enum MessageType {
 @interface VideoHomeViewController ()<EVEngineDelegate, CAAnimationDelegate>
 {
     BOOL ismute;
+    BOOL isservermute;
     BOOL iscamera;
     BOOL islayout;
     BOOL isCanMove;
@@ -42,11 +44,12 @@ enum MessageType {
     BOOL ismyselfmute;
     BOOL isshowContent;
     BOOL isshowNotworkAlert;
+    BOOL isshare;
     
     void * remoteArr[9];
-    
-    macHUD *hub;
+
     NSInteger fontInteger;
+    uint32 contentid;
     
     AppDelegate *appDelegate;
     dispatch_source_t _timer;
@@ -67,6 +70,8 @@ enum MessageType {
     
     MeetingWebWindowController *meetingWebWindow;
     
+    LocalContentWindowController *localControl;
+    
     EVLayoutMode layoutType;
     
     enum MessageType messageType;
@@ -81,7 +86,7 @@ enum MessageType {
 
 @implementation VideoHomeViewController
 
-@synthesize topViewBg, buttomViewBg, localBtn, localViewBg, handUpBtn, handUpViewBg, muteBtn, cameraBtn, setBtn, meetingBtn, videoLayoutBtn, handBtn, callendBtn, locolShowHiddenBtn, muteTitle, cameraTitle, setTitle, meetingTitle, videoTitle, handupTitle, signalImage, meetingNumber, timerLb, cancelVideo, cancelVideoConstraint, numberTitle;
+@synthesize topViewBg, buttomViewBg, localBtn, localViewBg, handUpBtn, handUpViewBg, muteBtn, cameraBtn, setBtn, meetingBtn, videoLayoutBtn, handBtn, callendBtn, locolShowHiddenBtn, muteTitle, cameraTitle, setTitle, meetingTitle, videoTitle, handupTitle, signalImage, meetingNumber, timerLb, cancelVideo, cancelVideoConstraint, numberTitle, shareBtn, shareTitle, hud, hudTitle;
 
 extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 
@@ -96,8 +101,6 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     
     [self creatMessageView];
     
-    [self setHUD];
-    
     [EVLayoutManager getInstance];
     
     NSTrackingAreaOptions options = NSTrackingInVisibleRect|NSTrackingMouseEnteredAndExited|NSTrackingActiveAlways;
@@ -108,6 +111,8 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     NSTrackingArea *area5 = [[NSTrackingArea alloc] initWithRect:self.cameraBtn.bounds options:options owner:self userInfo:nil];
     NSTrackingArea *area6 = [[NSTrackingArea alloc] initWithRect:self.handBtn.bounds options:options owner:self userInfo:nil];
     NSTrackingArea *area7 = [[NSTrackingArea alloc] initWithRect:self.showContentVideo.bounds options:options owner:self userInfo:nil];
+    NSTrackingAreaOptions options2 = NSTrackingMouseEnteredAndExited|NSTrackingInVisibleRect|NSTrackingActiveAlways;
+    NSTrackingArea *area8 = [[NSTrackingArea alloc] initWithRect:self.view.bounds options:options2 owner:self userInfo:nil];
     [self.meetingBtn addTrackingArea:area1];
     [self.setBtn addTrackingArea:area2];
     [self.videoLayoutBtn addTrackingArea:area3];
@@ -115,7 +120,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     [self.cameraBtn addTrackingArea:area5];
     [self.handBtn addTrackingArea:area6];
     [self.showContentVideo addTrackingArea:area7];
-    
+    [self.view addTrackingArea:area8];
 }
 
 - (void)viewWillAppear
@@ -132,8 +137,6 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     [super viewDidLayout];
     
     self.view.window.title = infoPlistStringBundle(@"CFBundleName");
-    
-    hub.frame = self.view.frame;
     
     _sourcePoint = CGPointMake(0, 0);
     
@@ -258,7 +261,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     }
     
     /** Message */
-    _messageView.frame = CGRectMake(0, WINDOWHEIGHT*verticalBorder/100, WINDOWWIDTH, 40);
+    _messageView.frame = CGRectMake(0, (WINDOWHEIGHT-76)*self->verticalBorder/100, WINDOWWIDTH, 40);
     CGRect rect = [self getLabelHeightWithText:_staticField.stringValue width:WINDOWWIDTH*2 font:fontInteger];
     _staticField.frame = CGRectMake(0, (40-rect.size.height)/2, WINDOWWIDTH, rect.size.height);
     _messageField.frame = CGRectMake(0, 0, WINDOWWIDTH, 40);
@@ -286,9 +289,14 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     localViewBg.layer.cornerRadius = 4;
     [self.view setBackgroundColor:BLACKCOLOR];
     
-    [self performSelector:@selector(hiddenTool) withObject:self afterDelay:30];
+    [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
     
     appDelegate = APPDELEGATE;
+    
+    hud.wantsLayer = YES;
+    hud.layer.backgroundColor = [NSColor blackColor].CGColor;
+    hud.layer.cornerRadius = 10;
+    hud.alphaValue = 0.6f;
     
     muteBtn.canSelected = YES;
     muteBtn.buttonState = SWSTAnswerButtonNormalState;
@@ -310,6 +318,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     isMainVenue = YES;
     isshowalert = NO;
     isshowNotworkAlert = YES;
+    isshare = NO;
     
     muteArr = [NSMutableArray arrayWithCapacity:1];
     
@@ -318,6 +327,8 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     contentWindow = [ContentWindowController windowController];
     
     meetingWebWindow = [MeetingWebWindowController windowController];
+    
+    localControl = [LocalContentWindowController windowController];
     
 }
 
@@ -330,6 +341,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
         [remoteList addObject:remotVideoController];
         [self.view addSubview:buttomViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
         [self.view addSubview:self.recordBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
+        [self.view addSubview:hud positioned:NSWindowAbove relativeTo:remotVideoController.view];
         [self.view addSubview:cancelVideo positioned:NSWindowAbove relativeTo:remotVideoController.view];
     }
     DDLogInfo(@"[Info] 10031 Set Remot Video Window");
@@ -366,12 +378,6 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     _staticField.hidden = YES;
     _staticField.alignment = NSTextAlignmentCenter;
     [_messageView addSubview:_staticField];
-}
-
-- (void)setHUD
-{
-    hub = [macHUD creatMacHUD:@"" icon:@"" viewController:self];
-    hub.hidden = YES;
 }
 
 - (void)setLayoutMode:(NSArray *)siteArr
@@ -555,6 +561,10 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hiddenLocal) name:HIDDENLOCAL object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeWindow) name:CLOSEVIDEOHOMEWINDOW object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseVideo:) name:CHOOSEVIDEO object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveIamge) name:SAVEIMAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localContentClose) name:LOCALCONTENTWINDOWDIDCLOSE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendContent:) name:SENDCONTENT object:nil];
+    
     //初始化应用语言
     [LanguageTool initUserLanguage];
     
@@ -571,6 +581,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
     handupTitle.stringValue = localizationBundle(@"video.handup");
     _showContentTitle.stringValue = localizationBundle(@"video.showcontent");
+    shareTitle.stringValue = localizationBundle(@"video.share");
 }
 
 - (void)getUserSet
@@ -583,6 +594,8 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
             cameraTitle.stringValue = localizationBundle(@"video.openvideo");
             cameraTitle.textColor = DEFAULREDCOLOR;
             [appDelegate.evengine enableCamera:NO];
+        }else {
+            [appDelegate.evengine enableCamera:YES];
         }
     }else {
         [appDelegate.evengine enableCamera:YES];
@@ -605,7 +618,12 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 #pragma mark - MOUSE
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    isCanMove = YES;
+    if (theEvent.window == self.view.window) {
+        buttomViewBg.hidden = NO;
+        [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
+    }else {
+        isCanMove = YES;
+    }
 }
 
 - (void)mouseExited:(NSEvent *)theEvent
@@ -625,14 +643,13 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 
 - (void)mouseDown:(NSEvent *)event
 {
-    
     if (isCanMove) {
         return;
     }
     isShowButtomBg = !isShowButtomBg;
     if (isShowButtomBg) {
         buttomViewBg.hidden = NO;
-        [self performSelector:@selector(hiddenTool) withObject:self afterDelay:30];
+        [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
         if (layoutType == EVLayoutSpeakerMode) {
             remotVideoController = remoteList[0];
             remotVideoController.nameConstraintH.constant = 85;
@@ -704,8 +721,8 @@ int seconds = 0l;
         
     }else if (sender == videoLayoutBtn) {
         if (!isMainVenue) {
-            self->hub.hidden = NO;
-            self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.openmainvenuemodel");
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.openmainvenuemodel");
             [self persendMethod:2];
             return;
         }
@@ -717,8 +734,8 @@ int seconds = 0l;
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             DDLogInfo(@"[Info] 10023 user choose Speaker Mode");
         }else {
@@ -727,8 +744,8 @@ int seconds = 0l;
             layout.mode = EVLayoutGalleryMode;
             layout.max_type = EVLayoutType_9;
             EVVideoSize vsize;
-            vsize.width = 1280;
-            vsize.height = 720;
+            vsize.width = 0;
+            vsize.height = 0;
             layout.max_resolution = vsize;
             // In case of going to gallery mode layout, chosen video is turned off automatically,
             // so hide the cancelVideo button
@@ -736,13 +753,13 @@ int seconds = 0l;
         }
         [appDelegate.evengine setLayout:layout];
     }else if (sender == _alertBtn) {
-        self->hub.hidden = NO;
-        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.openmainvenuemodel");
+        self->hud.hidden = NO;
+        self->hudTitle.stringValue = localizationBundle(@"alert.openmainvenuemodel");
         [self persendMethod:2];
     }else if (sender == handBtn) {
         [appDelegate.evengine requestRemoteUnmute:YES];
-        hub.hidden = NO;
-        self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.handsup.approve");
+        hud.hidden = NO;
+        self->hudTitle.stringValue = localizationBundle(@"alert.handsup.approve");
         [self persendMethod:2];
         DDLogInfo(@"[Info] 10025 user Speech Request");
     }else if (sender == callendBtn) {
@@ -763,17 +780,26 @@ int seconds = 0l;
         }
         
         [appDelegate.evengine leaveConference];
+        
+        [self usercallEndMeeting];
+        
     }else if (sender == cancelVideo) {
         EVLayoutRequest *layout = [[EVLayoutRequest alloc] init];
         layout.page = EVLayoutCurrentPage;
         layout.mode = layoutType;
         layout.max_type = EVLayoutType_5_4T_1B;
         EVVideoSize vsize;
-        vsize.width = 1280;
-        vsize.height = 720;
+        vsize.width = 0;
+        vsize.height = 0;
         layout.max_resolution = vsize;
         [appDelegate.evengine setLayout:layout];
         cancelVideo.hidden = YES;
+    }else if (sender == shareBtn) {
+        if (!isshare) {
+            Notifications(CLOSESCREENWINDOW);
+            ScreenWindowController *WinControl = [ScreenWindowController windowController];
+            [WinControl.window makeKeyAndOrderFront:self];
+        }
     }
 }
 
@@ -795,6 +821,7 @@ int seconds = 0l;
     meetingTitle.stringValue = localizationBundle(@"video.meetingmanagement");
     handupTitle.stringValue = localizationBundle(@"video.handup");
     _showContentTitle.stringValue = localizationBundle(@"video.showcontent");
+    shareTitle.stringValue = localizationBundle(@"video.share");
     
     [localBtn changeLeftButtonattribute:localizationBundle(@"video.openlocalvideo") color:WHITECOLOR];
 //    locaVideoController.view.hidden = NO;
@@ -866,6 +893,11 @@ int seconds = 0l;
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:MUTENAME object:self->muteArr];
+                if (self->ismute == NO && self->isservermute == NO) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ISLOCALMUTE object:@"unmute"];
+                }else {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ISLOCALMUTE object:@"mute"];
+                }
                 for (int i = 0; i<self->remoteList.count; i++)
                 {
                     self->remotVideoController = self->remoteList[i];
@@ -878,15 +910,132 @@ int seconds = 0l;
                         }
                     }
                 }
+                
+                if (self->isshare) {
+                    NSArray *screens = [NSScreen screens];
+                    for (int i = 0; i<screens.count; i++) {
+                        NSScreen *screen = screens[i];
+                        uint32 sad = [screen.deviceDescription[@"NSScreenNumber"] intValue];
+                        if (sad == self->contentid) {
+                            CGFloat windowWidth = screen.frame.size.width;
+                            CGFloat windowHeight = screen.frame.size.height;
+                            [self->localControl.window setFrame:NSMakeRect(0, 0, windowWidth, windowHeight) display:NO];
+                            [self->localControl.window setFrameOrigin:NSMakePoint(screen.frame.origin.x, screen.frame.origin.y)];
+                        }
+                    }
+                }
+                
                 seconds ++;
                 [EVUtils saveNewLogWhenOldLogTooBig];
-                UpdateSystemActivity(UsrActivity);
                 self->timerLb.stringValue = [EVUtils formaterSecondsToTimer:seconds];
             });
         });
         
         dispatch_resume(_timer);
         
+    }
+}
+
+- (void)saveIamge
+{
+    /** 保存图片到桌面 */
+    CFStringRef dspyDestType = CFSTR("public.png");
+    CGDirectDisplayID mainID = contentid;
+    // 根据Quartz分配给显示器的id，生成显示器mainID的截图
+    CGImageRef mainCGImage = CGDisplayCreateImage(mainID);
+    CFMutableDataRef mainMutData = CFDataCreateMutable(NULL, 0);
+    CGImageDestinationRef mainDest = CGImageDestinationCreateWithData(mainMutData, dspyDestType, 1, NULL);
+    CGImageDestinationAddImage(mainDest, mainCGImage, NULL);
+    CGImageRelease(mainCGImage);
+    CGImageDestinationFinalize(mainDest);
+    CFRelease(mainDest);
+    NSData *imageDate = (__bridge NSData *)mainMutData;
+    CFRelease(mainMutData);
+    CFRelease(dspyDestType);
+    
+    NSImage *tmpImage = [[NSImage alloc] initWithData:imageDate];
+    
+    NSData *imageData = [tmpImage TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+    [imageRep setSize:[tmpImage size]];
+    NSData *imageData1 = [imageRep representationUsingType:NSPNGFileType properties:nil];
+    
+    //获取保存路径暂时保存在桌面
+    NSString *filePath = [EVUtils get_download_app_path];
+    filePath = [NSString stringWithFormat:@"%@/%@-%@", filePath, [EVUtils getCurrentTimes], @"ScreenCapture.png"];
+    NSError *errpr;
+    if ([imageData1 writeToFile:filePath options:NSDataWritingAtomic error:&errpr]) {
+        //成功
+        NSLog(@"成功");
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:filePath]) {
+            [[NSWorkspace sharedWorkspace] openFile:filePath];
+        }else {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.savefailed");
+            [self persendMethod:2];
+        }
+    }else {
+        //失败
+        self->hud.hidden = NO;
+        self->hudTitle.stringValue = localizationBundle(@"alert.savefailed");
+        [self persendMethod:2];
+    }
+}
+
+- (void)localContentClose
+{
+    isshare = NO;
+    [appDelegate.evengine stopContent];
+}
+
+- (void)sendContent:(NSNotification *)sender
+{
+    NSArray *screens = [NSScreen screens];
+    for (int i = 0; i<screens.count; i++) {
+        NSScreen *screen = screens[i];
+        if (screen.deviceDescription[@"NSScreenNumber"] == sender.object) {
+            contentid = [screen.deviceDescription[@"NSScreenNumber"] intValue];
+            [appDelegate.evengine setLocalContentWindow:&contentid mode:EVContentFullMode];
+            [appDelegate.evengine sendContent];
+        }
+    }
+}
+
+- (void)usercallEndMeeting
+{
+    Notifications(CLOSEMANMAGEWINDOW);
+    Notifications(CLOSESIGNLWINDOW);
+    Notifications(CLOSELOCALWINDOW);
+    Notifications(CLOSECONTENTWINDOW);
+    Notifications(CLOSEMEETINGWEBWINDOW);
+    Notifications(REMOVEVIDEO);
+    Notifications(CLOSELOCALCONTENTWINDOW);
+    Notifications(CLOSESCREENWINDOW);
+    
+    isshare = NO;
+    appDelegate.isInTheMeeting = NO;
+    chooseVideoName = @"";
+    [contentWindow.window close];
+    [self.view.window close];
+    NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+    DDLogInfo(@"[Info] 10015 callback handup the meeting:%@", setDic[@"confId"]);
+    // 关闭定时器
+    DDLogInfo(@"[Info] 10017 Timer stop");
+    dispatch_source_cancel(_timer);
+    seconds = 0;
+    for (int i = 0; i<remoteList.count; i++) {
+        remotVideoController = remoteList[i];
+        remotVideoController.view.frame = CGRectMake(0, 0, 0, 0);
+    }
+    if ([[NSUSERDEFAULT objectForKey:@"anonymous"] isEqualToString:@"YES"]) {
+        DDLogInfo(@"[Info] 10038 leave meeting go to login window");
+        Notifications(SHOWLOGINWINDOW);
+    }else {
+        DDLogInfo(@"[Info] 10037 leave meeting go to home window");
+        HomeWindowController *WinControl = [HomeWindowController windowController];
+        appDelegate.mainWindowController = WinControl;
+        [WinControl.window makeKeyAndOrderFront:self];
     }
 }
 
@@ -898,19 +1047,29 @@ int seconds = 0l;
     });
 }
 
+- (void)onMuteSpeakingDetected
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->hud.hidden = NO;
+        self->hudTitle.stringValue = localizationBundle(@"alert.micmute");
+        [self persendMethod:10];
+    });
+}
+
 - (void)onWarn:(EVWarn *)warn
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self->hub.hidden = NO;
+        self->hud.hidden = NO;
         if (warn.code == EVWarnNetworkPoor) {
-            self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.network_stable");
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_stable");
         }else if (warn.code == EVWarnNetworkVeryPoor) {
-            self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.network_poor");
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_poor");
         }else if (warn.code == EVWarnBandwidthInsufficient) {
-            self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.network_insufficient");
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_insufficient");
         }else if (warn.code == EVWarnBandwidthVeryInsufficient) {
-            self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.network_shortage");
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_shortage");
         }
+        self.buttomViewBg.hidden = NO;
         [self persendMethod:10];
     });
 }
@@ -925,6 +1084,10 @@ int seconds = 0l;
         Notifications(CLOSECONTENTWINDOW);
         Notifications(CLOSEMEETINGWEBWINDOW);
         Notifications(REMOVEVIDEO);
+        Notifications(CLOSELOCALCONTENTWINDOW);
+        Notifications(CLOSESCREENWINDOW);
+        
+        self->isshare = NO;
         self->appDelegate.isInTheMeeting = NO;
         self->chooseVideoName = @"";
         [self->contentWindow.window close];
@@ -969,33 +1132,79 @@ int seconds = 0l;
 - (void)onContent:(EVContentInfo * _Nonnull)info
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (info.type == EVStreamContent || info.type == EVStreamWhiteBoard) {
-            if (info.enabled) {
-                DDLogInfo(@"[Info] 10047 user receive open contentWindow");
-                [self->contentWindow.window orderFront:nil];
-                self.showContentVideo.hidden = NO;
-                self.showContentTitle.hidden = NO;
-                self->isshowContent = YES;
-                if (self->ismyselfmute) {
-                    self.centerLine.constant = 0;
-                    self.showContentleft.constant = 140;
+        if (info.status == EVContentDenied) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.nosharepermission");
+            [self persendMethod:2];
+        }else if (EVContentGranted) {
+            if (info.type == EVStreamContent || info.type == EVStreamWhiteBoard) {
+                if (info.enabled) {
+                    if (info.dir == EVStreamUpload) {
+                        self->hud.hidden = NO;
+                        self->hudTitle.stringValue = localizationBundle(@"alert.sharesuccess");
+                        [self.view.window miniaturize:self];
+                        [self persendMethod:1];
+                        NSArray *screens = [NSScreen screens];
+                        for (int i = 0; i<screens.count; i++) {
+                            NSScreen *screen = screens[i];
+                            uint32 sad = [screen.deviceDescription[@"NSScreenNumber"] intValue];
+                            if (sad == self->contentid) {
+                                [self->localControl.window makeKeyAndOrderFront:nil];
+                                [self->localControl.window setRestorable:NO];
+                                CGFloat windowWidth = screen.frame.size.width;
+                                CGFloat windowHeight = screen.frame.size.height;
+                                [self->localControl.window setFrame:NSMakeRect(0, 0, windowWidth, windowHeight) display:NO];
+                                [self->localControl.window setFrameOrigin:NSMakePoint(screen.frame.origin.x, screen.frame.origin.y)];
+                                [self->localControl.window makeKeyAndOrderFront:nil];
+                                
+                                self->isshare = YES;
+                            }
+                            if (sad == self->contentid) {
+                                [self->localControl.window makeKeyAndOrderFront:nil];
+                                [self->localControl.window setRestorable:NO];
+                                CGFloat windowWidth = screen.frame.size.width;
+                                CGFloat windowHeight = screen.frame.size.height;
+                                [self->localControl.window setFrame:NSMakeRect(0, 0, windowWidth, windowHeight) display:NO];
+                                [self->localControl.window setFrameOrigin:NSMakePoint(screen.frame.origin.x, screen.frame.origin.y)];
+                                [self->localControl.window makeKeyAndOrderFront:nil];
+                                
+                                self->isshare = YES;
+                            }
+                            [self->contentWindow.window close];
+                        }
+                    }else{
+                        if (self->isshare) {
+                            self->isshare = NO;
+                            [self->appDelegate.evengine stopContent];
+                            [self->localControl.window orderOut:nil];
+                        }
+                        DDLogInfo(@"[Info] 10047 user receive open contentWindow");
+                        [self->contentWindow.window orderFront:nil];
+                        self.showContentVideo.hidden = NO;
+                        self.showContentTitle.hidden = NO;
+                        self->isshowContent = YES;
+                        if (self->ismyselfmute) {
+                            self.centerLine.constant = 0;
+                            self.showContentleft.constant = 140;
+                        }else{
+                            self.centerLine.constant = 35;
+                            self.showContentleft.constant = 70;
+                        }
+                    }
+                    
                 }else{
-                    self.centerLine.constant = 35;
-                    self.showContentleft.constant = 70;
+                    DDLogInfo(@"[Info] 10048 user receive close contentWindow");
+                    [self->contentWindow.window close];
+                    self.showContentVideo.hidden = YES;
+                    self.showContentTitle.hidden = YES;
+                    if (self->ismyselfmute) {
+                        self.centerLine.constant = 35;
+                        self.showContentleft.constant = 70;
+                    }else{
+                        self.centerLine.constant = 70;
+                        self.showContentleft.constant = 70;
+                    }
                 }
-            }else{
-                DDLogInfo(@"[Info] 10048 user receive close contentWindow");
-                [self->contentWindow.window close];
-                self.showContentVideo.hidden = YES;
-                self.showContentTitle.hidden = YES;
-                if (self->ismyselfmute) {
-                    self.centerLine.constant = 35;
-                    self.showContentleft.constant = 70;
-                }else{
-                    self.centerLine.constant = 70;
-                    self.showContentleft.constant = 70;
-                }
-
             }
         }
     });
@@ -1196,8 +1405,9 @@ int seconds = 0l;
         if (site.is_local) {
             if (self->isshowalert) {
                 if (site.remote_muted) {
-                    self->hub.hidden = NO;
-                    self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.nospeak");
+                    self->hud.hidden = NO;
+                    self->hudTitle.stringValue = localizationBundle(@"alert.nospeak");
+                    self->isservermute = YES;
                     [self persendMethod:2];
                     self->handBtn.hidden = NO;
                     self->handupTitle.hidden = NO;
@@ -1207,8 +1417,9 @@ int seconds = 0l;
                     DDLogInfo(@"[Info] 10026 user have been muted by meeting manager.");
                 }else{
                     DDLogInfo(@"[Info] 10027 user have been unmuted by meeting manager.");
-                    self->hub.hidden = NO;
-                    self->hub.hudTitleFd.stringValue = localizationBundle(@"alert.speak");
+                    self->hud.hidden = NO;
+                    self->hudTitle.stringValue = localizationBundle(@"alert.speak");
+                    self->isservermute = NO;
                     [self persendMethod:2];
                     self->handBtn.hidden = YES;
                     self->handupTitle.hidden = YES;
@@ -1288,7 +1499,7 @@ int seconds = 0l;
             self->_messageView.hidden = NO;
             self->verticalBorder = msg.verticalBorder;
             self->Messagecount = msg.displayRepetitions;
-            self->_messageView.frame = CGRectMake(0, (WINDOWHEIGHT-76)*self->verticalBorder/100, WINDOWWIDTH, 40);;
+            self->_messageView.frame = CGRectMake(0, (WINDOWHEIGHT-76)*self->verticalBorder/100, WINDOWWIDTH, 40);
             CGFloat width = [self getWidthWithText:msg.content height:40 font:msg.fontSize];
             if (width>WINDOWWIDTH) {
                 self->_messageField.frame = CGRectMake(0, 0, width+50, 40);
@@ -1390,7 +1601,7 @@ int seconds = 0l;
 
 - (void)hiddenHUD
 {
-    hub.hidden = YES;
+    hud.hidden = YES;
 }
 
 - (IBAction)test5:(id)sender

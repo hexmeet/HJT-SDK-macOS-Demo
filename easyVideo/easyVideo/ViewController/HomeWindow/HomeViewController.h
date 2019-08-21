@@ -32,6 +32,9 @@
 /** Top Menu View */
 @property (weak) IBOutlet NSView *topMenuView;
 @property (weak) IBOutlet NSTextField *topMenuViewTitle;
+@property (weak) IBOutlet NSButton *closeBtn;
+@property (weak) IBOutlet NSButton *miniBtn;
+@property (weak) IBOutlet NSButton *fullBtn;
 
 /** Meeting Custom View */
 @property (weak) IBOutlet NSView *webContainerView;

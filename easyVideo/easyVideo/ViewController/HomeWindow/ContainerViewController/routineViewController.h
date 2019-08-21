@@ -18,5 +18,6 @@
 @property (weak) IBOutlet NSButton *autoLoginBtn;
 @property (weak) IBOutlet NSButton *autoAnserBtn;
 @property (weak) IBOutlet NSButton *highFrameRateBtn;
+@property (weak) IBOutlet NSButton *enableHD;
 
 @end
