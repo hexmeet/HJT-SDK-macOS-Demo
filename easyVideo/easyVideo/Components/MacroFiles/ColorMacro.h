@@ -20,5 +20,7 @@
 #define JOINWINDOWBTNSELECT   HEXCOLOR(0xededed)
 #define CLEARCOLOR            [NSColor clearColor]
 #define BORDERCOLOR           HEXCOLOR(0xc1c1c1)
+#define COLORF1F1F1           HEXCOLOR(0xf1f1f1)
+#define COLORFF4747           HEXCOLOR(0xff4747)
 
 #endif /* ColorMacro_h */

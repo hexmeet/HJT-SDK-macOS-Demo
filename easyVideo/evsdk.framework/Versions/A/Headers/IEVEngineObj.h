@@ -187,7 +187,7 @@ typedef NS_ENUM (NSUInteger, EVLayoutMode) {
     EVLayoutSpecifiedMode =  3
 };
 
-typedef NS_ENUM (NSInteger, EVLayoutType) {
+typedef NS_ENUM (int, EVLayoutType) {
     EVLayoutType_AUTO       = -1, 
     EVLayoutType_1          = 101,
     EVLayoutType_2H         = 201,
@@ -305,6 +305,13 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 @property (assign, nonatomic) BOOL live;
 @end
 
+__attribute__((visibility("default"))) @interface EVContactInfo : NSObject
+@property (assign, nonatomic) int evstatus;
+@property (assign, nonatomic) uint64_t userId;
+@property (copy, nonatomic) NSString *_Nonnull displayName;
+@property (copy, nonatomic) NSString *_Nonnull imageUrl;
+@end
+
 @protocol EVEngineDelegate <EVCommonDelegate>
 @optional
 - (void)onRegister:(BOOL)registered;
@@ -317,6 +324,7 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 - (void)onMessageOverlay:(EVMessageOverlay *_Nonnull)msg;
 - (void)onWhiteBoardIndication:(EVWhiteBoardInfo * _Nonnull)msg;
 - (void)onParticipant:(int)number;
+- (void)onPeerImageUrl:(NSString *_Nonnull)imageUrl;
 @end
 
 //////////////////////////////
@@ -329,7 +337,7 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 - (void) setDelegate:(id<EVEngineDelegate>_Nonnull)aDelegate;
 
 //Login
-- (int) login:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
+- (int) login:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password __deprecated;
 - (int) loginWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
 - (int) logout;
 - (int) changePassword:(NSString *_Nonnull)oldpassword newpassword:(NSString *_Nonnull)newpassword;
@@ -341,10 +349,21 @@ __attribute__((visibility("default"))) @interface EVRecordingInfo : NSObject
 
 //Conference & Layout
 - (int) setMaxRecvVideo:(unsigned int)num;
+- (int) setLayoutCapacity:(EVLayoutMode)mode types:(EVLayoutType[_Nonnull])types size:(unsigned int)size;
 - (int) joinConference:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
-- (int) joinConference:(NSString *_Nonnull)server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
+- (int) joinConference:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password svcCallType:(EVSvcCallType)type;
+- (int) joinConference:(NSString *_Nonnull)server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password __deprecated;
 - (int) joinConferenceWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
 - (int) leaveConference;
+- (int) declineIncommingCall:(NSString *_Nonnull)conference_number;
 - (int) setLayout:(EVLayoutRequest *_Nonnull)layout;
+- (int) setVideoActive:(int)active;
+- (int) videoActive;
+- (int) setInConfDisplayName:(NSString *_Nonnull)display_name;
 
+//IM
+- (NSString * _Nonnull) getIMAddress;
+- (NSString * _Nonnull) getIMGroupID;
+- (EVContactInfo *_Nonnull)getContactInfo:(const char *_Nonnull)usrid timeout:(int)timeout_sec;
+- (void) setIMUserID:(const char *_Nonnull)im_usrid;
 @end

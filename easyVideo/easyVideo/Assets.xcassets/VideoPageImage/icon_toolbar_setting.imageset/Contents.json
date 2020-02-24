@@ -2,11 +2,12 @@
   "images" : [
     {
       "idiom" : "mac",
+      "filename" : "icon_seting@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "mac",
-      "filename" : "icon_toolbar_setting@2x.png",
+      "filename" : "icon_seting@2x.png",
       "scale" : "2x"
     }
   ],

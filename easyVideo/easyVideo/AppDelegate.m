@@ -36,7 +36,11 @@
     return _responseData;
 }
 
-@synthesize evengine;
+@synthesize evengine, emengine;
+
+- (UploadWindowController * _Nonnull)extracted {
+    return [UploadWindowController windowController];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
@@ -57,16 +61,33 @@
     
     [self redirectNSLogToDocumentFolder];
     
+    [self setEMSDK];
+    
     [self checktheVersion];
     
     self.joinMeetingWindow = [JoinMeetingWindowController windowController];
-    self.uploadWindow = [UploadWindowController windowController];
+    self.uploadWindow = [self extracted];
     
     [self languageLocalization];
     
     [self preventSystemSleep];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginSucceed) name:LOGINGSUCCEED object:nil];
+}
+
+#pragma mark - EMSDK
+- (void)setEMSDK
+{
+    emengine = [[EMEngineObj alloc] init];
+
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *logDirectory = [path stringByAppendingPathComponent:@"Log"];
+
+    [emengine initialize:path filename:@"config"];
+    [emengine setLog:EMLogLevelMessage path:logDirectory file:@"emsdk" size:1024*1024*20];
+    [emengine enableLog:YES];
+    [emengine enableSecure: YES];
+    DDLogInfo(@"emsdk-macos: applicationDidFinishLaunching end");
 }
 
 /**
@@ -194,6 +215,14 @@
         [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
     }
     
+    [EVUtils showScreenRecordingPrompt];
+    
+    //set bundle version
+    NSString *app_Version = infoDictionary[@"CFBundleVersion"];
+    if (app_Version) {
+        [evengine setUserAgent:@"HexMeet" version:app_Version];
+    }
+    
     if ([infoDic[@"http"] isEqualToString:@"https"]) {
         [evengine enableSecure:YES];
     }else {
@@ -238,103 +267,43 @@
     
     NSMutableDictionary *dic = [self getURLParameters:[webUrl absoluteString]];
     [dic setValue:[webUrl host] forKey:@"server"];
-    
-    if([[webUrl absoluteString] rangeOfString:@"join"].location != NSNotFound) {
-        if (_islogin) {
-            NSDictionary *setInfo = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
-            if ([setInfo[@"iscloudLogin"]isEqualToString:@"YES"]) {
-                NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:CLOUDUSERINFO];
-                if ([[webUrl host] isEqualToString:userinfo[@"server"]]) {
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
-                }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
-                }
-            }else {
-                NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:PRIVATEUSERINFO];
-                if ([[webUrl host] isEqualToString:userinfo[@"server"]]) {
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
-                }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
-                }
+
+    if (_islogin) {
+        NSDictionary *setInfo = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+        if ([setInfo[@"iscloudLogin"]isEqualToString:@"YES"]) {
+            NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:CLOUDUSERINFO];
+            DDLogInfo(@"[Info] location server address:%@", userinfo[@"locationServer"]);
+            if ([[webUrl host] isEqualToString:userinfo[@"locationServer"]]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
+            }else{
+                [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
+                [NSUSERDEFAULT setValue:@"NO" forKey:@"needAutoLogin"];
+                [NSUSERDEFAULT synchronize];
             }
         }else {
-            //User set up automatic login
-            NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
-            if (infoDic[@"autoLog"]) {
-                if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
-                    [NSUSERDEFAULT setValue:@"1" forKey:@"canautoLogin"];
-                    [NSUSERDEFAULT synchronize];
-                    
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSWEBLOGIN object:dic];
-                }else {
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSWEBLOGIN object:dic];
-                }
-            }else {
-                [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSWEBLOGIN object:dic];
+            NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:PRIVATEUSERINFO];
+            DDLogInfo(@"[Info] location server address:%@", userinfo[@"locationServer"]);
+            if ([[webUrl host] isEqualToString:userinfo[@"locationServer"]]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
+            }else{
+                [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
+                [NSUSERDEFAULT setValue:@"NO" forKey:@"needAutoLogin"];
+                [NSUSERDEFAULT synchronize];
             }
         }
     }else {
-        //location server
-        if (_islogin) {
-            NSDictionary *setInfo = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
-            if ([setInfo[@"iscloudLogin"]isEqualToString:@"YES"]) {
-                NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:CLOUDUSERINFO];
-                DDLogInfo(@"[Info] location server address:%@", userinfo[@"locationServer"]);
-                if ([[webUrl host] isEqualToString:userinfo[@"locationServer"]]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
-                }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
-                }
-            }else {
-                NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:PRIVATEUSERINFO];
-                DDLogInfo(@"[Info] location server address:%@", userinfo[@"locationServer"]);
-                if ([[webUrl host] isEqualToString:userinfo[@"locationServer"]]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WEBJOIN object:dic];
-                }else{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:LOGINGOUT object:dic];
-                }
-            }
-        }else {
-            //User set up automatic login
-            NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
-            if (infoDic[@"autoLog"]) {
-                if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
-                    [NSUSERDEFAULT setValue:@"1" forKey:@"canautoLogin"];
-                    [NSUSERDEFAULT synchronize];
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
+        //User set up automatic login
+        NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+        if (infoDic[@"autoLog"]) {
+            if ([infoDic[@"autoLog"] isEqualToString:@"YES"]) {
+                [NSUSERDEFAULT setValue:@"1" forKey:@"canautoLogin"];
+                [NSUSERDEFAULT synchronize];
+                if ([dic[@"protocol"] isEqualToString:@"https"]) {
+                    [evengine enableSecure:YES];
                 }else {
-                    if ([dic[@"protocol"] isEqualToString:@"https"]) {
-                        [evengine enableSecure:YES];
-                    }else {
-                        [evengine enableSecure:NO];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
+                    [evengine enableSecure:NO];
                 }
+                [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
             }else {
                 if ([dic[@"protocol"] isEqualToString:@"https"]) {
                     [evengine enableSecure:YES];
@@ -343,6 +312,13 @@
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
             }
+        }else {
+            if ([dic[@"protocol"] isEqualToString:@"https"]) {
+                [evengine enableSecure:YES];
+            }else {
+                [evengine enableSecure:NO];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:ANONYMOUSLOCATIONWEBLOGIN object:dic];
         }
     }
 }
@@ -457,10 +433,8 @@
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication
                     hasVisibleWindows:(BOOL)flag{
-    if (!flag){
-        [NSApp activateIgnoringOtherApps:NO];
-        [self.mainWindowController.window makeKeyAndOrderFront:self];
-    }
+    [NSApp activateIgnoringOtherApps:NO];
+    [self.mainWindowController.window makeKeyAndOrderFront:self];
     return YES;
 }
 

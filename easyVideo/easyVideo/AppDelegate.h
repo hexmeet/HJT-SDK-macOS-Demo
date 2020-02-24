@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <CoreData/CoreData.h>
 #import "evsdk/EVEngineObj.h"
+#import "emsdk/EMEngineObj.h"
 #import "JoinMeetingWindowController.h"
 #import "UploadWindowController.h"
 #import "CheckVersionWindowController.h"
@@ -22,6 +23,8 @@
 @property (nonatomic, assign) BOOL isautocheck;
 @property (nonatomic, strong) NSURL *joinurl;
 @property (nonatomic, strong) EVEngineObj *evengine;
+@property (nonatomic, strong) EMEngineObj *emengine;
+
 /** Menu */
 @property (weak) IBOutlet NSMenu *MeunName;
 @property (weak) IBOutlet NSMenuItem *appName;

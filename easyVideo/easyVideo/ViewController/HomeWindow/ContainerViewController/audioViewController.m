@@ -41,6 +41,8 @@
     [super viewWillAppear];
     
     playBtn.enabled = YES;
+    [playBtn setBackgroundColor:COLORF1F1F1];
+    playBtn.layer.cornerRadius = 4;
     speakerboBox.enabled = YES;
     
     [self testMicrophone];

@@ -29,8 +29,8 @@
     
     [joinBtn changeCenterButtonattribute:localizationBundle(@"login.window.join") color:WHITECOLOR];
     [cancelBtn changeCenterButtonattribute:localizationBundle(@"alert.cancel") color:TITLECOLOR];
-    [microphoneBtn changeLeftButtonattribute:localizationBundle(@"home.join.camera") color:BLACKCOLOR];
-    [cameraBtn changeLeftButtonattribute:localizationBundle(@"home.join.mute") color:BLACKCOLOR];
+    [microphoneBtn changeLeftButtonattribute:localizationBundle(@"home.join.mute") color:BLACKCOLOR];
+    [cameraBtn changeLeftButtonattribute:localizationBundle(@"home.join.camera") color:BLACKCOLOR];
     displayNameTF.placeholderString = localizationBundle(@"login.window.displayname");
     
     NSDictionary *setDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
@@ -49,6 +49,11 @@
         }else {
             microphoneBtn.state = NSOffState;
         }
+    }
+    //user name
+    NSString *displaynameStr = [NSUSERDEFAULT objectForKey:@"DISPLAYNAME"];
+    if (displaynameStr) {
+        displayNameTF.stringValue = displaynameStr;
     }
 }
 
@@ -77,6 +82,8 @@
             [appDelegate.evengine enableSecure:YES];
         }
         [NSUSERDEFAULT setValue:@"YES" forKey:@"anonymous"];
+        [NSUSERDEFAULT synchronize];
+        [NSUSERDEFAULT setObject:displayNameTF.stringValue forKey:@"DISPLAYNAME"];
         [NSUSERDEFAULT synchronize];
         [appDelegate.evengine setDelegate:self];
         Notifications(OPENVIDEO);

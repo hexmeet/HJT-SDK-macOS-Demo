@@ -7,8 +7,7 @@
 //
 
 #import "macHUD.h"
-#import <SDWebImageManager.h>
-#import "NSImage+WebCache.h"
+
 @implementation macHUD
 
 - (void)drawRect:(NSRect)dirtyRect {

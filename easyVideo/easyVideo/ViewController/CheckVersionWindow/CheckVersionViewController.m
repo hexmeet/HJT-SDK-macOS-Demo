@@ -97,6 +97,7 @@ typedef enum _DownloadState {
                 break;
             case DdStateFN:
                 [self openDownloadfile];
+                [self.view.window close];
                 break;
             case DdStateFL:
                 [self.outputStream close];

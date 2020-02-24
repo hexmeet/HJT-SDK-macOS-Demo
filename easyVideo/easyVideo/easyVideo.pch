@@ -9,7 +9,6 @@
 #ifndef easyVideo_pch
 #define easyVideo_pch
 
-#import <SDWebImageManager.h>
 #import <objc/runtime.h>
 #import "AppDelegate.h"
 #import "ConfigureMacro.h"
@@ -28,6 +27,10 @@
 #import <ZipArchive.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import <DDLog.h>
+#import "EMMessageManager.h"
+#import "EVUserIdManager.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "EMManager.h"
 
 #ifdef DEBUG
 static const int ddLogLevel = DDLogLevelVerbose;

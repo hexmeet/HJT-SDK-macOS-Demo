@@ -22,11 +22,12 @@
 @implementation HomeViewController
 
 //Left Custom View
-@synthesize leftMenuView, meetingline, setView, meetingView, setline, meetingViewImage, meetingViewTitle, meetingBtn, setViewImage, setViewTitle, setBtn, userImageBtn, userName, registerTitle, registerImage, closeBtn, miniBtn, fullBtn;
+@synthesize leftMenuView, meetingline, setView, meetingView, setline, meetingViewImage, meetingViewTitle, meetingBtn, setViewImage, setViewTitle, setBtn, userImageBtn, userName, registerTitle, registerImage, closeBtn, miniBtn, fullBtn, chatBtn, chatViewImage, chatViewTitle, Chatline, ChatView, contactsBtn, contactsline, contactsView, contactsImage, contactsTitle;
 //Top Custom View
 @synthesize topMenuView, topMenuViewTitle;
 //Other
-@synthesize setContainerView, webContainerView;
+@synthesize setContainerView, webContainerView, chatContainerView, contactsContainerView;
+@synthesize chatConstraint, contactsConstraint, setConstraint;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -52,8 +53,6 @@
 - (void)viewDidAppear
 {
     [super viewDidAppear];
-    
-    [self CheckPermissions];
 }
 
 - (void)viewDidLayout
@@ -65,64 +64,6 @@
 }
 
 /**
- Check the permissions
- */
-- (void)CheckPermissions
-{
-    if (@available(macOS 10.14, *)) {
-        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-        
-        if (authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)
-        {
-            //无权限
-            DDLogWarn(@"[Warn] No camera access");
-            NSAlert *alert = [NSAlert new];
-            [alert addButtonWithTitle:localizationBundle(@"alert.sure")];
-            [alert addButtonWithTitle:localizationBundle(@"alert.cancel")];
-            [alert setMessageText:localizationBundle(@"alert.error")];
-            [alert setInformativeText:localizationBundle(@"alert.open.carmer")];
-            [alert setAlertStyle:NSAlertStyleInformational];
-            [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
-                if(returnCode == NSAlertFirstButtonReturn){
-                    [[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Security.prefPane"];
-                }else if(returnCode == NSAlertSecondButtonReturn){
-                    
-                }
-            }];
-        }
-        
-    } else {
-        // Fallback on earlier versions
-    }
-    
-    if (@available(macOS 10.14, *)) {
-        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
-        
-        if (authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied)
-        {
-            //无权限
-           DDLogWarn(@"[Warn] No microphone access");
-            NSAlert *alert = [NSAlert new];
-            [alert addButtonWithTitle:localizationBundle(@"alert.sure")];
-            [alert addButtonWithTitle:localizationBundle(@"alert.cancel")];
-            [alert setMessageText:localizationBundle(@"alert.error")];
-            [alert setInformativeText:localizationBundle(@"alert.open.micphone")];
-            [alert setAlertStyle:NSAlertStyleInformational];
-            [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
-                if(returnCode == NSAlertFirstButtonReturn){
-                    [[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Security.prefPane"];
-                }else if(returnCode == NSAlertSecondButtonReturn){
-                    
-                }
-            }];
-        }
-    } else {
-        // Fallback on earlier versions
-    }
-    
-}
-
-/**
  Set the RootView Attribute
  */
 - (void)setRootViewAttribute
@@ -130,10 +71,33 @@
     hub = [macHUD creatMacHUD:@"" icon:@"" viewController:self];
     hub.hidden = YES;
     
+    [meetingView setBackgroundColor:WHITECOLOR];
+    meetingViewImage.image = [NSImage imageNamed:@"nav_meetings_c"];
+    meetingViewTitle.textColor = BLUECOLOR;
+    
+    [ChatView setBackgroundColor:BLUECOLOR];
+    chatViewImage.image = [NSImage imageNamed:@"nav_chat_n"];
+    chatViewTitle.textColor = WHITECOLOR;
+    
+    [contactsView setBackgroundColor:BLUECOLOR];
+    contactsImage.image = [NSImage imageNamed:@"nav_contacts_n"];
+    contactsTitle.textColor = WHITECOLOR;
+    
+    [setView setBackgroundColor:BLUECOLOR];
+    setViewImage.image = [NSImage imageNamed:@"nav_setting_n"];
+    setViewTitle.textColor = WHITECOLOR;
+    
+    webContainerView.hidden = NO;
+    chatContainerView.hidden = YES;
+    contactsContainerView.hidden = YES;
+    setContainerView.hidden = YES;
+    
     [EVUtils saveNewLogWhenOldLogTooBig];
     
     [self.view setBackgroundColor:WHITECOLOR];
     webContainerView.hidden = NO;
+    chatContainerView.hidden = YES;
+    contactsContainerView.hidden = YES;
     setContainerView.hidden = YES;
     
     appDelegate = APPDELEGATE;
@@ -144,7 +108,20 @@
 //    [self performSelector:@selector(getuserImage) withObject:self afterDelay:3];
     
     userImageBtn.wantsLayer = YES;
-    userImageBtn.layer.cornerRadius = 22;
+    userImageBtn.layer.cornerRadius = 25;
+    
+    ///hidden chatView
+    ChatView.hidden = YES;
+    
+    if ([EVUtils queryUserPlist:@"contactWebPage"]) {
+        //包含联系人
+        contactsConstraint.constant = 63;
+        setConstraint.constant = 118;
+    }else {
+        //不包含联系人
+        contactsView.hidden = YES;
+        setConstraint.constant = 63;
+    }
 }
 
 /**
@@ -155,6 +132,10 @@
     [leftMenuView setBackgroundColor:BLUECOLOR];
     [meetingView setBackgroundColor:WHITECOLOR];
     [meetingline setBackgroundColor:BLUECOLOR];
+    [ChatView setBackgroundColor:BLUECOLOR];
+    [Chatline setBackgroundColor:BLUECOLOR];
+    [contactsView setBackgroundColor:BLUECOLOR];
+    [contactsline setBackgroundColor:BLUECOLOR];
     [setView setBackgroundColor:BLUECOLOR];
     [setline setBackgroundColor:BLUECOLOR];
 }
@@ -187,6 +168,8 @@
     [LanguageTool initUserLanguage];
     
     meetingViewTitle.stringValue = localizationBundle(@"home.left.meetingtitle");
+    chatViewTitle.stringValue = localizationBundle(@"home.left.chattitle");
+    contactsTitle.stringValue = localizationBundle(@"home.left.contactstitle");
     setViewTitle.stringValue     = localizationBundle(@"home.left.settitle");
     registerTitle.stringValue    = localizationBundle(@"home.left.registeredtitle");
     [registerTitle sizeToFit];
@@ -234,21 +217,87 @@
 {
     if (sender == meetingBtn) {
         [meetingView setBackgroundColor:WHITECOLOR];
-        meetingViewImage.image = [UIImage imageNamed:@"nav_meetings_c"];
+        meetingViewImage.image = [NSImage imageNamed:@"nav_meetings_c"];
         meetingViewTitle.textColor = BLUECOLOR;
+        
+        [ChatView setBackgroundColor:BLUECOLOR];
+        chatViewImage.image = [NSImage imageNamed:@"nav_chat_n"];
+        chatViewTitle.textColor = WHITECOLOR;
+        
+        [contactsView setBackgroundColor:BLUECOLOR];
+        contactsImage.image = [NSImage imageNamed:@"nav_contacts_n"];
+        contactsTitle.textColor = WHITECOLOR;
+        
         [setView setBackgroundColor:BLUECOLOR];
-        setViewImage.image = [UIImage imageNamed:@"nav_setting_n"];
+        setViewImage.image = [NSImage imageNamed:@"nav_setting_n"];
         setViewTitle.textColor = WHITECOLOR;
+        
         webContainerView.hidden = NO;
+        chatContainerView.hidden = YES;
+        contactsContainerView.hidden = YES;
+        setContainerView.hidden = YES;
+    }else if (sender == chatBtn) {
+        [meetingView setBackgroundColor:BLUECOLOR];
+        meetingViewImage.image = [NSImage imageNamed:@"nav_meetings_n"];
+        meetingViewTitle.textColor = WHITECOLOR;
+        
+        [ChatView setBackgroundColor:WHITECOLOR];
+        chatViewImage.image = [NSImage imageNamed:@"nav_chat_c"];
+        chatViewTitle.textColor = BLUECOLOR;
+        
+        [contactsView setBackgroundColor:BLUECOLOR];
+        contactsImage.image = [NSImage imageNamed:@"nav_contacts_n"];
+        contactsTitle.textColor = WHITECOLOR;
+        
+        [setView setBackgroundColor:BLUECOLOR];
+        setViewImage.image = [NSImage imageNamed:@"nav_setting_n"];
+        setViewTitle.textColor = WHITECOLOR;
+        
+        webContainerView.hidden = YES;
+        chatContainerView.hidden = NO;
+        contactsContainerView.hidden = YES;
+        setContainerView.hidden = YES;
+    }else if (sender == contactsBtn) {
+        [meetingView setBackgroundColor:BLUECOLOR];
+        meetingViewImage.image = [NSImage imageNamed:@"nav_meetings_n"];
+        meetingViewTitle.textColor = WHITECOLOR;
+        
+        [ChatView setBackgroundColor:BLUECOLOR];
+        chatViewImage.image = [NSImage imageNamed:@"nav_chat_n"];
+        chatViewTitle.textColor = WHITECOLOR;
+        
+        [contactsView setBackgroundColor:WHITECOLOR];
+        contactsImage.image = [NSImage imageNamed:@"nav_contacts_c"];
+        contactsTitle.textColor = BLUECOLOR;
+        
+        [setView setBackgroundColor:BLUECOLOR];
+        setViewImage.image = [NSImage imageNamed:@"nav_setting_n"];
+        setViewTitle.textColor = WHITECOLOR;
+        
+        webContainerView.hidden = YES;
+        chatContainerView.hidden = YES;
+        contactsContainerView.hidden = NO;
         setContainerView.hidden = YES;
     }else if (sender == setBtn) {
         [meetingView setBackgroundColor:BLUECOLOR];
-        meetingViewImage.image = [UIImage imageNamed:@"nav_meetings_n"];
+        meetingViewImage.image = [NSImage imageNamed:@"nav_meetings_n"];
         meetingViewTitle.textColor = WHITECOLOR;
+        
+        [ChatView setBackgroundColor:BLUECOLOR];
+        chatViewImage.image = [NSImage imageNamed:@"nav_chat_n"];
+        chatViewTitle.textColor = WHITECOLOR;
+        
+        [contactsView setBackgroundColor:BLUECOLOR];
+        contactsImage.image = [NSImage imageNamed:@"nav_contacts_n"];
+        contactsTitle.textColor = WHITECOLOR;
+        
         [setView setBackgroundColor:WHITECOLOR];
-        setViewImage.image = [UIImage imageNamed:@"nav_setting_c"];
+        setViewImage.image = [NSImage imageNamed:@"nav_setting_c"];
         setViewTitle.textColor = BLUECOLOR;
+        
         webContainerView.hidden = YES;
+        chatContainerView.hidden = YES;
+        contactsContainerView.hidden = YES;
         setContainerView.hidden = NO;
     }
 }
@@ -263,8 +312,6 @@
     Notifications(CLOSEUSERWINDOW);
     
     UserWindowController* windowControl = [UserWindowController windowController];
-    
-    appDelegate.mainWindowController = windowControl;
     
     [windowControl.window makeKeyAndOrderFront:self];
     
@@ -285,6 +332,8 @@
 - (void)changeLanguage:(NSNotification *)sender
 {
     meetingViewTitle.stringValue = localizationBundle(@"home.left.meetingtitle");
+    chatViewTitle.stringValue = localizationBundle(@"home.left.chattitle");
+    contactsTitle.stringValue = localizationBundle(@"home.left.contactstitle");
     setViewTitle.stringValue     = localizationBundle(@"home.left.settitle");
     registerTitle.stringValue    = localizationBundle(@"home.left.registeredtitle");
     [registerTitle sizeToFit];
@@ -414,11 +463,33 @@
 - (void)onJoinConferenceIndication:(EVCallInfo *_Nonnull)info
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        Notifications(CLOSEINVITATIONWINDOW);
-        InvitationWindowController* invitation = [InvitationWindowController windowController];
-        self->appDelegate.mainWindowController = invitation;
-        [invitation.window makeKeyAndOrderFront:self];
-        [[NSNotificationCenter defaultCenter] postNotificationName:JOINMEETING object:info];
+        NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+        if (info.svcCallType == EVSvcCallP2P) {
+            [setDic setValue:info.conference_number forKey:@"confId"];
+            [setDic setValue:@"p2p" forKey:@"conftype"];
+        }else {
+            [setDic setValue:info.conference_number forKey:@"confId"];
+            [setDic setValue:@"conf" forKey:@"conftype"];
+        }
+        [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
+        if (info.svcCallAction == EVSvcIncomingCallRing) {
+            [EVUtils playSound];
+            InvitationWindowController* invitation = [InvitationWindowController windowController];
+            [invitation.window orderFront:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:JOINMEETING object:info];
+        }else{
+            [EVUtils stopSound];
+            [self->appDelegate.evengine declineIncommingCall:info.conference_number];
+            Notifications(CLOSEINVITATIONWINDOW);
+        }
+        
+    });
+}
+
+- (void)onPeerImageUrl:(NSString *)imageUrl
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:INVITATIONIMG object:imageUrl];
     });
 }
 

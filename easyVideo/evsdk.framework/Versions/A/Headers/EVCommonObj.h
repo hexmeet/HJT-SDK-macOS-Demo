@@ -23,6 +23,17 @@ typedef NS_ENUM (NSUInteger, EVCallType) {
 	EVCallSVC = 3
 };
 
+typedef NS_ENUM (NSUInteger, EVSvcCallType) {
+	EVSvcCallConf = 0,
+	EVSvcCallP2P = 1
+};
+
+typedef NS_ENUM (NSUInteger, EVSvcCallAction) {
+    EVSvcNoAction = 0,
+    EVSvcIncomingCallRing = 1,
+    EVSvcIncomingCallCancel = 2
+};
+
 typedef NS_ENUM (NSUInteger, EVCallDir) {
 	EVCallOutgoing = 0,
 	EVCallIncoming = 1
@@ -121,14 +132,19 @@ typedef NS_ENUM (NSUInteger, EVSdkError) {
     EVServerInvalid = 9,
     EVCallDeclined = 10,
     EVCallBusy = 11,
-    EVCallIOError = 12
+    EVCallIOError = 12,
+    EVNotLogin = 13,
+    EVCallTimeout = 14
  };
 
 typedef NS_ENUM (NSUInteger, EVWarnCode) {
     EVWarnNetworkPoor = 0,
     EVWarnNetworkVeryPoor = 1,
     EVWarnBandwidthInsufficient = 2,
-    EVWarnBandwidthVeryInsufficient = 3
+    EVWarnBandwidthVeryInsufficient = 3,
+    EVWarnNoAudioCaptureCard = 4,
+    EVWarnUnmuteAudioNotAllowed = 5,
+    EVWarnUnmuteAudioIndication = 6
 };
 
 __attribute__((visibility("default"))) @interface EVWarn : NSObject
@@ -191,6 +207,13 @@ __attribute__((visibility("default"))) @interface EVCallLog : NSObject
 //////////////////////////////
 //  Event
 //////////////////////////////
+__attribute__((visibility("default"))) @interface EVFeatureSupport : NSObject 
+@property (assign, nonatomic) bool contactWebPage;
+@property (assign, nonatomic) bool p2pCall;
+@property (assign, nonatomic) bool chatInConference;
+@property (assign, nonatomic) bool switchingToAudioConference;
+@property (assign, nonatomic) bool sitenameIsChangeable;
+@end
 
 __attribute__((visibility("default"))) @interface EVUserInfo : NSObject
 @property (assign, nonatomic) uint64_t userId;
@@ -212,6 +235,8 @@ __attribute__((visibility("default"))) @interface EVUserInfo : NSObject
 @property (copy, nonatomic) NSString *_Nonnull appServerType;
 @property (copy, nonatomic) NSString *_Nonnull urlSuffixForMobile;
 @property (copy, nonatomic) NSString *_Nonnull urlSuffixForPC;
+@property (strong, nonatomic) EVFeatureSupport *_Nonnull featureSupport;
+
 @end
 
 __attribute__((visibility("default"))) @interface EVCallInfo : NSObject
@@ -223,6 +248,8 @@ __attribute__((visibility("default"))) @interface EVCallInfo : NSObject
 @property (strong, nonatomic) EVError *_Nonnull err;
 @property (assign, nonatomic) BOOL isBigConference;
 @property (assign, nonatomic) BOOL isRemoteMuted;
+@property (assign, nonatomic) EVSvcCallType svcCallType;
+@property (assign, nonatomic) EVSvcCallAction svcCallAction;
 @end
 
 __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
@@ -245,11 +272,14 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (void)onNetworkQuality:(float)quality_rating;
 - (void)onProvision:(bool)applied;
 - (void)onCallConnected:(EVCallInfo * _Nonnull)info;
+- (void)onCallPeerConnected:(EVCallInfo * _Nonnull)info;
 - (void)onCallIncoming:(EVCallInfo * _Nonnull)info;
 - (void)onCallEnd:(EVCallInfo * _Nonnull)info;
 - (void)onContent:(EVContentInfo * _Nonnull)info;
 - (void)onMuteSpeakingDetected;
 - (void)onCallLogUpdated:(EVCallLog * _Nonnull)call_log;
+- (void)onMicMutedShow:(int)mic_muted;
+- (void)onAudioData:(int)sample_rate data:(void *)data len:(int)len;
 @end
 
 //////////////////////////////
@@ -314,7 +344,7 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (NSString * _Nonnull) getDisplayName;
 - (int) enableHD:(BOOL)enable;
 - (BOOL) HDEnabled;
-
+- (int) setVideoActive:(int)active;
 //Send Content
 - (int) sendContent;
 - (int) sendWhiteBoard;
@@ -324,5 +354,8 @@ __attribute__((visibility("default"))) @interface EVContentInfo : NSObject
 - (int) setCallLogMaxSize:(unsigned int) num;
 - (NSArray<EVCallLog *> * _Nonnull) getCallLog;
 - (int) removeCallLog:(NSString * _Nonnull)id;
+
+//Relay stream
+- (int) enableRelayStreamDataCb:(EVStreamType)type enable:(BOOL)enable;
 
 @end

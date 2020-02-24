@@ -7,12 +7,11 @@
 //
 
 #import "webViewController.h"
-#import <WebKit/WebKit.h>
-#import "VideoHomeWindowController.h"
 
 @interface webViewController ()<WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, EVEngineDelegate>
 {
     AppDelegate *appDelegate;
+    BOOL flag;
 }
 @end
 
@@ -34,6 +33,13 @@
     
 }
 
+- (void)viewWillAppear
+{
+    [super viewWillAppear];
+    
+    flag = YES;
+}
+
 - (void)setRootViewAttribute
 {
     [self.view setBackgroundColor:WHITECOLOR];
@@ -51,6 +57,7 @@
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLanguage:) name:CHANGELANGUAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateToken:) name:UPDATETOKEN object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeDisplayName:) name:@"CHANGEDISPLAYNAME" object:nil];
     
     [LanguageTool initUserLanguage];
     
@@ -88,8 +95,6 @@
 - (void)setConferenceManagerUrl
 {
     NSDictionary *setDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
-    EVUserInfo *userInfo = [appDelegate.evengine getUserInfo];
-    NSString *token = userInfo.token;
     NSDictionary *userDic;
     if ([setDic[@"iscloudLogin"] isEqualToString:@"YES"]) {
         userDic = [PlistUtils loadUserInfoPlistFilewithFileName:CLOUDUSERINFO];
@@ -97,7 +102,8 @@
         userDic = [PlistUtils loadUserInfoPlistFilewithFileName:PRIVATEUSERINFO];
     }
     
-    NSString *webUrl = [NSString stringWithFormat:@"%@/webapp/#/conferences?token=%@", userDic[@"customizedH5UrlPrefix"], token];
+    
+    NSString *webUrl = [NSString stringWithFormat:@"%@/webapp/#/conferences?token=%@", [EVUtils queryUserInfo:@"customizedH5UrlPrefix"], [appDelegate.evengine getUserInfo].token];
 #if DEBUG
 //    webUrl = [NSString stringWithFormat:@"http://172.16.0.103:8001/#/conferences?token=%@", @"96f67621f338461da98f252c1fbc0818"];
 #endif
@@ -150,23 +156,36 @@
             [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:emailLink]];
         }else if ([message.body containsString:@"tokenExpired"]) {
             //重新登录回传token
-            NSString *jsStr = [appDelegate.evengine getUserInfo].token;
-            if (jsStr.length == 0) {
-                //没有内容不传给WEB
-                return;
+            //Fix 只有登录的时候才回去获取token
+            if (flag) {
+                if (appDelegate.islogin) {
+                NSString *jsStr = [NSString stringWithFormat:@"window.updateToken('%@')", [appDelegate.evengine getUserInfo].token];
+                [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+                    if (!error) {
+                        // 成功
+                    } else {
+                        // 失败
+                    }
+                }];
+                
+                [self setConferenceManagerUrl];
+            }else {
+                [self performSelector:@selector(updateTokenMethod) withObject:nil afterDelay:2];
             }
-            [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-                if (!error) {
-                    // 成功
-                } else {
-                    // 失败
-                }
-            }];
-            
-            [self setConferenceManagerUrl];
-            
+
+            }else if ([message.body containsString:@"clearCache"]) {
+                //清除缓存
+                [EVUtils deleteWebCache];
+                //重新加载
+                [self setConferenceManagerUrl];
+            }
         }
     }
+}
+
+- (void)updateTokenMethod
+{
+    flag = YES;
 }
 
 #pragma mark = WKNavigationDelegate
@@ -279,24 +298,32 @@
  */
 - (void)updateToken:(NSNotification *)sender
 {
-    NSString *jsStr = [appDelegate.evengine getUserInfo].token;
-    if (jsStr.length == 0) {
-        //没有内容不传给WEB
-        return;
-    }
-    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-        if (!error) {
-            // 成功
-        } else {
-            // 失败
-        }
-    }];
+//    NSString *jsStr =[NSString stringWithFormat:@"window.updateToken('%@')", [appDelegate.evengine getUserInfo].token];
+//    if (jsStr.length == 0) {
+//        //没有内容不传给WEB
+//        return;
+//    }
+//    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+//        if (!error) {
+//            // 成功
+//        } else {
+//            // 失败
+//        }
+//    }];
+}
+
+- (void)changeDisplayName:(NSNotification *)sender
+{
+    NSString *jsStr =[NSString stringWithFormat:@"updateLoginUser('%@')", sender.object];
+    
+    [self.webView evaluateJavaScript:jsStr completionHandler:nil];
 }
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CHANGELANGUAGE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATETOKEN object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:CHANGEDISPLAYNAME object:nil];
 }
 
 @end

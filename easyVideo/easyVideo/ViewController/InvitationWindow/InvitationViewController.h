@@ -7,16 +7,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "RippleAnimationView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface InvitationViewController : NSViewController
 
-@property (weak) IBOutlet NSTextField *meetingName;
-@property (weak) IBOutlet NSView *joinBg;
-@property (weak) IBOutlet NSView *cancelBg;
-@property (weak) IBOutlet NSButton *joinBtn;
+@property (weak) IBOutlet NSImageView *inviteBg;
+@property (weak) IBOutlet NSImageView *callImg;
+@property (weak) IBOutlet NSTextField *inviteName;
+@property (weak) IBOutlet NSTextField *inviteTitle;
 @property (weak) IBOutlet NSButton *cancelBtn;
+@property (weak) IBOutlet NSTextField *cancelTitle;
+@property (weak) IBOutlet NSButton *joinBtn;
+@property (weak) IBOutlet NSTextField *joinVideoTitle;
 
 @end
 
