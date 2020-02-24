@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
+#import "SoundManager.h"
+#import <WebKit/WebKit.h>
 
 @interface EVUtils : NSObject
 
@@ -66,5 +69,51 @@
 
 /** 获取当前时间 */
 + (NSString *)getCurrentTimes;
+
+/** Json 解析*/
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
+
+/** 屏幕录制权限检测 */
++ (BOOL)canRecord;
+
+/** 屏幕权限申请*/
++ (void)showScreenRecordingPrompt;
+
+/** 查询用户配置Plist文件 */
++ (BOOL)queryUserPlist:(NSString *)queryValue;
+
+/** 查询用户保存信息*/
++ (NSString *)queryUserInfo:(NSString *)queryValue;
+
+/** 呼叫铃声相关 */
++ (void)playSound;
++ (void)stopSound;
+
+/** 对象转字典 */
++ (NSDictionary*)getObjectData:(id)obj;
+
+//聊天界面时间显示内容
++ (NSString *)getDateDisplayString:(long long)miliSeconds;
+
+//解析RFC3339
++ (NSString *)userVisibleDateTimeStringForRFC3339DateTimeString:(NSString *)rfc3339DateTimeString;
+    
+/**
+ 计算2个时间的差值是否大于10分钟
+ example
+ NSString *time1 = @"2019-06-23 12:18:15";
+ NSString *time2 = @"2019-06-28 10:10:10";
+ */
++ (BOOL)compareTwoTime:(NSString *)time1 time2:(NSString *)time2;
+
+//保持四周一定区域像素不拉伸，将图像扩散到一定的大小
+- (NSImage *)stretchableImageWithSize:(NSSize)size edgeInsets:(NSEdgeInsets)insets;
+//保持leftWidth,rightWidth这左右一定区域不拉伸，将图片宽度拉伸到(leftWidth+middleWidth+rightWidth)
+- (NSImage *)stretchableImageWithLeftCapWidth:(float)leftWidth middleWidth:(float)middleWidth rightCapWidth:(float)rightWidth;
+
+/**
+ 清除所有的WebCache
+ */
++ (void)deleteWebCache;
 
 @end

@@ -27,6 +27,8 @@
 
 /** HomeWindow */
 "home.left.meetingtitle" = "会议";
+"home.left.chattitle" = "聊天";
+"home.left.contactstitle" = "通讯录";
 "home.left.settitle" = "设置";
 "home.left.registeredtitle" = "已注册";
 "home.left.noregisteredtitle" = "未注册";
@@ -54,11 +56,14 @@
 "home.set.routine.chinese" = "中文";
 "home.set.routine.english" = "English";
 "home.set.routine.diagnosis" = "诊断";
-"home.set.routine.uploaddiagnosis" = "上传诊断信息";
+"home.set.routine.uploaddiagnosis" = "上传日志";
 "home.set.routine.application" = "应用";
 "home.set.routine.autologin" = "自动登录";
 "home.set.routine.autoanswer" = "自动应答";
 "home.set.routine.highframerate" = "启用高帧率视频";
+"home.set.routine.closetip" = "关闭提示";
+"home.set.routine.closetip_prompt" = "勾选后，进入会议时，网络状态等提示信息将不再显示";
+"home.set.hd_prompt" = "勾选后，视频发送优先使用25帧/秒高帧率";
 "home.set.audio.microphone" = "麦克风";
 "home.set.audio.speaker" = "扬声器";
 "home.set.audio.play" = "播放测试声音";
@@ -69,12 +74,14 @@
 "home.user.head.open" = "打开本地";
 "home.user.head.updata" = "上传头像";
 "home.join.password" = "会议密码";
-"home.invitation.join" = "接受";
-"home.invitation.cancel" = "婉拒";
-"home.invited.Meeting" = "您被邀请加入会议:";
+"home.invitation.videojoin" = "视频接听";
+"home.invitation.cancel" = "挂断";
+"home.invited.Meeting" = "正在邀请您加入会议:";
+"home.invited.p2pinvited" = "正在邀请您...";
 "home.joinmeetinginput" = "请输入会议号码(加*密码)";
 "home.signl.title" = "媒体统计信息";
 "home.joinmeeting" = "即将进入会议";
+"home.p2pcall" = "正在呼叫...";
 "video.statistics.column.encrypted" = "加密";
 "video.statistics.column.unencrypted" = "未加密";
 "video.content.save" = "保存";
@@ -84,7 +91,7 @@
 "video.screenimage" = "屏幕";
 
 /* Video */
-"video.openlocalvideo" = "开启本地视频";
+"video.openlocalvideo" = "显示画中画";
 "video.closelocalvideo" = "关闭本地视频";
 "video.unmute" = "解除静音";
 "video.mute" = "静音";
@@ -92,11 +99,11 @@
 "video.stopvideo" = "停止视频";
 "video.set" = "设备";
 "video.meetingmanagement" = "会议管理";
-"video.speakerlayout" = "主讲视图";
-"video.gallerylayout" = "画廊视图";
+"video.chat" = "群聊";
+"video.layoutswitch" = "分屏切换";
 "video.handup" = "申请发言";
 "video.showcontent" = "显示分享";
-"video.callend" = "  挂断";
+"video.callend" = "挂 断";
 "video.unselectvideo" = "取消选定视频";
 "video.selectspeaker" = "请选择声音的输出设备";
 "video.selectmicrophone" = "请选择麦克风";
@@ -104,6 +111,9 @@
 "video.speaker" = "扬声器";
 "video.microphone" = "麦克风";
 "video.camera" = "摄像头";
+"video.more" = "更多";
+"video.changeMode" = "切到语音模式";
+"video.changeName" = "改名";
 "video.statistics.column.name" = "媒体方向";
 "video.statistics.codec" = "编解码器";
 "video.statistics.rate" = "速率(kbps)";
@@ -116,6 +126,10 @@
 "video.statistics.column.thisEnd.content" = "内容发送";
 "video.statistics.column.farEnd.content" = "内容接收";
 "video.localdisplayname" = "我";
+"video.exitAudioTitle" = "退出语音模式";
+"video.isspeaking" = "正在发言";
+"video.rename" = "改名";
+"video.inputNewName" = "输入新的显示名称:";
 
 /* Image */
 "Image.Company" = "logo_login_title_zh";
@@ -154,16 +168,16 @@
 "alert.uploaded.successfully" = "上传成功";
 "alert.upload" = "上传中";
 "alert.uploaded.failed" = "上传失败";
-"alert.nospeak" = "您已被管理员静音，如需发言请点击申请按钮";
-"alert.speak" = "您已经被解除禁言";
-"alert.openmainvenuemodel" = "当前会议暂不支持指定分屏模式";
+"alert.nospeak" = "已被静音，您的声音不会被听到";
+"alert.speak" = "已解除静音，与会者将听到您的声音";
+"alert.openmainvenuemodel" = "当前会议禁止切换分屏";
 "alert.error" = "错误";
 "alert.serverisinconsistent" = "当前服务器不一致";
 "alert.note.loginout" = "确认退出登录？";
 "alert.note.networkNotStable" = "当前网络不稳定，可能会影响您的会话质量";
 "alert.handsup.approve" = "发言申请已发送，请稍候";
 "alert.cannotconnectserver" = "无法连接服务器";
-"alert.loginerr" = "无效的用户";
+"alert.loginerr" = "账号或密码错误";
 "alert.open.carmer" = "视频应用需要获取您的相机权限";
 "alert.open.micphone" = "视频应用需要获取您的麦克风权限";
 "alert.update" = "更新";
@@ -180,6 +194,8 @@
 "alert.network_poor" = "当前网络连接很差，建议检查网络连接或者切换网络";
 "alert.network_insufficient" = "当前网络带宽不足，可能会影响到您的会议体验";
 "alert.network_shortage" = "当前网络带宽严重不足，建议检查网络带宽或者切换网络";
+"alert.nnmuteAudioNotAllowed" = "当前会议禁止解除静音";
+"alert.nnmuteAudioIndication" = "主持人正在解除静音，是否同意解除静音?";
 "alert.stopshare" = "您确定要停止分享？";
 "alert.prompt" = "提示";
 "alert.passworderror1" = "密码错误。账号将在";
@@ -187,17 +203,24 @@
 "alert.passworderror3" = "密码错误次数已达上限，账号已被锁定，5分钟后自动解除";
 "alert.cantconnert.server" = "无法连接到服务，请检查网络";
 "alert.micmute" = "麦克风已静音";
+"alert.noScreenrecording" = "没有屏幕录制权限";
 
 /** Error code */
-"errorcode.1100" = "无效的用户";
+"errorcode.1100" = "账号或密码错误";
 "error.resolve" = "无法解析主机名";
-"error.10009" = "无效的用户";
+"error.10009" = "账号或密码错误";
 "error.1112" = "系统管理员无登录应用权限，请使用用户账号登录";
 "error.2011" = "您呼叫的云会议室已过期";
 "error.2009" = "您呼叫的群组尚未绑定云会议室";
 "error.2024" = "当前与会人数已达组织端口上限";
 "error.2025" = "当前与会人数已达平台会议端口上限";
 "error.2007" = "呼叫超时，请重试";
+"error.4055" = "加入失败，会议已锁定";
+"error.4051" = "对方不在线";
+"error.4049" = "呼叫失败，对方正在通话中";
+"error.10" = "呼叫失败，对方忙";
+"error.101" = "对方已挂断";
+"error.14" = "呼叫超时，对方未接听";
 
 /** Menu */
 "menu.menuName" = "easyVideo";

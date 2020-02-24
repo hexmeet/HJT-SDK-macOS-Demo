@@ -51,6 +51,9 @@
     [self.topBg setBackgroundColor:CONTENTCOLOR];
     [self.buttomBg setBackgroundColor:CONTENTCOLOR];
     
+    self.topBg.hidden = YES;
+    self.buttomBg.hidden = YES;
+    
     NSTrackingAreaOptions options = NSTrackingInVisibleRect|NSTrackingMouseEnteredAndExited|NSTrackingActiveAlways;
     trackingArea = [[NSTrackingArea alloc] initWithRect:self.topView.bounds options:options owner:self userInfo:nil];
     
@@ -62,6 +65,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reductionVideo) name:REDUCTION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(muteName:) name:MUTENAME object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localMute:) name:ISLOCALMUTE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hiddenLocal) name:HIDDENLOCALWINDOW object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeDisplayName:) name:CHANGEDISPLAYNAME object:nil];
     
     appDelegate = APPDELEGATE;
     
@@ -97,6 +102,11 @@
         [remoteList addObject:remotVideo];
     }
     DDLogInfo(@"[Info] 10031 Set Local Video Window");
+}
+
+- (void)changeDisplayName:(NSNotification *)sender
+{
+    locaVideoController.userName.stringValue = sender.object;
 }
 
 - (void)setVideo:(NSNotification *)sender
@@ -365,6 +375,22 @@
 
 #pragma mark - ButtonMethod
 - (IBAction)hiddenLocalAction:(id)sender
+{
+    Notifications(HIDDENLOCAL);
+    DDLogInfo(@"[Info] 10031 User Hidden Local Windwo");
+    ishiddenLocal = YES;
+    self.topBg.hidden = YES;
+    self.buttomBg.hidden = YES;
+    locaVideoController.view.hidden = YES;
+    for (int i = 0; i < remoteList.count; i++) {
+        VideoController *remotVideo = remoteList[i];
+        [remotVideo.view setFrame:CGRectMake(0, 0, 0, 0)];
+        remotVideo.userName.hidden = YES;
+        remotVideo.userBg.hidden = YES;
+    }
+}
+
+- (void)hiddenLocal
 {
     Notifications(HIDDENLOCAL);
     DDLogInfo(@"[Info] 10031 User Hidden Local Windwo");

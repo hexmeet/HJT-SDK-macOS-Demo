@@ -13,6 +13,7 @@
 {
     AppDelegate *appDelegate;
     macHUD *hub;
+    BOOL flag;
 }
 @end
 
@@ -47,6 +48,8 @@
 {
     [super viewWillAppear];
     [self creatWebview];
+    
+    flag = YES;
 }
 
 - (void)creatWebview
@@ -73,7 +76,7 @@
     NSString *token = userInfo.token;
     
     //http://cloud.hexmeet.com/webapp/#/confControl?numericId=13910001017&token=1209575050&lang=cn
-    NSString *webUrl = [NSString stringWithFormat:@"%@/webapp/#/confControl?numericId=%@&token=%@",userInfo.customizedH5UrlPrefix, setDic[@"confId"],token];
+    NSString *webUrl = [NSString stringWithFormat:@"%@/webapp/#/confControl?numericId=%@&token=%@&deviceId=%@",userInfo.customizedH5UrlPrefix, setDic[@"confId"], token, [NSString stringWithFormat:@"%llu", userInfo.deviceId]];
 #if DEBUG
     //    webUrl = [NSString stringWithFormat:@"http://172.16.0.82:8001/#/conferences?token=%@", token];
 #endif
@@ -104,20 +107,36 @@
             [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString:emailLink]];
         }else if ([message.body containsString:@"tokenExpired"]) {
             //重新登录回传token
-            NSString *jsStr = [appDelegate.evengine getUserInfo].token;
-            if (jsStr.length == 0) {
-                //没有内容不传给WEB
-                return;
-            }
-            [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-                if (!error) {
-                    // 成功
-                } else {
-                    // 失败
+            if (flag) {
+                NSString *jsStr =[NSString stringWithFormat:@"window.updateToken('%@')", [appDelegate.evengine getUserInfo].token];
+                if (jsStr.length == 0) {
+                    //没有内容不传给WEB
+                    return;
                 }
-            }];
+                [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+                    if (!error) {
+                        // 成功
+                    } else {
+                        // 失败
+                    }
+                }];
+                [self setConferenceManagerUrl];
+            }else {
+                [self performSelector:@selector(updateTokenMethod) withObject:nil afterDelay:2];
+            }
+            
+        }else if ([message.body containsString:@"clearCache"]) {
+            //清除缓存
+            [EVUtils deleteWebCache];
+            //重新加载
+            [self setConferenceManagerUrl];
         }
     }
+}
+
+- (void)updateTokenMethod
+{
+    flag = YES;
 }
 
 #pragma mark = WKNavigationDelegate
@@ -223,18 +242,18 @@
  */
 - (void)updateToken:(NSNotification *)sender
 {
-    NSString *jsStr = [appDelegate.evengine getUserInfo].token;
-    if (jsStr.length == 0) {
-        //没有内容不传给WEB
-        return;
-    }
-    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-        if (!error) {
-            // 成功
-        } else {
-            // 失败
-        }
-    }];
+//    NSString *jsStr =[NSString stringWithFormat:@"window.updateToken('%@')", [appDelegate.evengine getUserInfo].token];
+//    if (jsStr.length == 0) {
+//        //没有内容不传给WEB
+//        return;
+//    }
+//    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+//        if (!error) {
+//            // 成功
+//        } else {
+//            // 失败
+//        }
+//    }];
 }
 
 #pragma mark - HIDDENHUD

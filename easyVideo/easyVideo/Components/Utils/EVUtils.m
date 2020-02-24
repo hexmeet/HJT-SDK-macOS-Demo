@@ -7,7 +7,6 @@
 //
 
 #import "EVUtils.h"
-#import <QuartzCore/QuartzCore.h>
 
 @implementation EVUtils
 
@@ -283,5 +282,313 @@
     
     return currentTimeString;
 }
+
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+    
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary * dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    
+    return dic;
+}
+
++ (BOOL)canRecordScreen
+{
+    if (@available(macOS 10.15, *)) {
+        CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+        NSUInteger numberOfWindows = CFArrayGetCount(windowList);
+        NSUInteger numberOfWindowsWithName = 0;
+        for (int idx = 0; idx < numberOfWindows; idx++) {
+            NSDictionary *windowInfo = (NSDictionary *)CFArrayGetValueAtIndex(windowList, idx);
+            NSString *windowName = windowInfo[(id)kCGWindowName];
+            if (windowName) {
+                numberOfWindowsWithName++;
+            } else {
+                //no kCGWindowName detected -> not enabled
+                break; //breaking early, numberOfWindowsWithName not increased
+            }
+
+        }
+        CFRelease(windowList);
+        return numberOfWindows == numberOfWindowsWithName;
+    }
+    return YES;
+}
+
++ (BOOL)canRecord{
+    if (@available(macOS 10.15, *)) {
+            CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+            NSUInteger numberOfWindows = CFArrayGetCount(windowList);
+            NSUInteger numberOfWindowsWithName = 0;
+            for (int idx = 0; idx < numberOfWindows; idx++) {
+                NSDictionary *windowInfo = (NSDictionary *)CFArrayGetValueAtIndex(windowList, idx);
+                NSString *windowName = windowInfo[(id)kCGWindowName];
+                if (windowName) {
+                    numberOfWindowsWithName++;
+                } else {
+                    //no kCGWindowName detected -> not enabled
+                    break; //breaking early, numberOfWindowsWithName not increased
+                }
+
+            }
+            CFRelease(windowList);
+            if (numberOfWindowsWithName != 0) {
+                return YES;
+            }else {
+                return NO;
+            }
+        }
+    return YES;
+}
+
++ (void)showScreenRecordingPrompt{
+  
+  /* macos 10.14 and lower do not require screen recording permission to get window titles */
+    if(@available(macos 10.15, *)) {
+        CGImageRef c = CGWindowListCreateImage(CGRectMake(0, 0, 1, 1),
+                                               kCGWindowListOptionOnScreenOnly,
+                                               kCGNullWindowID,
+                                               kCGWindowImageDefault);
+        CFRelease(c);
+    }
+
+}
+
+
++ (BOOL)queryUserPlist:(NSString *)queryValue
+{
+    NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+    if ([setDic[queryValue] boolValue]) {
+        return YES;
+    }else {
+        return NO;
+    }
+}
+
++ (NSString *)queryUserInfo:(NSString *)queryValue
+{
+    NSDictionary *setInfo = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+    if ([setInfo[@"iscloudLogin"]isEqualToString:@"YES"]) {
+        NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:CLOUDUSERINFO];
+        return userinfo[queryValue];
+    }else {
+        NSDictionary *userinfo = [PlistUtils loadUserInfoPlistFilewithFileName:PRIVATEUSERINFO];
+        return userinfo[queryValue];
+    }
+}
+
++ (void)playSound{
+    
+    SoundManager* soundManager = [SoundManager sharedManager];
+    NSString* ringing = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"wav"];
+    [soundManager playSound:ringing looping:YES fadeIn:NO];
+}
+
++ (void)stopSound{
+    SoundManager* soundManager = [SoundManager sharedManager];
+    NSString* ringing = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"wav"];
+    [soundManager stopSound:ringing];
+}
+
++ (NSDictionary*)getObjectData:(id)obj
+{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    unsigned int propsCount;
+    objc_property_t *props = class_copyPropertyList([obj class], &propsCount);//获得属性列表
+    for(int i = 0;i < propsCount; i++)
+    {
+        objc_property_t prop = props[i];
+        
+        NSString *propName = [NSString stringWithUTF8String:property_getName(prop)];//获得属性的名称
+        id value = [obj valueForKey:propName];//kvc读值
+        if(value == nil)
+        {
+            value = [NSNull null];
+        }
+        else
+        {
+            value = [self getObjectInternal:value];//自定义处理数组，字典，其他类
+        }
+        [dic setObject:value forKey:propName];
+    }
+    return dic;
+}
+
++ (id)getObjectInternal:(id)obj
+{
+    if([obj isKindOfClass:[NSString class]]
+       || [obj isKindOfClass:[NSNumber class]]
+       || [obj isKindOfClass:[NSNull class]])
+    {
+        return obj;
+    }
+    
+    if([obj isKindOfClass:[NSArray class]])
+    {
+        NSArray *objarr = obj;
+        NSMutableArray *arr = [NSMutableArray arrayWithCapacity:objarr.count];
+        for(int i = 0;i < objarr.count; i++)
+        {
+            [arr setObject:[self getObjectInternal:[objarr objectAtIndex:i]] atIndexedSubscript:i];
+        }
+        return arr;
+    }
+    
+    if([obj isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *objdic = obj;
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:[objdic count]];
+        for(NSString *key in objdic.allKeys)
+        {
+            [dic setObject:[self getObjectInternal:[objdic objectForKey:key]] forKey:key];
+        }
+        return dic;
+    }
+    return [self getObjectData:obj];
+}
+
++ (NSString *)getDateDisplayString:(long long)miliSeconds
+{
+    NSTimeInterval tempMilli = miliSeconds;
+    NSTimeInterval seconds = tempMilli/1000.0;
+    NSDate *myDate = [NSDate dateWithTimeIntervalSince1970:seconds];
+    
+    NSCalendar *calendar = [ NSCalendar currentCalendar ];
+    int unit = NSCalendarUnitDay | NSCalendarUnitMonth |  NSCalendarUnitYear ;
+    NSDateComponents *nowCmps = [calendar components:unit fromDate:[ NSDate date ]];
+    NSDateComponents *myCmps = [calendar components:unit fromDate:myDate];
+    
+    NSDateFormatter *dateFmt = [[NSDateFormatter alloc ] init ];
+    
+    //2. 指定日历对象,要去取日期对象的那些部分.
+    NSDateComponents *comp =  [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday fromDate:myDate];
+    
+    if (nowCmps.year != myCmps.year) {
+        dateFmt.dateFormat = @"yyyy-MM-dd hh:mm";
+    } else {
+        if (nowCmps.day==myCmps.day) {
+            dateFmt.AMSymbol = @"上午";
+            dateFmt.PMSymbol = @"下午";
+            dateFmt.dateFormat = @"aaa hh:mm";
+            
+        } else if((nowCmps.day-myCmps.day)==1) {
+            dateFmt.AMSymbol = @"上午";
+            dateFmt.PMSymbol = @"下午";
+            dateFmt.dateFormat = @"昨天 aaahh:mm";
+
+        } else {
+            if ((nowCmps.day-myCmps.day) <=7) {
+                
+                dateFmt.AMSymbol = @"上午";
+                dateFmt.PMSymbol = @"下午";
+                
+                switch (comp.weekday) {
+                    case 1:
+                        dateFmt.dateFormat = @"星期日 aaahh:mm";
+                        break;
+                    case 2:
+                        dateFmt.dateFormat = @"星期一 aaahh:mm";
+                        break;
+                    case 3:
+                        dateFmt.dateFormat = @"星期二 aaahh:mm";
+                        break;
+                    case 4:
+                        dateFmt.dateFormat = @"星期三 aaahh:mm";
+                        break;
+                    case 5:
+                        dateFmt.dateFormat = @"星期四 aaahh:mm";
+                        break;
+                    case 6:
+                        dateFmt.dateFormat = @"星期五 aaahh:mm";
+                        break;
+                    case 7:
+                        dateFmt.dateFormat = @"星期六 aaahh:mm";
+                        break;
+                    default:
+                        break;
+                }
+            }else {
+                dateFmt.dateFormat = @"MM-dd hh:mm";
+            }
+        }
+    }
+    return [dateFmt stringFromDate:myDate];
+}
+
+static NSDateFormatter *sUserVisibleDateFormatter = nil;
++ (NSString *)userVisibleDateTimeStringForRFC3339DateTimeString:(NSString *)rfc3339DateTimeString {
+    /*
+      Returns a user-visible date time string that corresponds to the specified
+      RFC 3339 date time string. Note that this does not handle all possible
+      RFC 3339 date time strings, just one of the most common styles.
+     */
+
+    // If the date formatters aren't already set up, create them and cache them for reuse.
+    static NSDateFormatter *sRFC3339DateFormatter = nil;
+    if (sRFC3339DateFormatter == nil) {
+        sRFC3339DateFormatter = [[NSDateFormatter alloc] init];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [sRFC3339DateFormatter setLocale:enUSPOSIXLocale];
+        if (rfc3339DateTimeString.length == 20) {
+            //example 2019-12-14T06:37:56Z
+            [sRFC3339DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+        }else if (rfc3339DateTimeString.length == 22) {
+            [sRFC3339DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.S'Z'"];
+        }else if (rfc3339DateTimeString.length == 23) {
+            //example 2019-12-14T07:36:46.61Z yyyy-MM-dd'T'HH:mm:ss.SS'Z'
+            [sRFC3339DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SS'Z'"];
+        }else {
+            //example 2019-12-14T06:36:42.184Z
+            [sRFC3339DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:sss.SSS'Z'"];
+        }
+        [sRFC3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    }
+
+    // Convert the RFC 3339 date time string to an NSDate.
+    NSDate *date = [sRFC3339DateFormatter dateFromString:rfc3339DateTimeString];
+    NSString *userVisibleDateTimeString;
+    
+    if (date != nil) {
+        long long timeSp = [date timeIntervalSince1970]*1000;
+        userVisibleDateTimeString = [EVUtils getDateDisplayString:timeSp];
+    }else {
+        userVisibleDateTimeString = @"";
+    }
+    return userVisibleDateTimeString;
+}
+
++ (BOOL)compareTwoTime:(NSString *)time1 time2:(NSString *)time2
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    NSDate *date1 = [formatter dateFromString:time1];
+    NSDate *date2 = [formatter dateFromString:time2];
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendarUnit type = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    
+    NSDateComponents *cmps = [calendar components:type fromDate:date1 toDate:date2 options:0];
+    
+    if (cmps.year>0 || cmps.month>0 || cmps.day>0 || cmps.hour>0 || cmps.minute >10) {
+        return YES;
+    }else {
+        return NO;
+    }
+}
+
++ (void)deleteWebCache {
+    NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+
+    NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+
+    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+        DDLogInfo(@"delete all WebCache");
+    }];
+}
+
 
 @end

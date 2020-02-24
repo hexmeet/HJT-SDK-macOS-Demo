@@ -9,10 +9,10 @@ target 'easyVideo' do
 
   # Pods for easyVideo
   pod 'MagicalRecord', '~> 2.3.2'
-  pod 'SDWebImage', '~> 4.3.3'
   pod 'AliyunOSSiOS'
   pod 'ZipArchive'
   pod 'CocoaLumberjack'
+  pod 'SDWebImage'
 
   target 'easyVideoTests' do
     inherit! :search_paths

@@ -24,7 +24,7 @@ NSString * const BUCKET_NAME = @"hexmeet-log";
 NSString * const UPLOAD_OBJECT_KEY = @"hexmeethjt/mac";
 NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
 
-@synthesize languagecomboBox, languageTitle, diagnosisBtn, diagnosisTitle, applicationTitle, autoLoginBtn, autoAnserBtn, highFrameRateBtn, enableHD;
+@synthesize languagecomboBox, languageTitle, diagnosisBtn, diagnosisTitle, applicationTitle, autoLoginBtn, autoAnserBtn, highFrameRateBtn, enableHD, closeTipBtn, hd_prompt, close_tip_prompt;
 
 - (void)viewWillAppear
 {
@@ -78,13 +78,18 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
     }
     
     diagnosisTitle.stringValue = localizationBundle(@"home.set.routine.diagnosis");
-    [diagnosisBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.uploaddiagnosis") color:BLACKCOLOR];
+    [diagnosisBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.uploaddiagnosis") color:CONTENTCOLOR];
+    [diagnosisBtn setBackgroundColor:COLORF1F1F1];
+    diagnosisBtn.layer.cornerRadius = 4;
     applicationTitle.stringValue = localizationBundle(@"home.set.routine.application");
     
-    [autoLoginBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autologin") color:BLACKCOLOR];
-    [autoAnserBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autoanswer") color:BLACKCOLOR];
-    [highFrameRateBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.highframerate") color:BLACKCOLOR];
-    [enableHD changeLeftButtonattribute:@"1080p" color:BLACKCOLOR];
+    [autoLoginBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autologin") color:CONTENTCOLOR];
+    [autoAnserBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autoanswer") color:CONTENTCOLOR];
+    [highFrameRateBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.highframerate") color:CONTENTCOLOR];
+    [enableHD changeLeftButtonattribute:@"1080p" color:CONTENTCOLOR];
+    [closeTipBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.closetip") color:CONTENTCOLOR];
+    hd_prompt.stringValue = localizationBundle(@"home.set.hd_prompt");
+    close_tip_prompt.stringValue = localizationBundle(@"home.set.routine.closetip_prompt");
 }
 
 - (void)getSetInfo
@@ -116,6 +121,13 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
             enableHD.state = NSOnState;
         }else {
             enableHD.state = NSOffState;
+        }
+    }
+    if (infoDic[@"closeTip"]) {
+        if ([infoDic[@"closeTip"] isEqualToString:@"YES"]) {
+            closeTipBtn.state = NSOnState;
+        }else {
+            closeTipBtn.state = NSOffState;
         }
     }
 }
@@ -150,7 +162,13 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
         [setDic setValue:@"YES" forKey:@"1080p"];
         [appDelegate.evengine enableHD:YES];
     }else {
+        [setDic setValue:@"NO" forKey:@"1080p"];
         [appDelegate.evengine enableHD:NO];
+    }
+    if (closeTipBtn.state == NSOnState) {
+        [setDic setValue:@"YES" forKey:@"closeTip"];
+    }else {
+        [setDic setValue:@"NO" forKey:@"closeTip"];
     }
     
     [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
@@ -292,12 +310,16 @@ NSString * const endPoint = @"http://oss-cn-beijing.aliyuncs.com";
     }
     
     diagnosisTitle.stringValue = localizationBundle(@"home.set.routine.diagnosis");
-    [diagnosisBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.uploaddiagnosis") color:BLACKCOLOR];
+    [diagnosisBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.uploaddiagnosis") color:CONTENTCOLOR];
     applicationTitle.stringValue = localizationBundle(@"home.set.routine.application");
     
-    [autoLoginBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autologin") color:BLACKCOLOR];
-    [autoAnserBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autoanswer") color:BLACKCOLOR];
-    [highFrameRateBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.highframerate") color:BLACKCOLOR];
+    [autoLoginBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autologin") color:CONTENTCOLOR];
+    [autoAnserBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.autoanswer") color:CONTENTCOLOR];
+    [highFrameRateBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.highframerate") color:CONTENTCOLOR];
+    [enableHD changeLeftButtonattribute:@"1080p" color:CONTENTCOLOR];
+    [closeTipBtn changeLeftButtonattribute:localizationBundle(@"home.set.routine.closetip") color:CONTENTCOLOR];
+    hd_prompt.stringValue = localizationBundle(@"home.set.hd_prompt");
+    close_tip_prompt.stringValue = localizationBundle(@"home.set.routine.closetip_prompt");
 }
 
 #pragma mark - HIDDENHUD

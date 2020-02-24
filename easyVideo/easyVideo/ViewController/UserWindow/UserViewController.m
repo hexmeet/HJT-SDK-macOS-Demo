@@ -57,10 +57,10 @@
     
     if (displayNameStr.length != 0) {
         int state = [appDelegate.evengine changeDisplayName:displayNameStr];
-//        [appDelegate.evengine setDelegate:self];
+        
         if (state == EVOK) {
             DDLogInfo(@"[Info] 10008 ChangeDisplayNameSucceed");
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGEDISPLAYNAME" object:displayNameStr];
             [userNameTitle resignFirstResponder];
             editUserNameBtn.hidden = NO;
             userNameTitle.editable = NO;
@@ -107,7 +107,7 @@
                 int state = [appDelegate.evengine changeDisplayName:displayNameStr];
                 if (state == EVOK) {
                     DDLogInfo(@"[Info] 10008 ChangeDisplayNameSucceed");
-                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGEDISPLAYNAME" object:displayNameStr];
                     [userNameTitle resignFirstResponder];
                     editUserNameBtn.hidden = NO;
                     userNameTitle.editable = NO;
@@ -250,10 +250,9 @@
 }
 
 #pragma mark - NSTextFieldDelegate
--(void)controlTextDidChange:(NSNotification *)obj {
-    int PasswordMaxLimit = 20;
-    if ([[userNameTitle stringValue] length] > PasswordMaxLimit) {
-        [userNameTitle setStringValue:[[userNameTitle stringValue] substringToIndex:PasswordMaxLimit]];
+- (void)controlTextDidChange:(NSNotification *)obj {
+    if ([[userNameTitle stringValue] length] > 20) {
+        [userNameTitle setStringValue:[[userNameTitle stringValue] substringToIndex:20]];
     }
 }
 
@@ -304,7 +303,6 @@
         Notifications(CLOSEPDWINDOW);
         
         ChangePasswordWindowController* windowControl = [ChangePasswordWindowController windowController];
-        appDelegate.mainWindowController = windowControl;
         [windowControl.window makeKeyAndOrderFront:self];
         
 //        [self.view.window close];
@@ -346,7 +344,6 @@
         HeadImageWindowController* windowControl = [HeadImageWindowController windowController];
 
         AppDelegate *appDelegate = APPDELEGATE;
-        appDelegate.mainWindowController = windowControl;
 
         [windowControl.window makeKeyAndOrderFront:self];
     }

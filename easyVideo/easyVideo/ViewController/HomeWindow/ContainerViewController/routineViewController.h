@@ -19,5 +19,8 @@
 @property (weak) IBOutlet NSButton *autoAnserBtn;
 @property (weak) IBOutlet NSButton *highFrameRateBtn;
 @property (weak) IBOutlet NSButton *enableHD;
+@property (weak) IBOutlet NSButton *closeTipBtn;
+@property (weak) IBOutlet NSTextField *hd_prompt;
+@property (weak) IBOutlet NSTextField *close_tip_prompt;
 
 @end

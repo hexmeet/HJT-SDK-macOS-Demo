@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="MzB-ae-3U4">
+            <objects>
+                <windowController storyboardIdentifier="P2pConnectingWindowController" id="dMd-Ie-GcW" customClass="P2pConnectingWindowController" sceneMemberID="viewController">
+                    <window key="window" identifier="ConnectingWindow" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="GTX-TV-PyZ" customClass="ConnectingWindow">
+                        <windowStyleMask key="styleMask" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <rect key="contentRect" x="196" y="240" width="960" height="540"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <value key="minSize" type="size" width="960" height="540"/>
+                        <value key="maxSize" type="size" width="960" height="540"/>
+                        <connections>
+                            <outlet property="delegate" destination="dMd-Ie-GcW" id="XRC-tg-wqx"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="xbb-P7-uLF" kind="relationship" relationship="window.shadowedContentViewController" id="1RR-6s-loq"/>
+                    </connections>
+                </windowController>
+                <customObject id="dkD-ty-NdP" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-619" y="141"/>
+        </scene>
+        <!--2p Connecting View Controller-->
+        <scene sceneID="eKQ-tK-2l3">
+            <objects>
+                <viewController storyboardIdentifier="P2pConnectingViewController" id="xbb-P7-uLF" customClass="P2pConnectingViewController" sceneMemberID="viewController">
+                    <view key="view" id="h7T-H8-p4V">
+                        <rect key="frame" x="0.0" y="0.0" width="960" height="540"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="eoL-DQ-YtP">
+                                <rect key="frame" x="0.0" y="0.0" width="960" height="540"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                        <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UU6-Jw-NWU">
+                                <rect key="frame" x="410" y="310" width="140" height="140"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="140" id="0LA-O7-rv5"/>
+                                    <constraint firstAttribute="height" constant="140" id="hpb-Pp-3DP"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="U9f-vn-b7N"/>
+                            </imageView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="35y-2C-CL1">
+                                <rect key="frame" x="443" y="264" width="75" height="26"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Jasper" id="Hvo-9s-LHH">
+                                    <font key="font" metaFont="systemMedium" size="22"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O2m-4r-AlU">
+                                <rect key="frame" x="446" y="235" width="68" height="15"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="正在呼叫..." id="3fg-XJ-gU5">
+                                    <font key="font" metaFont="label" size="12"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button translatesAutoresizingMaskIntoConstraints="NO" id="OHF-jO-d25">
+                                <rect key="frame" x="445" y="50" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="LOs-at-vAE"/>
+                                    <constraint firstAttribute="height" constant="70" id="an0-Cl-fAq"/>
+                                </constraints>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="btn_reject" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Mwo-N2-Jbg">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="hangUpAction:" target="xbb-P7-uLF" id="C7s-ts-hjU"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bqn-5u-5iD">
+                                <rect key="frame" x="464" y="25" width="33" height="15"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="挂断" id="hPO-1S-Sy9">
+                                    <font key="font" metaFont="label" size="12"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="0.84705882349999995" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="35y-2C-CL1" firstAttribute="top" secondItem="UU6-Jw-NWU" secondAttribute="bottom" constant="20" id="4K0-Gr-71a"/>
+                            <constraint firstAttribute="bottom" secondItem="bqn-5u-5iD" secondAttribute="bottom" constant="25" id="FB4-6l-AKf"/>
+                            <constraint firstItem="O2m-4r-AlU" firstAttribute="top" secondItem="35y-2C-CL1" secondAttribute="bottom" constant="14" id="Imn-2h-yxZ"/>
+                            <constraint firstItem="35y-2C-CL1" firstAttribute="centerX" secondItem="UU6-Jw-NWU" secondAttribute="centerX" id="O6Z-h3-5Vr"/>
+                            <constraint firstItem="UU6-Jw-NWU" firstAttribute="centerY" secondItem="h7T-H8-p4V" secondAttribute="centerY" constant="-110" id="PVa-v4-Q9A"/>
+                            <constraint firstItem="OHF-jO-d25" firstAttribute="centerX" secondItem="O2m-4r-AlU" secondAttribute="centerX" id="QdI-HD-iBO"/>
+                            <constraint firstItem="UU6-Jw-NWU" firstAttribute="centerX" secondItem="eoL-DQ-YtP" secondAttribute="centerX" id="Rxe-bh-EpK"/>
+                            <constraint firstAttribute="trailing" secondItem="eoL-DQ-YtP" secondAttribute="trailing" id="Zkl-bv-Qkd"/>
+                            <constraint firstItem="eoL-DQ-YtP" firstAttribute="leading" secondItem="h7T-H8-p4V" secondAttribute="leading" id="byG-15-Zf7"/>
+                            <constraint firstItem="eoL-DQ-YtP" firstAttribute="top" secondItem="h7T-H8-p4V" secondAttribute="top" id="eyy-1B-Uaw"/>
+                            <constraint firstItem="O2m-4r-AlU" firstAttribute="centerX" secondItem="35y-2C-CL1" secondAttribute="centerX" id="fgE-A7-lrF"/>
+                            <constraint firstItem="bqn-5u-5iD" firstAttribute="top" secondItem="OHF-jO-d25" secondAttribute="bottom" constant="10" id="nNo-fT-VzQ"/>
+                            <constraint firstItem="bqn-5u-5iD" firstAttribute="centerX" secondItem="OHF-jO-d25" secondAttribute="centerX" id="sRA-Xh-Bj8"/>
+                            <constraint firstAttribute="bottom" secondItem="eoL-DQ-YtP" secondAttribute="bottom" id="saj-5w-4g4"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <connections>
+                        <outlet property="callTitle" destination="O2m-4r-AlU" id="8Rc-Mq-gGD"/>
+                        <outlet property="hangUpTitle" destination="bqn-5u-5iD" id="dGU-Dk-AWW"/>
+                        <outlet property="headImage" destination="UU6-Jw-NWU" id="BHS-3M-Ddi"/>
+                        <outlet property="localVideoView" destination="eoL-DQ-YtP" id="ZIt-sW-xx2"/>
+                        <outlet property="userName" destination="35y-2C-CL1" id="dkB-1L-95v"/>
+                    </connections>
+                </viewController>
+                <customObject id="uvr-SM-mva" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-619" y="827"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="btn_reject" width="50" height="50"/>
+    </resources>
+</document>

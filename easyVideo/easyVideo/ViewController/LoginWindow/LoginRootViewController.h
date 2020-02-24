@@ -73,4 +73,7 @@
 @property (weak) IBOutlet NSButton *muteBtn;
 @property (weak) IBOutlet NSButton *settingBtn;
 
+@property (weak) IBOutlet NSTableView *tab;
+@property (weak) IBOutlet NSScrollView *tabBg;
+
 @end

@@ -22,6 +22,7 @@
         [self setOpaque:NO];
         [self setBackgroundColor:[NSColor clearColor]];
         [self setMovableByWindowBackground:YES];
+        [self setLevel:NSScreenSaverWindowLevel];
         if (@available(macOS 10.14, *)) {
             self.appearance  = [NSAppearance appearanceNamed:NSAppearanceNameVibrantLight];
         } else {

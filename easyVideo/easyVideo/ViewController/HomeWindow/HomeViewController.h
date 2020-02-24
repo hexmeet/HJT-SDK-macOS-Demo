@@ -22,13 +22,27 @@
 @property (weak) IBOutlet NSImageView *meetingViewImage;
 @property (weak) IBOutlet NSTextField *meetingViewTitle;
 @property (weak) IBOutlet NSButton *meetingBtn;
+//Chat View
+@property (weak) IBOutlet NSView *ChatView;
+@property (weak) IBOutlet NSView *Chatline;
+@property (weak) IBOutlet NSImageView *chatViewImage;
+@property (weak) IBOutlet NSTextField *chatViewTitle;
+@property (weak) IBOutlet NSButton *chatBtn;
+@property (weak) IBOutlet NSLayoutConstraint *chatConstraint;
+//AddressBookView
+@property (weak) IBOutlet NSView *contactsView;
+@property (weak) IBOutlet NSView *contactsline;
+@property (weak) IBOutlet NSImageView *contactsImage;
+@property (weak) IBOutlet NSTextField *contactsTitle;
+@property (weak) IBOutlet NSButton *contactsBtn;
+@property (weak) IBOutlet NSLayoutConstraint *contactsConstraint;
 //Set View
 @property (weak) IBOutlet NSView *setView;
 @property (weak) IBOutlet NSView *setline;
 @property (weak) IBOutlet NSImageView *setViewImage;
 @property (weak) IBOutlet NSTextField *setViewTitle;
 @property (weak) IBOutlet NSButton *setBtn;
-
+@property (weak) IBOutlet NSLayoutConstraint *setConstraint;
 /** Top Menu View */
 @property (weak) IBOutlet NSView *topMenuView;
 @property (weak) IBOutlet NSTextField *topMenuViewTitle;
@@ -38,7 +52,10 @@
 
 /** Meeting Custom View */
 @property (weak) IBOutlet NSView *webContainerView;
-
+/** Chat Custom View*/
+@property (weak) IBOutlet NSView *chatContainerView;
+/**Contacts Custom View*/
+@property (weak) IBOutlet NSView *contactsContainerView;
 /** Setting Custom View */
 @property (weak) IBOutlet NSView *setContainerView;
 

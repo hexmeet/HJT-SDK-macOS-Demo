@@ -9,6 +9,22 @@
 #ifndef configureMacro_h
 #define configureMacro_h
 
+#define HQInitH(name) \
+- (instancetype) initWithDict:(NSDictionary *) dict;\
++ (instancetype) name##WithDict:(NSDictionary *) dict;
+
+#define HQNameH(name)\
+-(instancetype)initWithDict:(NSDictionary *)dict\
+{\
+    if (self = [super init]) {\
+        [self setValuesForKeysWithDictionary:dict];\
+    }\
+    return self;\
+}\
++(instancetype)name##WithDict:(NSDictionary *)dict\
+{\
+    return [[self alloc] initWithDict:dict];\
+}
 //Hexadecimal color
 #define HEXCOLOR(c) [NSColor colorWithRed:((c>>16)&0xFF)/255.0 green:((c>>8)&0xFF)/255.0 blue:(c&0xFF)/255.0 alpha:1.0]
 //Set language text

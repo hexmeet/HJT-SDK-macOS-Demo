@@ -85,7 +85,7 @@
 - (void) setDelegate:(id<EVEngineDelegate>_Nonnull)aDelegate;
 
 //Login
-- (int) login:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
+- (int) login:(NSString *_Nonnull)server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password __deprecated;
 - (int) loginWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port name:(NSString *_Nonnull)username password:(NSString *_Nonnull)password;
 - (int) logout;
 - (int) downloadUserImage:(NSString *_Nonnull)path;
@@ -99,12 +99,23 @@
 
 //Conference & Layout
 - (int) setMaxRecvVideo:(unsigned int)num;
+- (int) setLayoutCapacity:(EVLayoutMode)mode types:(EVLayoutType[_Nonnull])types size:(unsigned int)size;
 - (int) joinConference:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
-- (int) joinConference:(NSString *_Nonnull)server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
+- (int) joinConference:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password svcCallType:(EVSvcCallType)type;
+- (int) joinConference:(NSString *_Nonnull)server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password __deprecated;
 - (int) joinConferenceWithLocation:(NSString *_Nonnull)location_server port:(unsigned int)port conference_number:(NSString *_Nonnull)conference_number display_name:(NSString *_Nonnull)display_name password:(NSString *_Nonnull)password;
 - (int) leaveConference;
 - (int) setLayout:(EVLayoutRequest *_Nonnull)layout;
+- (int) declineIncommingCall:(NSString *_Nonnull)conference_number;
+- (int) setVideoActive:(int)active;
+- (int) videoActive;
+- (int) setInConfDisplayName:(NSString *_Nonnull)display_name;
 
+//IM
+//- (NSString * _Nonnull) getIMAddress;
+//- (NSString * _Nonnull) getIMGroupID;
+//- (void)setIMUserID:(const char*) im_usrid;
+//- (EVContactInfo *)getContactInfo:(const char *_Nonnull)usrid contactInfo timeout:(int)timeout_ms;
 //Private
 - (void) iterate;
 

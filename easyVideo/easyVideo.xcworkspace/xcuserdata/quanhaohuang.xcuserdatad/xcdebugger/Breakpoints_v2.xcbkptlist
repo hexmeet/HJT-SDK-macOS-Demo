@@ -7,7 +7,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
-            uuid = "DA9D583A-036D-416C-901A-4A77D1DBBF35"
+            uuid = "87D5C15C-2D17-4A5B-B9FC-6EB8C6149038"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -18,49 +18,79 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "9FA361EA-5122-4ED8-9DBD-2547F5187788"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "easyVideo/ViewController/VideoWindow/VideoHomeViewController.m"
-            timestampString = "587983746.141017"
+            filePath = "easyVideo/ViewController/LoginWindow/LoginRootViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "275"
-            endingLineNumber = "275"
-            landmarkName = "-viewDidLayout"
+            startingLineNumber = "1181"
+            endingLineNumber = "1181"
+            landmarkName = "-portmpt:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "F5DC8150-E1D9-4570-B5CD-2AC0A815333E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "easyVideo/ViewController/VideoWindow/VideoHomeViewController.m"
-            timestampString = "587983746.141084"
+            filePath = "easyVideo/ViewController/JoinMeetingWindow/JoinMeetingViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
-            landmarkName = "-viewDidLayout"
+            startingLineNumber = "792"
+            endingLineNumber = "792"
+            landmarkName = "-getMeetingpassword:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F5DC8150-E1D9-4570-B5CD-2AC0A815333E - 89d1cc99aaf115ba"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[JoinMeetingViewController getMeetingpassword:]"
+                  moduleName = "easyVideo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/quanhaohuang/swep-mac-svc/easyVideo/easyVideo/ViewController/JoinMeetingWindow/JoinMeetingViewController.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "792"
+                  endingLineNumber = "792"
+                  offsetFromSymbolStart = "2455">
+               </Location>
+               <Location
+                  uuid = "F5DC8150-E1D9-4570-B5CD-2AC0A815333E - 89d1cc99aaf115ba"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[JoinMeetingViewController getMeetingpassword:]"
+                  moduleName = "easyVideo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/quanhaohuang/swep-mac-svc/easyVideo/easyVideo/ViewController/JoinMeetingWindow/JoinMeetingViewController.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "792"
+                  endingLineNumber = "792"
+                  offsetFromSymbolStart = "2483">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "A2DE1D5B-DF98-4A6A-929A-AE759C7FDDBF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "easyVideo/ViewController/VideoWindow/VideoHomeViewController.m"
-            timestampString = "587983746.141129"
+            filePath = "easyVideo/ViewController/LoginWindow/LoginRootViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
-            landmarkName = "-setLayoutMode:"
-            landmarkType = "7">
+            startingLineNumber = "1398"
+            endingLineNumber = "1398">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

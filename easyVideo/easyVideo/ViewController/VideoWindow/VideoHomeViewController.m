@@ -21,6 +21,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <OpenGL/CGLMacro.h>
+#import "LocalViewController.h"
+#import "ChatPageViewController.h"
 
 enum MessageType {
     MessgeTop,
@@ -29,7 +31,7 @@ enum MessageType {
 };
 #define WINDOWWIDTH  self.view.bounds.size.width
 #define WINDOWHEIGHT self.view.bounds.size.height
-@interface VideoHomeViewController ()<EVEngineDelegate, CAAnimationDelegate>
+@interface VideoHomeViewController ()<EVEngineDelegate, CAAnimationDelegate, NSTextFieldDelegate>
 {
     BOOL ismute;
     BOOL isservermute;
@@ -40,11 +42,12 @@ enum MessageType {
     BOOL isFullScreen;
     BOOL isShowButtomBg;
     BOOL isMainVenue;
-    BOOL isshowalert;
     BOOL ismyselfmute;
     BOOL isshowContent;
     BOOL isshowNotworkAlert;
     BOOL isshare;
+    BOOL isshowLocal;
+    BOOL isMuteforEnd;
     
     void * remoteArr[9];
 
@@ -86,7 +89,7 @@ enum MessageType {
 
 @implementation VideoHomeViewController
 
-@synthesize topViewBg, buttomViewBg, localBtn, localViewBg, handUpBtn, handUpViewBg, muteBtn, cameraBtn, setBtn, meetingBtn, videoLayoutBtn, handBtn, callendBtn, locolShowHiddenBtn, muteTitle, cameraTitle, setTitle, meetingTitle, videoTitle, handupTitle, signalImage, meetingNumber, timerLb, cancelVideo, cancelVideoConstraint, numberTitle, shareBtn, shareTitle, hud, hudTitle;
+@synthesize topViewBg, buttomViewBg, handUpViewBg, muteBtn, cameraBtn, setBtn, meetingBtn, videoLayoutBtn, handBtn, callendBtn, muteTitle, cameraTitle, setTitle, meetingTitle, videoTitle, signalImage, meetingNumber, timerLb, cancelVideo, cancelVideoConstraint, numberTitle, shareBtn, shareTitle, hud, hudTitle;
 
 extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 
@@ -238,23 +241,62 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
             }else if (siteInfoArr.count > 6) {
                 double width = WINDOWWIDTH/3;
                 double height = width/16.0*9.0;
-                double redundant = (WINDOWHEIGHT-38-height*3)/2;
-                double y = redundant;
-                if (i == 0 || i == 1 || i == 2) {
-                    y = redundant+height*2;
-                }else if (i == 3 || i == 4 || i ==5) {
-                    y = redundant+height;
-                }else if (i == 6 || i == 7 || i ==8) {
-                    y = redundant;
+                
+                if (height*3 < WINDOWHEIGHT-38) {
+                    double redundant = (WINDOWHEIGHT-38-height*3)/2;
+                    double y = redundant;
+                    if (i == 0 || i == 1 || i == 2) {
+                        y = redundant+height*2;
+                    }else if (i == 3 || i == 4 || i ==5) {
+                        y = redundant+height;
+                    }else if (i == 6 || i == 7 || i ==8) {
+                        y = redundant;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    CGFloat x = gSvcLayoutDetail[SVC_LAYOUT_MODE_3X3].videoViewDescription[i][0] * WINDOWWIDTH;
+                    if (i<siteInfoArr.count) {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
+                    }else {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    }
                 }else {
-                    width = 0;
-                    height = 0;
-                }
-                CGFloat x = gSvcLayoutDetail[SVC_LAYOUT_MODE_3X3].videoViewDescription[i][0] * WINDOWWIDTH;
-                if (i<siteInfoArr.count) {
-                    [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
-                }else {
-                    [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    double height = (WINDOWHEIGHT-38)/3;
+                    double width  = height/9*16;
+                    double redundant = (WINDOWWIDTH - width*3)/2;
+                    double x = redundant;
+                    double y = 0.0;
+                    if (i == 0 || i == 3 || i == 6) {
+                        x = redundant;
+                        y = 0;
+                    }else if (i == 1 || i == 4 || i == 7) {
+                        x = redundant+width;
+                        y = height;
+                    }else if (i == 2 || i == 5 || i == 8) {
+                        x = redundant+width*2;
+                        y = height*2;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    
+                    if (i == 0 || i == 1 || i == 2) {
+                        y = height*2;
+                    }else if (i == 3 || i == 4 || i ==5) {
+                        y = height;
+                    }else if (i == 6 || i == 7 || i ==8) {
+                        y = 0;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    
+                    if (i<siteInfoArr.count) {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
+                    }else {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    }
                 }
             }
         }
@@ -278,18 +320,30 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 
 - (void)setRootViewAttribute
 {
+    _inputNameField.focusRingType = NSFocusRingTypeNone;
+    _inputNameField.delegate = self;
+    
+    [_nameCancelBtn changeCenterButtonattribute:localizationBundle(@"alert.cancel") color:CONTENTCOLOR];
+    [_nameSureBtn changeCenterButtonattribute:localizationBundle(@"alert.sure") color:WHITECOLOR];
+    
     [self.recordBg setBackgroundColorR:0 G:0 B:0 withAlpha:0.4];
     self.recordBg.layer.cornerRadius = 3.;
     [self.redBg setBackgroundColor:HEXCOLOR(0xff2a3c)];
     self.redBg.layer.cornerRadius = 5.;
     
+    [self.speakerViewBg setBackgroundColorR:0 G:0 B:0 withAlpha:0.4];
+    self.speakerViewBg.layer.cornerRadius = 3.;
+    
     [topViewBg setBackgroundColorR:0 G:0 B:0 withAlpha:0.95];
     [buttomViewBg setBackgroundColorR:0 G:0 B:0 withAlpha:0.95];
-    [localViewBg setBackgroundColor:HEXCOLOR(0x353534)];
-    localViewBg.layer.cornerRadius = 4;
+    [self.zheView setBackgroundColorR:0 G:0 B:0 withAlpha:0.95];
+    
+    [self.menuViewBg setBackgroundColorR:0 G:0 B:0 withAlpha:0.95];
+    
     [self.view setBackgroundColor:BLACKCOLOR];
     
-    [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
+    [[self class] cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(hiddenTool) withObject:nil afterDelay:15];
     
     appDelegate = APPDELEGATE;
     
@@ -308,6 +362,8 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     self.recordBg.hidden = YES;
     cancelVideo.hidden = YES;
     cancelVideoConstraint.constant = 20;
+    _speakerConstraint.constant = 20;
+    _speakerViewBg.hidden = YES;
     
     ismute = NO;
     iscamera = NO;
@@ -316,9 +372,10 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     isNeedAnimation = NO;
     isShowButtomBg = YES;
     isMainVenue = YES;
-    isshowalert = NO;
     isshowNotworkAlert = YES;
     isshare = NO;
+    isshowLocal = YES;
+    isMuteforEnd = NO;
     
     muteArr = [NSMutableArray arrayWithCapacity:1];
     
@@ -330,6 +387,11 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     
     localControl = [LocalContentWindowController windowController];
     
+    if ([EVUtils queryUserPlist:@"switchingToAudioConference"]) {
+        _menuuViewConstraint.constant = 150;
+    }else {
+        _menuuViewConstraint.constant = 50;
+    }
 }
 
 - (void)setVideo
@@ -340,9 +402,13 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
         remoteArr[i] = (__bridge void *)(remotVideoController.videoView);
         [remoteList addObject:remotVideoController];
         [self.view addSubview:buttomViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
+        [self.view addSubview:self.menuViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
         [self.view addSubview:self.recordBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
+        [self.view addSubview:self.speakerViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
         [self.view addSubview:hud positioned:NSWindowAbove relativeTo:remotVideoController.view];
         [self.view addSubview:cancelVideo positioned:NSWindowAbove relativeTo:remotVideoController.view];
+        [self.view addSubview:_audioViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
+        [self.view addSubview:_changeNameViewBg positioned:NSWindowAbove relativeTo:remotVideoController.view];
     }
     DDLogInfo(@"[Info] 10031 Set Remot Video Window");
     [appDelegate.evengine setRemoteVideoWindow:remoteArr andSize:9];
@@ -510,26 +576,65 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
                 }else {
                     [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
                 }
-            }else if (siteArr.count >6) {
+            }else if (siteArr.count > 6) {
                 double width = WINDOWWIDTH/3;
                 double height = width/16.0*9.0;
-                double redundant = (WINDOWHEIGHT-38-height*3)/2;
-                double y = redundant;
-                if (i == 0 || i == 1 || i == 2) {
-                    y = redundant+height*2;
-                }else if (i == 3 || i == 4 || i ==5) {
-                    y = redundant+height;
-                }else if (i == 6 || i == 7 || i ==8) {
-                    y = redundant;
+                
+                if (height*3 < WINDOWHEIGHT-38) {
+                    double redundant = (WINDOWHEIGHT-38-height*3)/2;
+                    double y = redundant;
+                    if (i == 0 || i == 1 || i == 2) {
+                        y = redundant+height*2;
+                    }else if (i == 3 || i == 4 || i ==5) {
+                        y = redundant+height;
+                    }else if (i == 6 || i == 7 || i ==8) {
+                        y = redundant;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    CGFloat x = gSvcLayoutDetail[SVC_LAYOUT_MODE_3X3].videoViewDescription[i][0] * WINDOWWIDTH;
+                    if (i<siteInfoArr.count) {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
+                    }else {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    }
                 }else {
-                    width = 0;
-                    height = 0;
-                }
-                CGFloat x = gSvcLayoutDetail[SVC_LAYOUT_MODE_3X3].videoViewDescription[i][0] * WINDOWWIDTH;
-                if (i<siteInfoArr.count) {
-                    [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
-                }else {
-                    [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    double height = (WINDOWHEIGHT-38)/3;
+                    double width  = height/9*16;
+                    double redundant = (WINDOWWIDTH - width*3)/2;
+                    double x = redundant;
+                    double y = 0.0;
+                    if (i == 0 || i == 3 || i == 6) {
+                        x = redundant;
+                        y = 0;
+                    }else if (i == 1 || i == 4 || i == 7) {
+                        x = redundant+width;
+                        y = height;
+                    }else if (i == 2 || i == 5 || i == 8) {
+                        x = redundant+width*2;
+                        y = height*2;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    
+                    if (i == 0 || i == 1 || i == 2) {
+                        y = height*2;
+                    }else if (i == 3 || i == 4 || i ==5) {
+                        y = height;
+                    }else if (i == 6 || i == 7 || i ==8) {
+                        y = 0;
+                    }else {
+                        width = 0;
+                        height = 0;
+                    }
+                    
+                    if (i<siteInfoArr.count) {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, width, height)];
+                    }else {
+                        [remotVideoController.view setFrame:CGRectMake(x, y, 0, 0)];
+                    }
                 }
             }
         }
@@ -565,23 +670,35 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localContentClose) name:LOCALCONTENTWINDOWDIDCLOSE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendContent:) name:SENDCONTENT object:nil];
     
+    cancelVideo.layer.cornerRadius = 4.;
+    
     //初始化应用语言
     [LanguageTool initUserLanguage];
     
-    [localBtn changeLeftButtonattribute:localizationBundle(@"video.openlocalvideo") color:WHITECOLOR];
-    [handUpBtn changeLeftButtonattribute:localizationBundle(@"video.callend") color:WHITECOLOR];
     [cancelVideo changeCenterButtonattribute:localizationBundle(@"video.unselectvideo") color:WHITECOLOR];
+    [_closeLocalBtn changeCenterButtonattribute:localizationBundle(@"video.closelocalvideo") color:WHITECOLOR];
+//    [_moreBtn changeCenterButtonattribute:localizationBundle(@"video.more") color:WHITECOLOR];
+    [handBtn changeCenterButtonattribute:localizationBundle(@"video.handup") color:WHITECOLOR];
+    [_switchAudioBtn changeCenterButtonattribute:localizationBundle(@"video.changeMode") color:WHITECOLOR];
+    [_changeNameBtn changeCenterButtonattribute:localizationBundle(@"video.changeName") color:WHITECOLOR];
+    [callendBtn changeCenterButtonattribute:localizationBundle(@"video.callend") color:COLORFF4747];
+    [_exitAudioBtn changeCenterButtonattribute:@"" color:WHITECOLOR];
     [cancelVideo setBackgroundColor:BLACKCOLOR withAlpha:0.4];
-    cancelVideo.layer.cornerRadius = 4.;
     
     muteTitle.stringValue = localizationBundle(@"video.mute");
     cameraTitle.stringValue = localizationBundle(@"video.stopvideo");
     setTitle.stringValue = localizationBundle(@"video.set");
     meetingTitle.stringValue = localizationBundle(@"video.meetingmanagement");
-    videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
-    handupTitle.stringValue = localizationBundle(@"video.handup");
+    _chatTitle.stringValue = localizationBundle(@"video.chat");
+    videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
+    _showLocalTitle.stringValue = localizationBundle(@"video.openlocalvideo");
     _showContentTitle.stringValue = localizationBundle(@"video.showcontent");
     shareTitle.stringValue = localizationBundle(@"video.share");
+    _speakerTitle.stringValue = localizationBundle(@"video.isspeaking");
+    _moreTitle.stringValue = localizationBundle(@"video.more");
+    _exitAudioTitle.stringValue = localizationBundle(@"video.exitAudioTitle");
+    _changeNameTitle.stringValue = localizationBundle(@"video.rename");
+    _inputNameTitle.stringValue = localizationBundle(@"video.inputNewName");
 }
 
 - (void)getUserSet
@@ -620,6 +737,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 {
     if (theEvent.window == self.view.window) {
         buttomViewBg.hidden = NO;
+        [[self class] cancelPreviousPerformRequestsWithTarget:self];
         [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
     }else {
         isCanMove = YES;
@@ -649,6 +767,7 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
     isShowButtomBg = !isShowButtomBg;
     if (isShowButtomBg) {
         buttomViewBg.hidden = NO;
+        [[self class] cancelPreviousPerformRequestsWithTarget:self];
         [self performSelector:@selector(hiddenTool) withObject:self afterDelay:15];
         if (layoutType == EVLayoutSpeakerMode) {
             remotVideoController = remoteList[0];
@@ -658,7 +777,9 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
             remotVideoController.nameConstraintH.constant = 10;
         }
     }else {
+        [[self class] cancelPreviousPerformRequestsWithTarget:self];
         buttomViewBg.hidden = YES;
+        _menuViewBg.hidden = YES;
         if (layoutType == EVLayoutSpeakerMode) {
             remotVideoController = remoteList[0];
             remotVideoController.nameConstraintH.constant = 10;
@@ -671,27 +792,36 @@ extern SVCLayoutDetail gSvcLayoutDetail[SVC_LAYOUT_MODE_NUMBER];
 
 int seconds = 0l;
 #pragma mark - NSButtonMethod
+- (IBAction)changeNameAction:(id)sender {
+    _changeNameViewBg.hidden = YES;
+    if (sender == _nameCancelBtn) {
+    }else if (sender == _nameSureBtn) {
+        if (_inputNameField.stringValue.length != 0) {
+            [self->appDelegate.evengine setInConfDisplayName:_inputNameField.stringValue];
+            [[NSNotificationCenter defaultCenter] postNotificationName:CHANGEDISPLAYNAME object:_inputNameField.stringValue];
+        }
+    }
+}
+
 - (IBAction)buttonMethod:(id)sender
 {
-    if (sender == locolShowHiddenBtn) {
-//        locaVideoController.view.hidden = NO;
-        Notifications(SHOWLOCAL);
-        DDLogInfo(@"[Info] 10032 User Show Local Winodw");
-        localViewBg.hidden = YES;
-    }else if (sender == muteBtn) {
-        isshowalert = NO;
+    if (sender == muteBtn) {
         ismute = !ismute;
-        if (ismute) {
+        [appDelegate.evengine enableMic:!ismute];
+        if (![appDelegate.evengine micEnabled]) {
+            DDLogInfo(@"[Info] micEnabled:YES.");
             muteTitle.stringValue = localizationBundle(@"video.unmute");
             muteTitle.textColor = DEFAULREDCOLOR;
-            [appDelegate.evengine enableMic:NO];
+            [muteBtn setButtonState:SWSTAnswerButtonSelectedState];
             DDLogInfo(@"[Info] 10019 user mute");
         }else {
+            DDLogInfo(@"[Info] micEnabled:NO.");
             muteTitle.stringValue = localizationBundle(@"video.mute");
             muteTitle.textColor = WHITECOLOR;
-            [appDelegate.evengine enableMic:YES];
+            [muteBtn setButtonState:SWSTAnswerButtonNormalState];
             DDLogInfo(@"[Info] 10020 user unmute");
         }
+        
     }else if (sender == cameraBtn) {
         iscamera = !iscamera;
         if (iscamera) {
@@ -705,12 +835,26 @@ int seconds = 0l;
             [appDelegate.evengine enableCamera:YES];
             DDLogInfo(@"[Info] 10022 user turn off camera");
         }
+    }else if (sender == shareBtn) {
+        
+        if ([EVUtils canRecord]) {
+            if (!isshare) {
+                Notifications(CLOSESCREENWINDOW);
+                ScreenWindowController *WinControl = [ScreenWindowController windowController];
+                [WinControl.window makeKeyAndOrderFront:self];
+            }
+        }else {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.noScreenrecording");
+            [self getAlertViewWidth:hudTitle.stringValue];
+            [self persendMethod:2];
+            NSString *urlString = @"x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture";
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:urlString]];
+        }
     }else if (sender == setBtn) {
         
         Notifications(CLOSEMANMAGEWINDOW);
         ManagementWindowController *WinControl = [ManagementWindowController windowController];
-        
-        appDelegate.mainWindowController = WinControl;
         
         [WinControl.window makeKeyAndOrderFront:self];
         
@@ -719,10 +863,18 @@ int seconds = 0l;
         Notifications(UPLOADMEETINGWEBWINDOW);
         [meetingWebWindow.window orderFront:self];
         
+    }else if (sender == self.chatBtn) {
+        if (_chatPageWindow == nil) {
+            _chatPageWindow = [ChatPageWindowC windowController];
+        }
+        ChatPageViewController *chat = (ChatPageViewController *)_chatPageWindow.contentViewController;
+        chat.groupStr = [appDelegate.evengine getIMGroupID];
+        [_chatPageWindow.window makeKeyAndOrderFront:nil];
     }else if (sender == videoLayoutBtn) {
         if (!isMainVenue) {
             self->hud.hidden = NO;
             self->hudTitle.stringValue = localizationBundle(@"alert.openmainvenuemodel");
+            [self getAlertViewWidth:hudTitle.stringValue];
             [self persendMethod:2];
             return;
         }
@@ -730,7 +882,7 @@ int seconds = 0l;
         EVLayoutRequest *layout = [[EVLayoutRequest alloc] init];
         layout.page = EVLayoutCurrentPage;
         if (islayout) {
-            videoTitle.stringValue = localizationBundle(@"video.gallerylayout");
+            videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
             layout.mode = EVLayoutSpeakerMode;
             layout.max_type = EVLayoutType_5_4T_1B;
             EVVideoSize vsize;
@@ -740,7 +892,7 @@ int seconds = 0l;
             DDLogInfo(@"[Info] 10023 user choose Speaker Mode");
         }else {
             DDLogInfo(@"[Info] 10024 user choose Gallery Mode");
-            videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
+            videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
             layout.mode = EVLayoutGalleryMode;
             layout.max_type = EVLayoutType_9;
             EVVideoSize vsize;
@@ -752,16 +904,23 @@ int seconds = 0l;
             cancelVideo.hidden = YES;
         }
         [appDelegate.evengine setLayout:layout];
-    }else if (sender == _alertBtn) {
-        self->hud.hidden = NO;
-        self->hudTitle.stringValue = localizationBundle(@"alert.openmainvenuemodel");
-        [self persendMethod:2];
     }else if (sender == handBtn) {
+        [handBtn setButtonState:SWSTAnswerButtonNormalState];
         [appDelegate.evengine requestRemoteUnmute:YES];
         hud.hidden = NO;
         self->hudTitle.stringValue = localizationBundle(@"alert.handsup.approve");
+        [self getAlertViewWidth:hudTitle.stringValue];
         [self persendMethod:2];
         DDLogInfo(@"[Info] 10025 user Speech Request");
+    }else if (sender == _alertBtn) {
+        self->hud.hidden = NO;
+        self->hudTitle.stringValue = localizationBundle(@"alert.openmainvenuemodel");
+        [self getAlertViewWidth:hudTitle.stringValue];
+        [self persendMethod:2];
+    }else if (sender == _showContentVideo) {
+        [contentWindow.window orderFront:nil];
+    }else if (sender == _moreBtn) {
+        _menuViewBg.hidden = !_menuViewBg.hidden;
     }else if (sender == callendBtn) {
         NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
         DDLogInfo(@"[Info] 10012 user handup the meeting:%@", setDic[@"confId"]);
@@ -779,9 +938,9 @@ int seconds = 0l;
             remotVideoController.view.frame = CGRectMake(0, 0, 0, 0);
         }
         
-        [appDelegate.evengine leaveConference];
+        [appDelegate.evengine hangUp];
         
-        [self usercallEndMeeting];
+//        [self usercallEndMeeting];
         
     }else if (sender == cancelVideo) {
         EVLayoutRequest *layout = [[EVLayoutRequest alloc] init];
@@ -794,36 +953,140 @@ int seconds = 0l;
         layout.max_resolution = vsize;
         [appDelegate.evengine setLayout:layout];
         cancelVideo.hidden = YES;
-    }else if (sender == shareBtn) {
-        if (!isshare) {
-            Notifications(CLOSESCREENWINDOW);
-            ScreenWindowController *WinControl = [ScreenWindowController windowController];
-            [WinControl.window makeKeyAndOrderFront:self];
+    }else if (sender == _switchAudioBtn) {
+        [_switchAudioBtn setButtonState:SWSTAnswerButtonNormalState];
+        [self enterAudioMode];
+    }else if (sender == _changeNameBtn) {
+        [_changeNameBtn setButtonState:SWSTAnswerButtonNormalState];
+        if ([appDelegate.evengine getDisplayName] != nil) {
+            _inputNameField.stringValue = [appDelegate.evengine getDisplayName];
+        }else{
+            _inputNameField.stringValue = localizationBundle(@"video.localdisplayname");
         }
+        _changeNameViewBg.hidden = NO;
+        _menuViewBg.hidden = YES;
+    }else if (sender == _exitAudioBtn) {
+        [self enterVideoMode];
+    }else if (sender == _showLocalBtn) {
+        Notifications(SHOWLOCAL);
+        _showLocalView.hidden = YES;
+        _showContentConstraint.constant = 10;
     }
+}
+
+//进入语音模式
+- (void)enterAudioMode
+{
+    Notifications(HIDDENLOCALWINDOW);
+    self.showLocalBtn.enabled = NO;
+    self.zheView.hidden = NO;
+    _audioViewBg.hidden = NO;
+    [appDelegate.evengine setVideoActive:0];
+    
+    cameraBtn.hidden = YES;
+    cameraTitle.hidden = YES;
+    
+    shareBtn.hidden = YES;
+    shareTitle.hidden = YES;
+    
+    videoLayoutBtn.hidden = YES;
+    videoTitle.hidden = YES;
+    
+    _moreBtn.hidden = YES;
+    _moreTitle.hidden = YES;
+    
+    _menuViewBg.hidden = YES;
+    
+    _audioConstraint.constant = 108;
+    
+    NSMutableDictionary *setInfo = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+    if ([setInfo[@"chatInConference"] boolValue] && [setInfo[@"getIMAddress"] boolValue]) {
+        //包含会议聊天
+        _chatBtn.hidden = NO;
+        _chatTitle.hidden = NO;
+        _videoLayoutConstraint.constant = 108;
+    }else {
+        //没有会议聊天
+        _chatBtn.hidden = YES;
+        _chatTitle.hidden = YES;
+        _videoLayoutConstraint.constant = 40;
+    }
+    
+}
+//进入视频模式
+- (void)enterVideoMode
+{
+    self.showLocalBtn.enabled = YES;
+    self.zheView.hidden = YES;
+    _audioViewBg.hidden = YES;
+    [appDelegate.evengine setVideoActive:3];
+    
+    cameraBtn.hidden = NO;
+    cameraTitle.hidden = NO;
+    
+    shareBtn.hidden = NO;
+    shareTitle.hidden = NO;
+    
+    videoLayoutBtn.hidden = NO;
+    videoTitle.hidden = NO;
+    
+    _moreBtn.hidden = NO;
+    _moreTitle.hidden = NO;
+    
+    _audioConstraint.constant = 259;
+    
+    NSMutableDictionary *setInfo = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
+    if ([setInfo[@"chatInConference"] boolValue] && [setInfo[@"getIMAddress"] boolValue]) {
+        //包含会议聊天
+        _chatBtn.hidden = NO;
+        _chatTitle.hidden = NO;
+        _videoLayoutConstraint.constant = 108;
+    }else {
+        //没有会议聊天
+        _chatBtn.hidden = YES;
+        _chatTitle.hidden = YES;
+        _videoLayoutConstraint.constant = 40;
+    }
+}
+
+- (void)getAlertViewWidth:(NSString *)str {
+    CGFloat width = [self getWidthWithText:str height:20 font:14];
+    if (width < 400) {
+        _alertViewConstraint.constant = width + 100;
+    }else {
+        _alertViewConstraint.constant = 500;
+    }
+    
 }
 
 - (IBAction)openSignlWindowAction:(id)sender
 {
     Notifications(CLOSESIGNLWINDOW);
     SignalWindowController *WinControl = [SignalWindowController windowController];
-    appDelegate.mainWindowController = WinControl;
     [WinControl.window makeKeyAndOrderFront:self];
 }
 
 #pragma mark - Notification
 - (void)changeLanguage:(NSNotification *)sender
 {
-    [handUpBtn changeLeftButtonattribute:localizationBundle(@"video.callend") color:WHITECOLOR];
-    [handUpBtn changeLeftButtonattribute:localizationBundle(@"video.callend") color:WHITECOLOR];
     
     setTitle.stringValue = localizationBundle(@"video.set");
     meetingTitle.stringValue = localizationBundle(@"video.meetingmanagement");
-    handupTitle.stringValue = localizationBundle(@"video.handup");
+    _chatTitle.stringValue = localizationBundle(@"video.chat");
+    _showLocalTitle.stringValue = localizationBundle(@"video.openlocalvideo");
     _showContentTitle.stringValue = localizationBundle(@"video.showcontent");
+    _moreTitle.stringValue = localizationBundle(@"video.more");
     shareTitle.stringValue = localizationBundle(@"video.share");
+    _exitAudioTitle.stringValue = localizationBundle(@"video.exitAudioTitle");
+    _changeNameTitle.stringValue = localizationBundle(@"video.rename");
+    _inputNameTitle.stringValue = localizationBundle(@"video.inputNewName");
     
-    [localBtn changeLeftButtonattribute:localizationBundle(@"video.openlocalvideo") color:WHITECOLOR];
+    [_closeLocalBtn changeCenterButtonattribute:localizationBundle(@"video.closelocalvideo") color:WHITECOLOR];
+//    [_moreBtn changeCenterButtonattribute:@"" color:WHITECOLOR];
+    [handBtn changeCenterButtonattribute:localizationBundle(@"video.handup") color:WHITECOLOR];
+    [_switchAudioBtn changeCenterButtonattribute:localizationBundle(@"video.changeMode") color:WHITECOLOR];
+    [_changeNameBtn changeCenterButtonattribute:localizationBundle(@"video.changeName") color:WHITECOLOR];
+    
 //    locaVideoController.view.hidden = NO;
     
     if (ismute) {
@@ -843,16 +1106,17 @@ int seconds = 0l;
     }
     
     if (islayout) {
-        videoTitle.stringValue = localizationBundle(@"video.gallerylayout");
+        videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
     }else {
-        videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
+        videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
     }
 }
 
 - (void)hiddenLocal
 {
     DDLogInfo(@"[Info] 10033 Receive user minification requests");
-    localViewBg.hidden = NO;
+    _showLocalView.hidden = NO;
+    _showContentConstraint.constant = 130;
 }
 
 - (void)closeWindow
@@ -871,10 +1135,18 @@ int seconds = 0l;
     
     DDLogInfo(@"[Info] 10016 Timer start");
     
+    [self enterVideoMode];
+    
     [appDelegate.evengine setDelegate:self];
     
     NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
-    meetingNumber.stringValue = setDic[@"confId"];
+    if ([setDic[@"conftype"] isEqualToString:@"p2p"]) {
+        meetingNumber.stringValue = @"";
+        [setDic setValue:@"conf" forKey:@"conftype"];
+    }else {
+        meetingNumber.stringValue = setDic[@"confId"];
+    }
+    [PlistUtils saveUserInfoPlistFile:(NSDictionary *)setDic withFileName:SETINFO];
     
     [self getUserSet];
                     
@@ -973,12 +1245,14 @@ int seconds = 0l;
         }else {
             self->hud.hidden = NO;
             self->hudTitle.stringValue = localizationBundle(@"alert.savefailed");
+            [self getAlertViewWidth:hudTitle.stringValue];
             [self persendMethod:2];
         }
     }else {
         //失败
         self->hud.hidden = NO;
         self->hudTitle.stringValue = localizationBundle(@"alert.savefailed");
+        [self getAlertViewWidth:hudTitle.stringValue];
         [self persendMethod:2];
     }
 }
@@ -987,6 +1261,7 @@ int seconds = 0l;
 {
     isshare = NO;
     [appDelegate.evengine stopContent];
+    [self.view.window orderFront:nil];
 }
 
 - (void)sendContent:(NSNotification *)sender
@@ -1013,6 +1288,7 @@ int seconds = 0l;
     Notifications(CLOSELOCALCONTENTWINDOW);
     Notifications(CLOSESCREENWINDOW);
     
+    [appDelegate.evengine enableCamera:YES];
     isshare = NO;
     appDelegate.isInTheMeeting = NO;
     chooseVideoName = @"";
@@ -1039,6 +1315,13 @@ int seconds = 0l;
     }
 }
 
+#pragma mark - NSTextFieldDelegate
+- (void)controlTextDidChange:(NSNotification *)obj {
+    if ([[_inputNameField stringValue] length] > 32) {
+        [_inputNameField setStringValue:[[_inputNameField stringValue] substringToIndex:32]];
+    }
+}
+
 #define mark - EVEngineDelegate
 - (void)onNetworkQuality:(float)quality_rating
 {
@@ -1050,8 +1333,15 @@ int seconds = 0l;
 - (void)onMuteSpeakingDetected
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+        if (infoDic[@"closeTip"]) {
+            if ([infoDic[@"closeTip"] isEqualToString:@"YES"]) {
+                return;
+            }
+        }
         self->hud.hidden = NO;
         self->hudTitle.stringValue = localizationBundle(@"alert.micmute");
+        [self getAlertViewWidth:self->hudTitle.stringValue];
         [self persendMethod:10];
     });
 }
@@ -1059,18 +1349,85 @@ int seconds = 0l;
 - (void)onWarn:(EVWarn *)warn
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self->hud.hidden = NO;
-        if (warn.code == EVWarnNetworkPoor) {
-            self->hudTitle.stringValue = localizationBundle(@"alert.network_stable");
-        }else if (warn.code == EVWarnNetworkVeryPoor) {
-            self->hudTitle.stringValue = localizationBundle(@"alert.network_poor");
-        }else if (warn.code == EVWarnBandwidthInsufficient) {
-            self->hudTitle.stringValue = localizationBundle(@"alert.network_insufficient");
-        }else if (warn.code == EVWarnBandwidthVeryInsufficient) {
-            self->hudTitle.stringValue = localizationBundle(@"alert.network_shortage");
+        NSDictionary *infoDic = [PlistUtils loadUserInfoPlistFilewithFileName:SETINFO];
+        if (infoDic[@"closeTip"]) {
+            if ([infoDic[@"closeTip"] isEqualToString:@"YES"]) {
+                if (warn.code == EVWarnNetworkPoor || warn.code == EVWarnNetworkVeryPoor || warn.code == EVWarnBandwidthInsufficient || warn.code == EVWarnBandwidthVeryInsufficient) {
+                    return;
+                }
+            }
         }
-        self.buttomViewBg.hidden = NO;
-        [self persendMethod:10];
+        
+        if (warn.code == EVWarnNetworkPoor) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_stable");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
+            self.buttomViewBg.hidden = NO;
+            [self persendMethod:10];
+        }else if (warn.code == EVWarnNetworkVeryPoor) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_poor");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
+            self.buttomViewBg.hidden = NO;
+            [self persendMethod:10];
+        }else if (warn.code == EVWarnBandwidthInsufficient) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_insufficient");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
+            self.buttomViewBg.hidden = NO;
+            [self persendMethod:10];
+        }else if (warn.code == EVWarnBandwidthVeryInsufficient) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.network_shortage");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
+            self.buttomViewBg.hidden = NO;
+            [self persendMethod:10];
+        }else if (warn.code == EVWarnUnmuteAudioNotAllowed) {
+            self->hud.hidden = NO;
+            self->hudTitle.stringValue = localizationBundle(@"alert.nnmuteAudioNotAllowed");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
+            self.buttomViewBg.hidden = NO;
+            [self persendMethod:10];
+        }else if (warn.code == EVWarnUnmuteAudioIndication) {
+            NSAlert *alert = [NSAlert new];
+            [alert addButtonWithTitle:localizationBundle(@"alert.sure")];
+            [alert addButtonWithTitle:localizationBundle(@"alert.cancel")];
+            [alert setMessageText:@""];
+            [alert setInformativeText:localizationBundle(@"alert.nnmuteAudioIndication")];
+            [alert setAlertStyle:NSAlertStyleInformational];
+            [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
+                if(returnCode == NSAlertFirstButtonReturn){
+                    [self->appDelegate.evengine enableMic:YES];
+                    self->ismute = NO;
+                    if (self->ismute) {
+                        DDLogInfo(@"[Info] micEnabled:YES.");
+                        self->muteTitle.stringValue = localizationBundle(@"video.unmute");
+                        self->muteTitle.textColor = DEFAULREDCOLOR;
+                        [self->muteBtn setButtonState:SWSTAnswerButtonSelectedState];
+                    }else {
+                        DDLogInfo(@"[Info] micEnabled:NO.");
+                        self->muteTitle.stringValue = localizationBundle(@"video.mute");
+                        self->muteTitle.textColor = WHITECOLOR;
+                        [self->muteBtn setButtonState:SWSTAnswerButtonNormalState];
+                    }
+                }else if(returnCode == NSAlertSecondButtonReturn){
+                    [self->appDelegate.evengine enableMic:NO];
+                    self->ismute = YES;
+                    if (self->ismute) {
+                        DDLogInfo(@"[Info] micEnabled:YES.");
+                        self->muteTitle.stringValue = localizationBundle(@"video.unmute");
+                        self->muteTitle.textColor = DEFAULREDCOLOR;
+                        [self->muteBtn setButtonState:SWSTAnswerButtonSelectedState];
+                    }else {
+                        DDLogInfo(@"[Info] micEnabled:NO.");
+                        self->muteTitle.stringValue = localizationBundle(@"video.mute");
+                        self->muteTitle.textColor = WHITECOLOR;
+                        [self->muteBtn setButtonState:SWSTAnswerButtonNormalState];
+                    }
+                }
+            }];
+        }
+        
     });
 }
 
@@ -1078,6 +1435,7 @@ int seconds = 0l;
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         //call hanp up
+        
         Notifications(CLOSEMANMAGEWINDOW);
         Notifications(CLOSESIGNLWINDOW);
         Notifications(CLOSELOCALWINDOW);
@@ -1087,9 +1445,44 @@ int seconds = 0l;
         Notifications(CLOSELOCALCONTENTWINDOW);
         Notifications(CLOSESCREENWINDOW);
         
+        if ([EVUtils queryUserPlist:@"chatInConference"]) {
+            [[EMMessageManager sharedInstance] selectEntity:nil ascending:YES filterString:nil success:^(NSArray *results) {
+                NSLog(@"数据---%@",results);
+                //全部删除
+                for (NSManagedObject *obj in results){
+                    [[EMMessageManager sharedInstance] deleteEntity:obj success:^{
+                    } fail:^(NSError *error) {
+                    }];
+                }
+            } fail:nil];
+            
+            [[EVUserIdManager sharedInstance] selectEntity:nil ascending:YES filterString:nil success:^(NSArray *results) {
+                NSLog(@"数据---%@",results);
+                //全部删除
+                for (NSManagedObject *obj in results){
+                    [[EVUserIdManager sharedInstance] deleteEntity:obj success:^{
+                    } fail:^(NSError *error) {
+                    }];
+                }
+            } fail:^(NSError *error) {
+                
+            }];
+            
+            [[EMManager sharedInstance].delegates onCallEnd];
+            
+            [self->appDelegate.emengine logout];
+        }
+        
+        [self enterVideoMode];
+        
+        self->_speakerViewBg.hidden = YES;
+        
+        self->_menuViewBg.hidden = YES;
         self->isshare = NO;
+        self->isMuteforEnd = NO;
         self->appDelegate.isInTheMeeting = NO;
         self->chooseVideoName = @"";
+        self->isshowLocal = YES;
         [self->contentWindow.window close];
         [self.view.window close];
         NSMutableDictionary *setDic = [NSMutableDictionary dictionaryWithDictionary:[PlistUtils loadUserInfoPlistFilewithFileName:SETINFO]];
@@ -1135,6 +1528,7 @@ int seconds = 0l;
         if (info.status == EVContentDenied) {
             self->hud.hidden = NO;
             self->hudTitle.stringValue = localizationBundle(@"alert.nosharepermission");
+            [self getAlertViewWidth:self->hudTitle.stringValue];
             [self persendMethod:2];
         }else if (EVContentGranted) {
             if (info.type == EVStreamContent || info.type == EVStreamWhiteBoard) {
@@ -1142,6 +1536,7 @@ int seconds = 0l;
                     if (info.dir == EVStreamUpload) {
                         self->hud.hidden = NO;
                         self->hudTitle.stringValue = localizationBundle(@"alert.sharesuccess");
+                        [self getAlertViewWidth:self->hudTitle.stringValue];
                         [self.view.window miniaturize:self];
                         [self persendMethod:1];
                         NSArray *screens = [NSScreen screens];
@@ -1170,6 +1565,7 @@ int seconds = 0l;
                                 
                                 self->isshare = YES;
                             }
+                            self.showContentView.hidden = YES;
                             [self->contentWindow.window close];
                         }
                     }else{
@@ -1180,8 +1576,12 @@ int seconds = 0l;
                         }
                         DDLogInfo(@"[Info] 10047 user receive open contentWindow");
                         [self->contentWindow.window orderFront:nil];
-                        self.showContentVideo.hidden = NO;
-                        self.showContentTitle.hidden = NO;
+                        self.showContentView.hidden = NO;
+                        if (self->_showLocalView.hidden) {
+                            self->_showContentConstraint.constant = 10;
+                        }else {
+                            self->_showContentConstraint.constant = 130;
+                        }
                         self->isshowContent = YES;
                         if (self->ismyselfmute) {
                             self.centerLine.constant = 0;
@@ -1195,8 +1595,7 @@ int seconds = 0l;
                 }else{
                     DDLogInfo(@"[Info] 10048 user receive close contentWindow");
                     [self->contentWindow.window close];
-                    self.showContentVideo.hidden = YES;
-                    self.showContentTitle.hidden = YES;
+                    self.showContentView.hidden = YES;
                     if (self->ismyselfmute) {
                         self.centerLine.constant = 35;
                         self.showContentleft.constant = 70;
@@ -1212,6 +1611,46 @@ int seconds = 0l;
 
 - (void)onLayoutIndication:(EVLayoutIndication *_Nonnull)layout{
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (layout.speaker_name.length != 0) {
+            self->_speakerName.stringValue = layout.speaker_name;
+            if (!self->_audioViewBg.hidden) {
+                self->_speakerViewBg.hidden = NO;
+                if (!self->_audioViewBg.hidden) {
+                    self->_speakerViewBg.hidden = NO;
+                    if (self.recordBg.hidden == YES && self->cancelVideo.hidden == YES) {
+                        self->_speakerConstraint.constant = 20;
+                    }else if (self.recordBg.hidden == YES && self->cancelVideo.hidden == NO) {
+                        self->_speakerConstraint.constant = 90;
+                    }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == YES) {
+                        self->_speakerConstraint.constant = 90;
+                    }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == NO) {
+                        self->_speakerConstraint.constant = 178;
+                    }
+                }
+            }else {
+                if (layout.speaker_index == -1) {
+                    self->_speakerViewBg.hidden = NO;
+                    if (!self->_audioViewBg.hidden) {
+                        self->_speakerViewBg.hidden = NO;
+                        if (self.recordBg.hidden == YES && self->cancelVideo.hidden == YES) {
+                            self->_speakerConstraint.constant = 20;
+                        }else if (self.recordBg.hidden == YES && self->cancelVideo.hidden == NO) {
+                            self->_speakerConstraint.constant = 90;
+                        }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == YES) {
+                            self->_speakerConstraint.constant = 90;
+                        }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == NO) {
+                            self->_speakerConstraint.constant = 178;
+                        }
+                    }
+                }else {
+                    self->_speakerViewBg.hidden = YES;
+                }
+            }
+        }else {
+            self->_speakerViewBg.hidden = YES;
+        }
+        
         self->isMainVenue = layout.mode_settable;
         if (self->isMainVenue) {
 //            self->videoLayoutBtn.enabled = YES;
@@ -1230,6 +1669,11 @@ int seconds = 0l;
             if (self->chooseVideoName.length != 0) {
                 if ([self->chooseVideoName isEqualToString:site.name]) {
                     self->cancelVideo.hidden = NO;
+                    if (self->cancelVideoConstraint.constant == 90) {
+                        self->_speakerConstraint.constant = 178;
+                    }else {
+                        self->_speakerConstraint.constant = 90;
+                    }
                 }else {
                     //fixed clear saved user when video change
                     self->cancelVideo.hidden = YES;
@@ -1274,7 +1718,7 @@ int seconds = 0l;
             if (layout.setting_mode == EVLayoutSpeakerMode) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:MUTENAME object:self->muteArr];
                 self->islayout = YES;
-                self->videoTitle.stringValue = localizationBundle(@"video.gallerylayout");
+                self->videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
                 [self->videoLayoutBtn setButtonState:SWSTAnswerButtonSelectedState];
                 for (int i = 0; i<self->remoteList.count; i++)
                 {
@@ -1298,7 +1742,7 @@ int seconds = 0l;
                 }
             }else if (layout.setting_mode == EVLayoutGalleryMode) {
                 self->islayout = NO;
-                self->videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
+                self->videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
                 [self->videoLayoutBtn setButtonState:SWSTAnswerButtonNormalState];
                 for (int i = 0; i<self->remoteList.count; i++)
                 {
@@ -1330,7 +1774,7 @@ int seconds = 0l;
             if (layout.mode == EVLayoutSpeakerMode) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:MUTENAME object:self->muteArr];
                 self->islayout = YES;
-                self->videoTitle.stringValue = localizationBundle(@"video.gallerylayout");
+                self->videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
                 [self->videoLayoutBtn setButtonState:SWSTAnswerButtonSelectedState];
                 for (int i = 0; i<self->remoteList.count; i++)
                 {
@@ -1347,7 +1791,7 @@ int seconds = 0l;
                 }
             }else if (layout.mode == EVLayoutGalleryMode) {
                 self->islayout = NO;
-                self->videoTitle.stringValue = localizationBundle(@"video.speakerlayout");
+                self->videoTitle.stringValue = localizationBundle(@"video.layoutswitch");
                 [self->videoLayoutBtn setButtonState:SWSTAnswerButtonNormalState];
                 for (int i = 0; i<self->remoteList.count; i++)
                 {
@@ -1385,6 +1829,47 @@ int seconds = 0l;
 - (void)onLayoutSpeakerIndication:(EVLayoutSpeakerIndication *_Nonnull)speaker
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        if (speaker.speaker_name.length != 0) {
+            self->_speakerName.stringValue = speaker.speaker_name;
+            if (!self->_audioViewBg.hidden) {
+                self->_speakerViewBg.hidden = NO;
+                if (!self->_audioViewBg.hidden) {
+                    self->_speakerViewBg.hidden = NO;
+                    if (self.recordBg.hidden == YES && self->cancelVideo.hidden == YES) {
+                        self->_speakerConstraint.constant = 20;
+                    }else if (self.recordBg.hidden == YES && self->cancelVideo.hidden == NO) {
+                        self->_speakerConstraint.constant = 90;
+                    }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == YES) {
+                        self->_speakerConstraint.constant = 90;
+                    }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == NO) {
+                        self->_speakerConstraint.constant = 178;
+                    }
+                }
+            }else {
+                if (speaker.speaker_index == -1) {
+                    self->_speakerViewBg.hidden = NO;
+                    if (!self->_audioViewBg.hidden) {
+                        self->_speakerViewBg.hidden = NO;
+                        if (self.recordBg.hidden == YES && self->cancelVideo.hidden == YES) {
+                            self->_speakerConstraint.constant = 20;
+                        }else if (self.recordBg.hidden == YES && self->cancelVideo.hidden == NO) {
+                            self->_speakerConstraint.constant = 90;
+                        }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == YES) {
+                            self->_speakerConstraint.constant = 90;
+                        }else if (self.recordBg.hidden == NO && self->cancelVideo.hidden == NO) {
+                            self->_speakerConstraint.constant = 178;
+                        }
+                    }
+                }else {
+                    self->_speakerViewBg.hidden = YES;
+                }
+            }
+        }else {
+            self->_speakerViewBg.hidden = YES;
+        }
+        
+        
         for (int i = 0; i<self->remoteList.count; i++)
         {
             self->remotVideoController = self->remoteList[i];
@@ -1402,33 +1887,50 @@ int seconds = 0l;
 - (void)onLayoutSiteIndication:(EVSite *_Nonnull)site
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        //修改了会中名称
+        for (int i = 0; i<self->remoteList.count; i++) {
+            self->remotVideoController = self->remoteList[i];
+            if (self->remotVideoController.videoView == site.window) {
+                self->remotVideoController.userName.stringValue = site.name;
+            }
+        }
+        
         if (site.is_local) {
-            if (self->isshowalert) {
-                if (site.remote_muted) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:CHANGEDISPLAYNAME object:site.name];
+            if (site.remote_muted) {
+                //被管理员禁言
+                if (!self->isMuteforEnd) {
+                    self->isMuteforEnd = YES;
                     self->hud.hidden = NO;
                     self->hudTitle.stringValue = localizationBundle(@"alert.nospeak");
+                    [self getAlertViewWidth:self->hudTitle.stringValue];
                     self->isservermute = YES;
                     [self persendMethod:2];
-                    self->handBtn.hidden = NO;
-                    self->handupTitle.hidden = NO;
+                    self->handBtn.enabled = YES;
                     self->ismyselfmute = YES;
                     self.centerLine.constant = 35;
                     self.showContentleft.constant = 140;
                     DDLogInfo(@"[Info] 10026 user have been muted by meeting manager.");
-                }else{
+                }
+                
+            }else{
+                if (self->isMuteforEnd) {
+                    self->isMuteforEnd = NO;
                     DDLogInfo(@"[Info] 10027 user have been unmuted by meeting manager.");
                     self->hud.hidden = NO;
                     self->hudTitle.stringValue = localizationBundle(@"alert.speak");
+                    [self getAlertViewWidth:self->hudTitle.stringValue];
                     self->isservermute = NO;
                     [self persendMethod:2];
-                    self->handBtn.hidden = YES;
-                    self->handupTitle.hidden = YES;
+                    self->handBtn.enabled = NO;
                     self->ismyselfmute = NO;
                     self.centerLine.constant = 70;
                     self.showContentleft.constant = 70;
                 }
+                
             }
-            self->isshowalert = YES;
+
         }else {
             if (self->layoutType == EVLayoutGalleryMode) {
                 
@@ -1562,21 +2064,59 @@ int seconds = 0l;
             self.recTitle.stringValue = @"LIVE";
             self.recordBg.hidden = NO;
             self->cancelVideoConstraint.constant = 90;
+            if (self->cancelVideo.hidden) {
+                self->_speakerConstraint.constant = 90;
+            }else {
+                self->_speakerConstraint.constant = 178;
+            }
         }else {
             self.recTitle.stringValue = @"REC";
             if (info.state == EVRecordingStateNone) {
                 DDLogInfo(@"[Info] 10043 Close recording");
                 self.recordBg.hidden = YES;
                 self->cancelVideoConstraint.constant = 20;
+                if (self->cancelVideo.hidden) {
+                    self->_speakerConstraint.constant = 20;
+                }else {
+                    self->_speakerConstraint.constant = 90;
+                }
             }else if (info.state == EVRecordingStateOn) {
                 DDLogInfo(@"[Info] 10044 Star recording");
                 self.recordBg.hidden = NO;
                 self->cancelVideoConstraint.constant = 90;
+                if (self->cancelVideo.hidden) {
+                    self->_speakerConstraint.constant = 90;
+                }else {
+                    self->_speakerConstraint.constant = 178;
+                }
             }else if (info.state == EVRecordingStatePause) {
                 DDLogInfo(@"[Info] 10045 Pause recording");
                 self.recordBg.hidden = YES;
                 self->cancelVideoConstraint.constant = 20;
+                if (self->cancelVideo.hidden) {
+                    self->_speakerConstraint.constant = 20;
+                }else {
+                    self->_speakerConstraint.constant = 90;
+                }
             }
+        }
+    });
+}
+
+- (void)onMicMutedShow:(int)mic_muted
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->ismute = mic_muted;
+        if (self->ismute) {
+            DDLogInfo(@"[Info] micEnabled:YES.");
+            self->muteTitle.stringValue = localizationBundle(@"video.unmute");
+            self->muteTitle.textColor = DEFAULREDCOLOR;
+            [self->muteBtn setButtonState:SWSTAnswerButtonSelectedState];
+        }else {
+            DDLogInfo(@"[Info] micEnabled:NO.");
+            self->muteTitle.stringValue = localizationBundle(@"video.mute");
+            self->muteTitle.textColor = WHITECOLOR;
+            [self->muteBtn setButtonState:SWSTAnswerButtonNormalState];
         }
     });
 }
@@ -1596,17 +2136,18 @@ int seconds = 0l;
 #pragma mark - HIDDENHUD
 - (void)persendMethod:(NSInteger)time
 {
-    [self performSelector:@selector(hiddenHUD) withObject:self afterDelay:time];
+    dispatch_main_async_safe(^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self->hud.hidden = YES;
+        });
+    });
 }
 
 - (void)hiddenHUD
 {
-    hud.hidden = YES;
-}
-
-- (IBAction)test5:(id)sender
-{
-    [contentWindow.window orderFront:nil];
+    dispatch_main_async_safe(^{
+        self->hud.hidden = YES;
+    });
 }
 
 - (void)showNotwordAlert
@@ -1652,6 +2193,8 @@ int seconds = 0l;
     }
     isShowButtomBg = NO;
     buttomViewBg.hidden = YES;
+    _menuViewBg.hidden = YES;
+    [[self class] cancelPreviousPerformRequestsWithTarget:self];
     if (layoutType == EVLayoutSpeakerMode) {
         remotVideoController = remoteList[0];
         remotVideoController.nameConstraintH.constant = 10;
